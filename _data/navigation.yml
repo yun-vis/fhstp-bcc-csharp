@@ -1,5 +1,7 @@
 # main links
 main:
+  - title: "Setup"
+    url: /pages/setup
   - title: "C# Basics"
     url: /pages/basics
   - title: "Class"
