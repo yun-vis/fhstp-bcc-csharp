@@ -6,29 +6,36 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"
-last_modified_at: 2022-03-12
+last_modified_at: 2023-02-20
 ---
 
 # C# Environment Setup
 
 Windows:
-  * Visual Studio 2019, 2022: .Net 6, support Class Diagram
-  * Visual Studio Code: .Net 5, support PUML Class Diagram
+  * Visual Studio Code: .Net 6, support PUML Class Diagram
 
 MacOS:
-  * Visual Studio 2022: not yet support
-  * Visual Studio 2019: .Net 5, support Class Diagram
-  * Visual Studio Code: .Net 5, .Net 6, support PUML Class Diagram (tested on Mojave)
+  * Visual Studio Code: .Net 6, support PUML Class Diagram (tested on Mojave)
 
 Linux:
-  * Visual Studio Code: .Net 5, support PUML Class Diagram (not yet tested)
+  * Visual Studio Code: .Net 6, support PUML Class Diagram (not yet tested)
 
-## Install IDE and .NET Framework
+## Install Visual Studio Code and .NET 6 SDKs
 
-  * [Visual Studio Community](https://visualstudio.microsoft.com/vs/community/)
-  * [Visual Studio Code](https://code.visualstudio.com), [.Net 5 or .Net 6 Runtime](https://dotnet.microsoft.com/en-us/download/visual-studio-sdks), [Debugger Extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp), [Tutorial](https://www.c-sharpcorner.com/article/how-to-setup-visual-studio-code-for-c-sharp-10-and-net-6-0/)
+  * [Visual Studio Code](https://code.visualstudio.com/)
+  * [.Net 6 SDKs](https://dotnet.microsoft.com/en-us/download/dotnet)
 
-## CSharp to PlantUML (For Visual Studio Code Users)
+### Install Visual Studio Code Extension
+
+  * [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
+  * [CSharp to PlantUML](https://marketplace.visualstudio.com/items?itemName=pierre3.csharp-to-plantuml)
+  * [Markdown All in One](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one)
+    * Preview shortcut: Ctrl K+V
+  
+### Additional Settings (Optional)
+  * Turn on Word Wrap in the Setting
+
+## CSharp to PlantUML (Optional, in case you don't find the extension through Visual Studio Code)
 
   * [CSharp to PlantUML](https://github.com/pierre3/PlantUmlClassDiagramGenerator)
   * Install
@@ -42,7 +49,7 @@ Linux:
   * Copy the text from *.puml and visualize using [PUML Viewer](https://www.planttext.com)
 
 
-## First Program
+## First Console Program
 
 ```bash
 $ dotnet --info // check the version installed in your system
@@ -79,7 +86,6 @@ In MyBusiness.csproj [Doc](https://docs.microsoft.com/en-us/aspnet/web-forms/ove
 
 </Project>
 ```
-
 
 ## How to Check the .Net Version
 
@@ -142,6 +148,28 @@ namespace MyBusiness  // Application namespace (defined by the programmer)
     }
 }
 ```
+
+## Introduction to Markdown language
+  * [Markdown Official Website](https://daringfireball.net/projects/markdown/)
+  * [Markdown Guide](https://www.markdownguide.org/)
+
+
+## Writing a README.mk file
+
+  * [Best README Template](https://github.com/othneildrew/Best-README-Template)
+
+  * About The Project
+    * Built With
+  * Getting Started: How to install and set up your app.
+    * Prerequisites
+    * Installation
+  * Usage: Show useful examples of how a project can be used.
+  * Roadmap: What have been implemented and what are the planed features.
+  * Contributing: Encourage people to work on your project.
+  * License: Your project license
+  * Contact
+  * Acknowledgments
+
 
 ---
 # Selected Theory
