@@ -18,7 +18,7 @@ MacOS:
   * Visual Studio Code: .Net 6, support PUML Class Diagram (tested on Mojave)
 
 Linux:
-  * Visual Studio Code: .Net 6, support PUML Class Diagram (not yet tested)
+  * Visual Studio Code: .Net 6, support PUML Class Diagram (not yet tested Unbuntu 22.04)
 
 ## Install Visual Studio Code and .NET 6 SDKs
 
@@ -56,11 +56,16 @@ $ dotnet --info // check the version installed in your system
 $ dotnet new console
 ```
 
-In Program.cs
+In Program.cs [Doc](https://aka.ms/new-console-template)
+```csharp
+// See https://aka.ms/new-console-template for more information
+Console.WriteLine("Hello, World!");
+```
+
 ```csharp
 using System;
 
-namespace MyBusiness
+namespace CRC_CSD_00
 {
     class Program
     {
@@ -73,13 +78,14 @@ namespace MyBusiness
 }
 ```
 
-In MyBusiness.csproj [Doc](https://docs.microsoft.com/en-us/aspnet/web-forms/overview/deployment/web-deployment-in-the-enterprise/understanding-the-project-file)
+In CRC_CSD-00.csproj [Doc](https://docs.microsoft.com/en-us/aspnet/web-forms/overview/deployment/web-deployment-in-the-enterprise/understanding-the-project-file)
 ```csharp
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>CRC_CSD_00</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -110,7 +116,7 @@ $ dotnet run
 using System;         // System namespace (defined by C#)
                       // The "using" Directive
 
-namespace MyBusiness  // Application namespace (defined by the programmer)
+namespace CRC_CSD_00  // Application namespace (defined by the programmer)
 {
     class Program
     {
@@ -133,7 +139,7 @@ A static class is basically the same as a non-static class,
 but there is one difference: a static class cannot be instantiated.
 */
 
-namespace MyBusiness  // Application namespace (defined by the programmer)
+namespace CRC_CSD_00  // Application namespace (defined by the programmer)
 {
     class Program
     {
@@ -144,6 +150,25 @@ namespace MyBusiness  // Application namespace (defined by the programmer)
         static void Main(string[] args) // Where the application begins
         {
             WriteLine("Hello World!");
+        }
+    }
+}
+```
+
+```csharp
+using System;
+
+namespace CRC_CSD_00
+{
+    class Program
+    {
+        // string[] args: parameters passed to the main function.
+        static void Main(string[] args) // Where the application begins
+        {
+            Console.WriteLine("The length of the arguments: " + args.Length);
+            for( int i = 0; i < args.Length; i++ ){
+                Console.WriteLine(args[i]);
+            }
         }
     }
 }
@@ -196,7 +221,7 @@ of comment symbol is reached
 The following codes show how I often add comments to my programs.
 This is a my application namespace, called My Business.
 */
-namespace MyBusiness
+namespace CRC_CSD_00
 {
     /*
     The class of my main program
