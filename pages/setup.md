@@ -55,7 +55,8 @@ Linux:
 
 ```bash
 $ dotnet --info // check the version installed in your system
-$ dotnet new console
+$ dotnet new console // Use top-level statements
+$ dotnet new console --use-program-main // Skip top-level statements and include Main()
 ```
 
 In Program.cs [Doc](https://aka.ms/new-console-template)
