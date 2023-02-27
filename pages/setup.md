@@ -9,6 +9,8 @@ header:
 last_modified_at: 2023-02-20
 ---
 
+![C# Logo](/assets/images/c-sharp.png)
+
 # C# Environment Setup
 
 Windows:
@@ -18,7 +20,7 @@ MacOS:
   * Visual Studio Code: .Net 6, support PUML Class Diagram (tested on Mojave)
 
 Linux:
-  * Visual Studio Code: .Net 6, support PUML Class Diagram (not yet tested Unbuntu 22.04)
+  * Visual Studio Code: .Net 6, support PUML Class Diagram (tested Unbuntu 22.04)
 
 ## Install Visual Studio Code and .NET 6 SDKs
 
