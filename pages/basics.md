@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"
-last_modified_at: 2022-03-12
+last_modified_at: 2023-03-02
 ---
 
 C# is a general-purpose, type-safe, object-oriented programming language.
@@ -53,18 +53,18 @@ string myName = "FirstName FamilyName";
 ```
 
 ### float, double, and decimal (real number)
-The type of a real literal is determined by its suffix: The literal without suffix or with the d or D suffix is of type double. The literal with the f or F suffix is of type float. The literal with the m or M suffix is of type decimal.
+The type of a real literal is determined by its suffix: The literal without suffix or with the d or D suffix is of type double. The literal with the f or F suffix is of type float. The literal with the m or M suffix is of type decimal.
 ```csharp
 Console.WriteLine("Using doubles:");
 double a = 0.1;
 double b = 0.2;
 if (a + b == 0.3)
 {
-    Console.WriteLine($"{a} + {b} equals 0.3");
+    Console.WriteLine($"{a} + {b} equals to 0.3");
 }
 else
 {
-    Console.WriteLine($"{a} + {b} does NOT equal 0.3");
+    Console.WriteLine($"{a} + {b} does NOT equal to 0.3");
 }
 ```
 What is the difference between these two code pieces?
@@ -74,11 +74,11 @@ decimal c = 0.1M; // M suffix means a decimal literal value
 decimal d = 0.2M;
 if (c + d == 0.3M)
 {
-    Console.WriteLine($"{c} + {d} equals 0.3");
+    Console.WriteLine($"{c} + {d} equals to 0.3");
 }
 else
 {
-    Console.WriteLine($"{c} + {d} does NOT equal 0.3");
+    Console.WriteLine($"{c} + {d} does NOT equal to 0.3");
 }
 ```
 
@@ -100,9 +100,22 @@ int[,] twoDArray = new int[4, 2];
 
 ### var
 ```csharp
-var = 1+2;
-var totalPrice = subTotal + salesTax;   // ambigious, can be float, double, or decimal
+var a = 1+2;
+var subTotal = 0.2;
+var salesTax = 0.1;
+var totalPrice = subTotal + salesTax;   // ambigious, can be float, double, or decimal, so which one is it here?
                                         // based on the types of subTotal and  salesTax.
+
+if (totalPrice == 0.3)
+{
+    Console.WriteLine($"{subTotal}+{salesTax} equal to 0.3.");
+}
+else
+{
+    Console.WriteLine($"{subTotal}+{salesTax} does NOT equal to " + (subTotal + salesTax));
+    Console.WriteLine($"{subTotal}+{salesTax} does NOT equal to 0.3.");
+}
+
 ```
 
 ### null value
@@ -152,6 +165,21 @@ result = 10 % 5;  // modulo operator (returns the remainder)
 int a = 10;
 a++; // a = a+1
 a--; // a = a-1
+++a; // What is the difference?
+--a;
+```
+
+```csharp
+int a = 10;
+int b = 0;
+b = a++; // a = a+1
+Console.WriteLine(a + ", " + b); 
+b = a--; // a = a-1
+Console.WriteLine(a + ", " + b); 
+b = ++a;
+Console.WriteLine(a + ", " + b); 
+b = --a;
+Console.WriteLine(a + ", " + b); 
 ```
 
 ### Logical Operators [Doc](https://en.wikipedia.org/wiki/Truth_table)
@@ -240,7 +268,7 @@ void DisplayNum(double num)
             Console.WriteLine("3 or 4");
             break;
         case 5:
-            goto case 1;  // jump
+            goto case 1;  // jump, usually not preferred
         default:  // Usually for debug purpose.
             Console.WriteLine($"The num is {num}.");
             break;
@@ -406,7 +434,7 @@ namespace MyBusiness
         // return void, nothing to return
         static void PrintMyName(string myName)
         {
-          Console.WriteLine($"My name is {myName}.");
+            Console.WriteLine($"My name is {myName}.");
         }
     }
 }
