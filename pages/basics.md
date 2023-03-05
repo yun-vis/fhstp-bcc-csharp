@@ -382,7 +382,7 @@ Parameters and variables declared inside of a method can be only used under the 
 ```csharp
 using System;
 
-namespace MyBusiness
+namespace CRC_CSD_02
 {
     class Program
     {
@@ -410,7 +410,7 @@ namespace MyBusiness
 ```csharp
 using System;
 
-namespace MyBusiness
+namespace CRC_CSD_02
 {
     class Program
     {
@@ -445,7 +445,7 @@ namespace MyBusiness
 ```csharp
 using System;
 
-namespace MyBusiness
+namespace CRC_CSD_02
 {
     class Program
     {
@@ -498,7 +498,7 @@ Passing parameters in a method can be done by deep copying or referencing.
 ```csharp
 using System;
 
-namespace MyBusiness
+namespace CRC_CSD_02
 {
     class Program
     {
@@ -555,7 +555,7 @@ Factorial of a Given Number can be implemented using **Recursion** or **Iteratio
 ```csharp
 using System;
 
-namespace MyBusiness
+namespace CRC_CSD_02
 {
     class Program
     {
@@ -564,15 +564,15 @@ namespace MyBusiness
             int num = 5;
             Console.WriteLine("Factorial of " + num +
                               " using Recursion is: " +
-                              FactorialUsingRecursion(5));
+                              FactorialUsingRecursion(num));
 
             Console.WriteLine("Factorial of " + num +
                               " using Iteration is: " +
-                              FactorialUsingIteration(5));
+                              FactorialUsingIteration(num));
         }
 
         /*
-        SquareVal: find factorial of given number.
+        FactorialUsingRecursion: find factorial of given number using recurrsion.
         Input:
           num: int
         Output:
@@ -588,9 +588,9 @@ namespace MyBusiness
         }
 
         /*
-        SquareVal: find factorial of given number.
+        FactorialUsingIteration: find factorial of given number using iteration.
         Input:
-          num: ref int
+          num: int
         Output:
           int
         */
@@ -599,8 +599,10 @@ namespace MyBusiness
             int res = 1;
 
             // using iteration
-            for (int i = 2; i <= n; i++)
+            for (int i = 2; i <= n; i++) 
+            {
                 res *= i;
+            }
 
             return res;
         }
@@ -610,4 +612,98 @@ namespace MyBusiness
 ```bash
 $ Factorial of 5 using Recursion is: 120
 $ Factorial of 5 using Iteration is: 120
+```
+
+
+Fibonacci Sequence can be implemented using **Recursion** or **Iteration**.
+
+```csharp
+using System;
+
+namespace CRC_CSD_02
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int num = 5;
+            Console.WriteLine("A Fibonacci Sequence of elements " + num +
+                              " using Recursion is: " +
+                              FactorialUsingRecursion(num));
+
+            Console.WriteLine("A Fibonacci Sequence of elements " + num +
+                              " using Iteration is: " +
+                              FactorialUsingIteration(num));
+        }
+
+        /*
+        FibonacciUsingRecursion: find the Fibonacci sequence of a given element number using recurrsion.
+        Input:
+          num: int
+        Output:
+          int
+        */
+        static int FibonacciUsingRecursion(int num)
+        {
+            if (num == 1)
+            {
+                Console.Write( "0" + " ");
+                return 0;
+            }
+            else if (num == 2 )
+            {
+                Console.Write( "1" + " ");
+                return 1;
+            }
+            else{
+                // recursion call
+                int value = FibonacciUsingRecursion(num-2)+FibonacciUsingRecursion(num-1);
+                Console.Write( value + " ");
+                return value;
+            }
+        }
+
+        /*
+        FibonacciUsingIteration: find the Fibonacci sequence of a given element number using iteration.
+        Input:
+          num: int
+        Output:
+          int
+        */
+        static int FibonacciUsingIteration(int num)
+        {
+            int value = 1;
+            int prePreValue = 0;
+            int preValue = 1;
+
+            if (num == 1)
+            {
+                Console.Write( "0" + " ");
+                return 0;
+            }
+            else if (num == 2)
+            {
+                Console.Write( "0 1" + " ");
+                return 1;
+            }
+            else{
+                // using iteration
+                Console.Write( "0 1" + " ");
+                for (int i = 2; i <= num; i++)
+                {
+                    value = preValue + prePreValue;
+                    prePreValue = preValue;
+                    preValue = Value;
+                    Console.Write( value + " ");
+                }
+            }
+
+            return value;
+        }
+    }
+}
+```
+```bash
+$ A Fibonacci Sequence of elements 5 using Recursion is: 0 1 1 2 3
+$ A Fibonacci Sequence of elements 5 using Iteration is: 0 1 1 2 3
 ```

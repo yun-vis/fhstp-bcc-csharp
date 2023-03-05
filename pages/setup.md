@@ -68,7 +68,7 @@ Console.WriteLine("Hello, World!");
 ```csharp
 using System;
 
-namespace CRC_CSD_00
+namespace CRC_CSD_01
 {
     class Program
     {
@@ -88,7 +88,7 @@ In CRC_CSD-00.csproj [Doc](https://docs.microsoft.com/en-us/aspnet/web-forms/ove
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>CRC_CSD_00</RootNamespace>
+    <RootNamespace>CRC_CSD_01</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -119,7 +119,7 @@ $ dotnet run
 using System;         // System namespace (defined by C#)
                       // The "using" Directive
 
-namespace CRC_CSD_00  // Application namespace (defined by the programmer)
+namespace CRC_CSD_01  // Application namespace (defined by the programmer)
 {
     class Program
     {
@@ -142,7 +142,7 @@ A static class is basically the same as a non-static class,
 but there is one difference: a static class cannot be instantiated.
 */
 
-namespace CRC_CSD_00  // Application namespace (defined by the programmer)
+namespace CRC_CSD_01  // Application namespace (defined by the programmer)
 {
     class Program
     {
@@ -161,7 +161,7 @@ namespace CRC_CSD_00  // Application namespace (defined by the programmer)
 ```csharp
 using System;
 
-namespace CRC_CSD_00
+namespace CRC_CSD_01
 {
     class Program
     {
@@ -224,7 +224,7 @@ of comment symbol is reached
 The following codes show how I often add comments to my programs.
 This is a my application namespace, called My Business.
 */
-namespace CRC_CSD_00
+namespace CRC_CSD_01
 {
     /*
     The class of my main program
