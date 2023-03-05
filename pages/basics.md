@@ -678,7 +678,8 @@ namespace CRC_CSD_02
         }
 
         /*
-        FibonacciUsingRecursion: find the Fibonacci sequence of a given element number using recurrsion.
+        FibonacciUsingRecursion: find the Fibonacci sequence of a given element 
+        number using recurrsion.
         Input:
           num: int
           sequence: int[]
@@ -701,14 +702,16 @@ namespace CRC_CSD_02
             else
             {
                 // recursion call
-                int value = FibonacciUsingRecursion(num - 2, sequence) + FibonacciUsingRecursion(num - 1, sequence);
+                int value = FibonacciUsingRecursion(num - 2, sequence) 
+                            + FibonacciUsingRecursion(num - 1, sequence);
                 sequence[num - 1] = value;
                 return value;
             }
         }
 
         /*
-        FibonacciUsingIteration: find the Fibonacci sequence of a given element number using iteration.
+        FibonacciUsingIteration: find the Fibonacci sequence of a given element 
+        number using iteration.
         Input:
           num: int
           sequence: int[]

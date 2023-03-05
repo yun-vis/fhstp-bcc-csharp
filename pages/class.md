@@ -338,7 +338,7 @@ $ Nana\'s age is 3.
 
 ## Overloading Methods
 
-Another way to simplify methods is to makeparameters optional.
+Another way to simplify methods is to make parameters optional.
 
 ```csharp
 // The function describes what happens if a cat speaks
