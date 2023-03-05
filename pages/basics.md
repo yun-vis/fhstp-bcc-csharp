@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"
-last_modified_at: 2023-03-02
+last_modified_at: 2023-03-05
 ---
 
 C# is a general-purpose, type-safe, object-oriented programming language.
@@ -626,39 +626,83 @@ namespace CRC_CSD_02
     {
         static void Main(string[] args)
         {
+            // initialization
             int num = 5;
-            Console.WriteLine("A Fibonacci Sequence of elements " + num +
-                              " using Recursion is: " +
-                              FactorialUsingRecursion(num));
+            int[] sequence = new int[num];
 
-            Console.WriteLine("A Fibonacci Sequence of elements " + num +
-                              " using Iteration is: " +
-                              FactorialUsingIteration(num));
+            // Calculate and print out the Fibonacci Sequence
+            // Recurrsion
+            resetFibonacciSequence(sequence);
+            Console.Write("A Fibonacci Sequence of elements " + num +
+                              " using Recursion is: ");
+            FibonacciUsingRecursion(num, sequence);
+            printFibonacciSequence(sequence);
+
+            // Iteration
+            resetFibonacciSequence(sequence);
+            Console.Write("A Fibonacci Sequence of elements " + num +
+                              " using Iteration is: ");
+            FibonacciUsingIteration(num, sequence);
+            printFibonacciSequence(sequence);
+        }
+
+        /*
+        resetFibonacciSequence: reset the sequence
+        Input:
+          sequence: int[]
+        Output:
+          none
+        */
+        static void resetFibonacciSequence(int[] sequence)
+        {
+            for (int i = 0; i < sequence.Length; i++)
+            {
+                sequence[i] = -1;
+            }
+        }
+
+        /*
+        printFibonacciSequence: print the sequence
+        Input:
+          sequence: int[]
+        Output:
+          none
+        */
+        static void printFibonacciSequence(int[] sequence)
+        {
+            for (int i = 0; i < sequence.Length; i++)
+            {
+                Console.Write(sequence[i] + " ");
+            }
+            Console.WriteLine("");
         }
 
         /*
         FibonacciUsingRecursion: find the Fibonacci sequence of a given element number using recurrsion.
         Input:
           num: int
+          sequence: int[]
         Output:
           int
         */
-        static int FibonacciUsingRecursion(int num)
+        static int FibonacciUsingRecursion(int num, int[] sequence)
         {
             if (num == 1)
             {
-                Console.Write( "0" + " ");
+                sequence[0] = 0;
                 return 0;
             }
-            else if (num == 2 )
+            else if (num == 2)
             {
-                Console.Write( "1" + " ");
+                sequence[0] = 0;
+                sequence[1] = 1;
                 return 1;
             }
-            else{
+            else
+            {
                 // recursion call
-                int value = FibonacciUsingRecursion(num-2)+FibonacciUsingRecursion(num-1);
-                Console.Write( value + " ");
+                int value = FibonacciUsingRecursion(num - 2, sequence) + FibonacciUsingRecursion(num - 1, sequence);
+                sequence[num - 1] = value;
                 return value;
             }
         }
@@ -667,38 +711,33 @@ namespace CRC_CSD_02
         FibonacciUsingIteration: find the Fibonacci sequence of a given element number using iteration.
         Input:
           num: int
+          sequence: int[]
         Output:
-          int
+          none
         */
-        static int FibonacciUsingIteration(int num)
+        static void FibonacciUsingIteration(int num, int[] sequence)
         {
-            int value = 1;
-            int prePreValue = 0;
-            int preValue = 1;
-
             if (num == 1)
             {
-                Console.Write( "0" + " ");
-                return 0;
+                sequence[0] = 0;
+                return;
             }
             else if (num == 2)
             {
-                Console.Write( "0 1" + " ");
-                return 1;
+                sequence[0] = 0;
+                sequence[1] = 1;
+                return;
             }
-            else{
+            else
+            {
+                sequence[0] = 0;
+                sequence[1] = 1;
                 // using iteration
-                Console.Write( "0 1" + " ");
-                for (int i = 2; i <= num; i++)
+                for (int i = 2; i < num; i++)
                 {
-                    value = preValue + prePreValue;
-                    prePreValue = preValue;
-                    preValue = Value;
-                    Console.Write( value + " ");
+                    sequence[i] = sequence[i - 2] + sequence[i - 1];
                 }
             }
-
-            return value;
         }
     }
 }
