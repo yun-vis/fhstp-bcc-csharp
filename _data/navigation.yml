@@ -18,6 +18,8 @@ main:
     url: /pages/fileio
   - title: "Performance"
     url: /pages/performance
+  - title: "Snake"
+    url: /pages/snake
   - title: "Assignment"
     url: /pages/assignment
   # - title: "Knitting for Fun"
