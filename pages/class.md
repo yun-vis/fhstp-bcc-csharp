@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"  
-last_modified_at: 2022-03-13
+last_modified_at: 2023-03-06
 ---
 
 
@@ -62,7 +62,7 @@ using System;
 using Animals;
 
 // namespace
-namespace MyBusiness
+namespace CRC_CSD_03
 {
     // main program
     internal class Program
@@ -142,7 +142,7 @@ using System;
 using Animals;
 
 // namespace
-namespace MyBusiness
+namespace CRC_CSD_03
 {
     // main program
     internal class Program
@@ -236,7 +236,7 @@ using System;
 using Animals;
 
 // namespace
-namespace MyBusiness
+namespace CRC_CSD_03
 {
     // main program
     internal class Program
@@ -370,7 +370,7 @@ using System.Collections.Generic; // To be able to use the data structure "list"
 using Animals;
 
 // namespace
-namespace MyBusiness
+namespace CRC_CSD_03
 {
     // main program
     internal class Program

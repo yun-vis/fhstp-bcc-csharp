@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"  
-last_modified_at: 2023-03-05
+last_modified_at: 2023-03-06
 ---
 
 # Console Game Snake
@@ -39,15 +39,40 @@ namespace ConsoleGame
         // snake body positioins
         private List<Position> _points = new List<Position>();
 
+        // getter and setter
+        // public int getLength()
+        // {
+        //     return _length;
+        // }
+        // public void setLength( int value )
+        // {
+        //     _length = value;
+        // }
         public int Length
         {
-            get => _length;
-            set => _length = value;
+            // get => _length;
+            get
+            {
+                return _length;
+            }
+            // set => _length = value;
+            set
+            {
+                _length = value;
+            }
         }
         public List<Position> Points
         {
-            get => _points;
-            set => _points = value;
+            // get => _points;
+            get
+            {
+                return _points;
+            }
+            // set => _points = value;
+            set
+            {
+                _points = value;
+            }
         }
 
         // Check if the snake is self-overlapped when adding a new position
@@ -92,14 +117,30 @@ namespace ConsoleGame
         private Random _rnd = new Random();
         public Position? Position
         {
-            get => _position;
-            set => _position = value;
+            // get => _position;
+            get
+            {
+                return _position;
+            }
+            // set => _position = value;
+            set
+            {
+                _position = value;
+            }
         }
 
         public Random Rnd
         {
-            get => _rnd;
-            set => _rnd = value;
+            // get => _rnd;
+            get
+            {
+                return _rnd;
+            }
+            // set => _rnd = value;
+            set
+            {
+                _rnd = value;
+            }
         }
     }
 
@@ -202,7 +243,9 @@ namespace ConsoleGame
                 case ConsoleKey.DownArrow:
                     currentPos.top++;
                     break;
-
+                default:
+                    // Undefined keys, so the signal should be ignored
+                    break;
             }
 
             // Check if the new position collide with scene boundary or self-overlapped
@@ -254,8 +297,6 @@ namespace ConsoleGame
 
             // throw new NotImplementedException();
         }
-
-
     }
 }
 ```
