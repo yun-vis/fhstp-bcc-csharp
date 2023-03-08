@@ -6,6 +6,8 @@ main:
     url: /pages/basics
   - title: "Class"
     url: /pages/class
+  - title: "Data Structure & Algorithm"
+    url: /pages/algorithm
   - title: "Inheritance"
     url: /pages/inheritance
   - title: "Polymorphism"
