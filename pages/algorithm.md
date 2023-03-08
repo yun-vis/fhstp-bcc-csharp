@@ -9,8 +9,6 @@ header:
 last_modified_at: 2023-03-08
 ---
 
-![C# Logo](/assets/images/c-sharp.png)
-
 # Data Structure
 
 ## Singly Linked List
