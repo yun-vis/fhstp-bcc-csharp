@@ -6,11 +6,8 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"  
-last_modified_at: 2022-03-13
+last_modified_at: 2023-03-08
 ---
-
-# C# Homework Assignment 1: Environment Setup
-Please refer to the [setup page](https://csharp-cheatsheet.github.io/).
 
 # ASCII Art [Doc]()
 
