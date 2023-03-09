@@ -39,23 +39,12 @@ namespace ConsoleGame
         // snake body positioins
         private List<Position> _points = new List<Position>();
 
-        // getter and setter
-        // public int getLength()
-        // {
-        //     return _length;
-        // }
-        // public void setLength( int value )
-        // {
-        //     _length = value;
-        // }
         public int Length
         {
-            // get => _length;
             get
             {
                 return _length;
             }
-            // set => _length = value;
             set
             {
                 _length = value;
@@ -63,12 +52,10 @@ namespace ConsoleGame
         }
         public List<Position> Points
         {
-            // get => _points;
             get
             {
                 return _points;
             }
-            // set => _points = value;
             set
             {
                 _points = value;
@@ -131,12 +118,10 @@ namespace ConsoleGame
 
         public Random Rnd
         {
-            // get => _rnd;
             get
             {
                 return _rnd;
             }
-            // set => _rnd = value;
             set
             {
                 _rnd = value;
@@ -193,6 +178,7 @@ namespace ConsoleGame
         private static void DrawScreen()
         {
             Console.Clear();
+            // Use the SetCursorPosition method to specify where the next write operation in the console window is to begin
             Console.SetCursorPosition(Console.WindowWidth - 3, Console.WindowHeight - 1);
             Console.Write(_score);
 
