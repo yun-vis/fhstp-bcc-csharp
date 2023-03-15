@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"  
-last_modified_at: 2022-03-13
+last_modified_at: 2023-03-15
 ---
 
 # Other Properties of Methods
@@ -166,24 +166,25 @@ public Cat ProduceKittyWith(Cat partner)
 ```
 
 ---
-# Splitting Files to Organize Them
+# Splitting Files to Organize Them [Doc](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-new)
 ```bash
 // Create a folder named MyBusiness
-MyBusiness> mkdir MyBusiness
-// Create a folder named PetLibrary
-MyBusiness> mkdir PetLibrary
+CRC_CSD-05> mkdir MyBusiness
 // Enter the folder MyBusiness
-MyBusiness> cd MyBusiness
+CRC_CSD-05> cd MyBusiness
 // Set up a console application
-MyBusiness/MyBusiness> $ dotnet new console
-// Leave the folder MyBusiness and enter the folder PetLibrary
-MyBusiness/MyBusiness> $ cd ../PetLibrary
-// Set up a class library
-MyBusiness/PetLibrary> $ dotnet new classlib
-MyBusiness/PetLibrary> $ mv Class1.cs Animals.cs
+CRC_CSD-05/MyBusiness> $ dotnet new console
+// Leave the folder MyBusiness
+CRC_CSD-05/MyBusiness> $ cd ../
+// Set up a class library called PetLibrary
+CRC_CSD-05> $ dotnet new classlib --name PetLibrary
+// Change the folder to PetLibrary
+CRC_CSD-05> $ cd PetLibrary
+// Change the file name and add content to Class Cat
+CRC_CSD-05/PetLibrary> $ mv Class1.cs Cat.cs
 // Go back to the folder MyBusiness and run the program
-MyBusiness/PetLibrary> $ cd ../MyBusiness
-MyBusiness/MyBusiness> $ dotnet run
+CRC_CSD-05/PetLibrary> $ cd ../MyBusiness
+CRC_CSD-05/MyBusiness> $ dotnet run
 ```
 
 In MyBusiness.csproj, you see the configuration of the program
@@ -193,20 +194,18 @@ In MyBusiness.csproj, you see the configuration of the program
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>MyBusiness</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  // Set environment variable
+<!-- Set environment variable -->
   <ItemGroup>
     <ProjectReference
-      // On Windows
-      Include="..\PetLibrary\PetLibrary.csproj" />
-      // On MacOS, Unix
-      Include="../PetLibrary/PetLibrary.csproj" />        
-      // The slash and backslash presentation used to describe a path were not
-      // standardized. It causes a lot of pain.
-      // Some morden editors automatically convert them.
+      Include="../PetLibrary/PetLibrary.csproj" />
+      <!-- The slash and backslash presentation used to describe a path were not
+      standardized. It causes a lot of pain.
+      Some morden editors automatically convert them. -->
   </ItemGroup>
 
 </Project>
@@ -215,95 +214,145 @@ In MyBusiness.csproj, you see the configuration of the program
 In MyBusiness/Program.cs,
 ```csharp
 using System;
-using System.Collections.Generic;
-using Animals;
+using PetLibrary;
 
 // namespace
 namespace MyBusiness
 {
     // main program
-    internal class Program
+    public class Program
     {
         static void Main(string[] args)
         {
             // Create a cat
             Cat nana = new Cat("Nana", new DateTime(2019, 12, 9));
+            nana.WriteToConsole();
+
+            OwnPets myPets = new OwnPets();
+            myPets.WriteToConsole();
         }
     }
 }
 ```
-In PetLibrary/Animals.cs,
+
+In PetLibrary/Cat.cs,
 ```csharp
-/*
-The animal namespace
-*/
-namespace Animals
+// The same as namespace PetLibrary{}. We use ";" just to save indent spac
+namespace PetLibrary;
+
+public class Cat
 {
-    public class Cat
+    /*
+    Class field, including different variables
+    they can be organized by similar characteristics
+    */
+
+    // The name of the cat
+    public string Name;
+    // The birthday of the cat
+    public DateTime DateOfBirth;
+    // The children of the cat
+    public List<Cat> Children = new List<Cat>();
+
+    /*
+    Class methods, where functions should be implemented
+    */
+
+    // Constructors
+    // Default constructor. It will be called by default
+    public Cat()
     {
-        /*
-        Class field, including different variables
-        they can be organized by similar characteristics
-        */
+        Name = "UnknownCat";
+        DateOfBirth = DateTime.Today;
+    }
+    // Parameterized Constructor
+    public Cat(string name, DateTime dateOfBirth)
+    {
+        this.Name = name;
+        this.DateOfBirth = dateOfBirth;
+    }
+    // Finalizer
+    ~Cat()
+    {
+    }
 
-        // The name of the cat
-        public string Name;
-        // The birthday of the cat
-        public DateTime DateOfBirth;
-        // The children of the cat
-        public List<Cat> Children = new List<Cat>();
+    // Print out method
+    public void WriteToConsole()
+    {
+        Console.WriteLine($"{Name} was born on a {DateOfBirth:dddd}.");
+    }
 
-        /*
-        Class methods, where functions should be implemented
-        */
+    // Static method to "multiply"
+    public static Cat ProduceKitty(Cat cat1, Cat cat2)
+    {
+        Cat kitty = new Cat
+        {
+            Name = $"Baby of {cat1.Name} and {cat2.Name}"
+        };
+        cat1.Children.Add(kitty);
+        cat2.Children.Add(kitty);
+        return kitty;
+    }
 
-        // Constructors
-        // Default constructor. It will be called by default
-        public Cat()
-        {
-            Name = "Unknown";
-            DateOfBirth = DateTime.Today;
-        }
-        // Parameterized Constructor
-        public Cat(string name, DateTime dateOfBirth)
-        {
-            this.Name = name;
-            this.DateOfBirth = dateOfBirth;
-        }
-        // Finalizer
-        ~Cat()
-        {
-        }
+    // Use operators instead of the above method
+    public static Cat operator *(Cat cat1, Cat cat2)
+    {
+        return Cat.ProduceKitty(cat1, cat2);
+    }
 
-        // Print out method
-        public void WriteToConsole()
-        {
-            Console.WriteLine($"{Name} was born on a {DateOfBirth:dddd}.");
-        }
+    // Instance method to "multiply"
+    public Cat ProduceKittyWith(Cat partner)
+    {
+        return ProduceKitty(this, partner);
+    }
+}
+```
 
-        // Static method to "multiply"
-        public static Cat ProduceKitty(Cat cat1, Cat cat2)
-        {
-            Cat kitty = new Cat
-            {
-                Name = $"Baby of {cat1.Name} and {cat2.Name}"
-            };
-            cat1.Children.Add(kitty);
-            cat2.Children.Add(kitty);
-            return kitty;
-        }
+In PetLibrary/Dog.cs,
+```csharp
+namespace PetLibrary;
 
-        // Use operators instead of the above method
-        public static Cat operator *(Cat cat1, Cat cat2)
-        {
-            return Cat.ProduceKitty(cat1, cat2);
-        }
+// Access modifier internal can be only used inside the project
+internal class Dog
+{
+    // Fields
+    // The name of the cat
+    public string Name;
 
-        // Instance method to "multiply"
-        public Cat ProduceKittyWith(Cat partner)
-        {
-            return ProduceKitty(this, partner);
-        }
+    // Constructors
+    // Default constructor. It will be called by default
+    public Dog()
+    {
+        Name = "UnknownDog";
+    }
+}
+```
+
+In PetLibrary/OwnPets.cs,
+```csharp
+namespace PetLibrary;
+
+public class OwnPets
+{
+    // Fields
+    Cat houseCat;
+    Dog houseDog;
+
+    // Constructors
+    public OwnPets()
+    {
+        houseCat = new Cat();
+        houseDog = new Dog();
+    }
+
+    // Finalizers
+
+    // Methods
+    // Print out method
+    public void WriteToConsole()
+    {
+        Console.WriteLine($"{houseCat}'s name is  {houseCat.Name}.");
+        Console.WriteLine($"{houseDog}'s name is  {houseDog.Name}.");
     }
 }
 ```
@@ -827,3 +876,7 @@ $ cannot override inherited member because it is sealed
 ## Useful Advanced C# Data Structure
 
 * Collections [Doc](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/collections). We will introduce one-by-one later.
+
+* Create and publish a package with the dotnet CLI [Doc](https://learn.microsoft.com/en-us/nuget/quickstart/create-and-publish-a-package-using-the-dotnet-cli)
+
+* Visual Studio Code Tips and Tricks [Doc](https://code.visualstudio.com/docs/getstarted/tips-and-tricks)

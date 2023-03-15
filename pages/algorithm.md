@@ -20,7 +20,8 @@ namespace CRC_CSD_04
 {
     class Program
     {
-        static void Main(string[] args) // Where the application begins
+        // Where the application begins
+        static void Main(string[] args) 
         {
             // Single linked list
             SingleLinkedList singleList = new SingleLinkedList();
@@ -206,7 +207,8 @@ namespace CRC_CSD_04
 {
     class Program
     {
-        static void Main(string[] args) // Where the application begins
+        // Where the application begins
+        static void Main(string[] args) 
         {
             // double linked list
             DoubleLinkedList doubleList = new DoubleLinkedList();
@@ -261,7 +263,7 @@ namespace CRC_CSD_04
 
     public class DoubleLinkedList
     {
-        // Field
+        // Fields
         private DNode? _head;
 
         // Constructors

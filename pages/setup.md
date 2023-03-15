@@ -30,12 +30,16 @@ Linux:
 ### Install Visual Studio Code Extension
 
   * [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
+  * [PlantUML](http://www.plantuml.com/plantuml)
   * [CSharp to PlantUML](https://marketplace.visualstudio.com/items?itemName=pierre3.csharp-to-plantuml)
   * [Markdown All in One](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one)
     * Preview shortcut: Ctrl K+V
   
 ### Additional Settings (Optional)
   * Turn on Word Wrap in the Setting
+
+## CSharp to PlantUML via Extension
+  * Usage: Ctrl+Shift+P to enable the vscode Command Palette and run the command "csharp2plantuml.classDiagram".
 
 ## CSharp to PlantUML (Optional, in case you don't find the extension through Visual Studio Code)
 
