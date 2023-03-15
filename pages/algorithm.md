@@ -409,6 +409,336 @@ The doubleLinkedList: 4 6
 The doubleLinkedList: 4 5 6 
 ```
 
+## Graph (Adjacency List)
+
+In SocialNet/SocialNet.csproj
+```csharp
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>SocialNet</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!-- Set environment variable -->
+  <ItemGroup>
+    <ProjectReference
+      Include="../GraphLibrary/GraphLibrary.csproj" />
+  </ItemGroup>
+
+</Project>
+```
+
+In SocialNet/Program.cs
+```csharp
+using GraphLibrary;
+
+// namespace
+namespace SocialNet
+{
+    // main program
+    public class Program
+    {
+        static void Main(string[] args)
+        {
+            AdjacencyListGraph graph = new AdjacencyListGraph();
+            uint v1 = graph.AddVertex("Helen");
+            uint v2 = graph.AddVertex("Tony");
+            uint v3 = graph.AddVertex("Yun");
+            uint v4 = graph.AddVertex("Tim");
+            // graph.RemoveVertex("Yun");
+            graph.AddEdge(v1, v2);
+            graph.AddEdge(v1, v3);
+            graph.AddEdge(v2, v3);
+            graph.PrintGraph();
+            graph.RemoveVertex("Helen");
+            // graph.RemoveEdge(v1, v3);
+            graph.PrintGraph();
+        }
+    }
+}
+```
+```bash
+The total number of vertices is 4
+The total number of edges is 3
+==============================
+V(0) = Helen
+V(1) = Tony
+V(2) = Yun
+V(3) = Tim
+==============================
+E(0) = V(0) -- V(1)
+E(1) = V(0) -- V(2)
+E(2) = V(1) -- V(2)
+==============================
+The total number of vertices is 3
+The total number of edges is 3
+==============================
+V(1) = Tony
+V(2) = Yun
+V(3) = Tim
+==============================
+E(2) = V(1) -- V(2)
+==============================
+```
+
+In GraphLibrary/AdjacencyListGraph.cs
+```csharp
+namespace GraphLibrary;
+
+public class AdjacencyListGraph
+{
+    // Fields
+    // The list of vertices in the graph
+    private LinkedList<Vertex> _vertices;
+    private LinkedList<Edge> _edges;
+
+    // The number of vertices
+    private uint _nVertices;
+    private uint _nEdges;
+
+
+    // Constructors
+    public AdjacencyListGraph()
+    {
+        _vertices = new LinkedList<Vertex>();
+        _edges = new LinkedList<Edge>();
+        _nVertices = 0;
+        _nEdges = 0;
+    }
+
+    // Getters and Setters
+
+    // Finalizer
+    ~AdjacencyListGraph()
+    {
+    }
+
+    // Methods
+    // Vertex
+    public uint AddVertex(string name)
+    {
+        Vertex v = new Vertex(_nVertices, name);
+        _vertices.AddLast(v);
+        _nVertices++;
+        return _nVertices - 1;
+    }
+
+    public void RemoveVertex(string name)
+    {
+        Vertex? v = HasVertex(name);
+
+        if (v != null)
+        {
+            // Remove the adjacent edges
+            bool allChecked = false;
+            while (!allChecked)
+            {
+                allChecked = true;
+                for (int i = 0; i < _edges.Count; i++)
+                {
+                    // Equal to source id
+                    if (_edges.ElementAt(i).Property.SourceId == v.Property.Id)
+                    {
+                        _edges.Remove(_edges.ElementAt(i));
+                        allChecked = false;
+                    }
+                    // Equal to target id
+                    if (_edges.ElementAt(i).Property.TargetId == v.Property.Id)
+                    {
+                        _edges.Remove(_edges.ElementAt(i));
+                        allChecked = false;
+                    }
+                }
+            }
+
+            // Remove the vertex
+            _vertices.Remove(v);
+            _nVertices--;
+        }
+    }
+
+    public Vertex? HasVertex(string name)
+    {
+        for (int i = 0; i < _vertices.Count; i++)
+        {
+            if (_vertices.ElementAt(i).Property.Name == name)
+                return _vertices.ElementAt(i);
+        }
+        return null;
+    }
+
+    // Function overloading
+    public Vertex? HasVertex(uint id)
+    {
+        for (int i = 0; i < _vertices.Count; i++)
+        {
+            if (_vertices.ElementAt(i).Property.Id == id)
+                return _vertices.ElementAt(i);
+        }
+        return null;
+    }
+
+    // Edge
+    public void AddEdge(uint sourceId, uint targetId)
+    {
+        Edge? e = HasEdge(sourceId, targetId);
+        if (e == null)
+        {
+            Vertex? sourceV = HasVertex(sourceId);
+            Vertex? targetV = HasVertex(targetId);
+            if (sourceV == null || targetV == null)
+            {
+                Console.WriteLine("Source or Target Vertex could not be found. Please add vertices first");
+                return;
+            }
+            else
+            {
+                Edge newE = new Edge(_nEdges, sourceId, targetId);
+                _edges.AddLast(newE);
+                _nEdges++;
+            }
+        }
+    }
+
+    public void RemoveEdge(uint sourcdId, uint targetId)
+    {
+        Edge? e = HasEdge(sourcdId, targetId);
+        if (e != null)
+        {
+            _edges.Remove(e);
+            _nEdges--;
+        }
+    }
+
+    public Edge? HasEdge(uint sourcdId, uint targetId)
+    {
+        for (int i = 0; i < _edges.Count; i++)
+        {
+            if ((_edges.ElementAt(i).Property.SourceId == sourcdId) && (_edges.ElementAt(i).Property.TargetId == targetId))
+                return _edges.ElementAt(i);
+        }
+        return null;
+    }
+
+    // Graph
+    public void PrintGraph()
+    {
+        Console.WriteLine("The total number of vertices is " + _nVertices);
+        Console.WriteLine("The total number of edges is " + _nEdges);
+        Console.WriteLine("==============================");
+
+        // Vertex list
+        for (int i = 0; i < _vertices.Count; i++)
+        {
+            Console.WriteLine($"V({_vertices.ElementAt(i).Property.Id}) = {_vertices.ElementAt(i).Property.Name}");
+        }
+        Console.WriteLine("==============================");
+
+        // Edge list
+        for (int i = 0; i < _edges.Count; i++)
+        {
+            Console.WriteLine($"E({_edges.ElementAt(i).Property.Id}) = V({_edges.ElementAt(i).Property.SourceId}) -- V({_edges.ElementAt(i).Property.TargetId})");
+        }
+        Console.WriteLine("==============================");
+    }
+}
+```
+
+In GraphLibrary/Vertex.cs
+```csharp
+namespace GraphLibrary;
+
+public class VertexProperty
+{
+    // Fields
+    public uint Id;
+    public string Name = "Unknown_Name";
+}
+
+public class Vertex
+{
+    // Fields
+    private VertexProperty _property;
+
+    // Constructors
+    public Vertex(uint id, string name)
+    {
+        _property = new VertexProperty();
+        _property.Id = id;
+        _property.Name = name;
+    }
+
+    // Getters and Setters
+    public VertexProperty Property
+    {
+        get { return _property; }
+        set { _property = value; }
+    }
+
+
+    // Finalizer
+    ~Vertex()
+    {
+    }
+
+    // Methods
+}
+```
+
+In GraphLibrary/Edge.cs
+```csharp
+namespace GraphLibrary;
+
+public struct EdgeProperty
+{
+    // Fields
+    public uint Id;
+    public uint SourceId;
+    public uint TargetId;
+}
+
+public class Edge
+{
+    // Fields
+    private EdgeProperty _property;
+
+    // Constructors
+    public Edge(uint id, uint source, uint target)
+    {
+        _property = new EdgeProperty();
+        _property.Id = id;
+        _property.SourceId = source;
+        _property.TargetId = target;
+    }
+
+    // Getters and Setters
+    public EdgeProperty Property
+    {
+        get { return _property; }
+        set { _property = value; }
+    }
+
+
+    // Finalizer
+    ~Edge()
+    {
+    }
+
+    // Methods
+}
+```
+
+## Graph (Adjacency List Generic)
+
+```csharp
+```
+
+```bash
+```
 
 ---
 # External Resources
