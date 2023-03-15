@@ -500,7 +500,6 @@ public class AdjacencyListGraph
     private uint _nVertices;
     private uint _nEdges;
 
-
     // Constructors
     public AdjacencyListGraph()
     {
@@ -618,7 +617,8 @@ public class AdjacencyListGraph
     {
         for (int i = 0; i < _edges.Count; i++)
         {
-            if ((_edges.ElementAt(i).Property.SourceId == sourcdId) && (_edges.ElementAt(i).Property.TargetId == targetId))
+            if ((_edges.ElementAt(i).Property.SourceId == sourcdId) &&
+                (_edges.ElementAt(i).Property.TargetId == targetId))
                 return _edges.ElementAt(i);
         }
         return null;
@@ -679,7 +679,6 @@ public class Vertex
         set { _property = value; }
     }
 
-
     // Finalizer
     ~Vertex()
     {
@@ -721,7 +720,6 @@ public class Edge
         get { return _property; }
         set { _property = value; }
     }
-
 
     // Finalizer
     ~Edge()
