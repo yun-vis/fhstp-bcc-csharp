@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"
-last_modified_at: 2023-02-20
+last_modified_at: 2023-03-16
 ---
 
 ![C# Logo](/assets/images/c-sharp.png)
@@ -30,10 +30,9 @@ Linux:
 ### Install Visual Studio Code Extension
 
   * [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
-  * [PlantUML](http://www.plantuml.com/plantuml)
   * [CSharp to PlantUML](https://marketplace.visualstudio.com/items?itemName=pierre3.csharp-to-plantuml)
+  * [PlantUML](http://www.plantuml.com/plantuml)
   * [Markdown All in One](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one)
-    * Preview shortcut: Ctrl K+V
   
 ### Additional Settings (Optional)
   * Turn on Word Wrap in the Setting
@@ -53,6 +52,16 @@ Linux:
   $ puml-gen ./Program.cs -public
   ```
   * Copy the text from *.puml and visualize using [PUML Viewer](https://www.planttext.com)
+
+## PlantUML via Extension 
+  * PlantUML is an Extension for viewing *.puml files.
+  * Prerequisite: 
+    * Windows: Java runtime
+    * Mac OS: Java runtime + graphviz ($ brew install graphviz) 
+  * Usage: Alt+D to enable the preview function
+
+## Markdown All in One via Extension
+  * Usage: Ctrl K+V to preview the file
 
 
 ## First Console Program
