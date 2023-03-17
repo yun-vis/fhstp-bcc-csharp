@@ -56,8 +56,8 @@ Linux:
 ## PlantUML via Extension 
   * PlantUML is an Extension for viewing *.puml files.
   * Prerequisite: 
-    * Windows: Java runtime
-    * Mac OS: Java runtime + graphviz ($ brew install graphviz) 
+    * Windows: [Java runtime](https://www.java.com/en/download/)
+    * Mac OS: [Java runtime](https://www.java.com/en/download/) + graphviz ($ brew install graphviz) 
   * Usage: Alt+D to enable the preview function
 
 ## Markdown All in One via Extension

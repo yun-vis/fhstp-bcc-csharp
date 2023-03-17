@@ -88,16 +88,16 @@ namespace CRC_CSD_04
         ~SingleLinkedList() { }
 
         // Methods
-        public void InsertFront(int new_data)
+        public void InsertFront(int newData)
         {
-            Node new_node = new Node(new_data);
+            Node new_node = new Node(newData);
             new_node.Next = _head;
             _head = new_node;
         }
 
-        public void InsertLast(int new_data)
+        public void InsertLast(int newData)
         {
-            Node new_node = new Node(new_data);
+            Node new_node = new Node(newData);
             if (_head == null)
             {
                 _head = new_node;
@@ -409,7 +409,7 @@ The doubleLinkedList: 4 6
 The doubleLinkedList: 4 5 6 
 ```
 
-## Graph (Adjacency List)
+## Graph (Node/Edge List)
 
 In SocialNet/SocialNet.csproj
 ```csharp
@@ -444,7 +444,7 @@ namespace SocialNet
     {
         static void Main(string[] args)
         {
-            AdjacencyListGraph graph = new AdjacencyListGraph();
+            Graph graph = new Graph();
             uint v1 = graph.AddVertex("Helen");
             uint v2 = graph.AddVertex("Tony");
             uint v3 = graph.AddVertex("Yun");
@@ -485,11 +485,11 @@ E(2) = V(1) -- V(2)
 ==============================
 ```
 
-In GraphLibrary/AdjacencyListGraph.cs
+In GraphLibrary/Graph.cs
 ```csharp
 namespace GraphLibrary;
 
-public class AdjacencyListGraph
+public class Graph
 {
     // Fields
     // The list of vertices in the graph
@@ -501,7 +501,7 @@ public class AdjacencyListGraph
     private uint _nEdges;
 
     // Constructors
-    public AdjacencyListGraph()
+    public Graph()
     {
         _vertices = new LinkedList<Vertex>();
         _edges = new LinkedList<Edge>();
@@ -512,7 +512,7 @@ public class AdjacencyListGraph
     // Getters and Setters
 
     // Finalizer
-    ~AdjacencyListGraph()
+    ~Graph()
     {
     }
 
@@ -755,7 +755,7 @@ namespace SocialNet
     {
         static void Main(string[] args)
         {
-            AdjacencyListGraph<VertexProperty, EdgeProperty> graph = new AdjacencyListGraph<VertexProperty, EdgeProperty>();
+            Graph<VertexProperty, EdgeProperty> graph = new Graph<VertexProperty, EdgeProperty>();
             uint v1 = graph.AddVertex("Helen");
             uint v2 = graph.AddVertex("Tony");
             uint v3 = graph.AddVertex("Yun");
@@ -796,11 +796,11 @@ E(2) = V(1) -- V(2)
 ==============================
 ```
 
-In GraphLibrary/AdjacencyListGraph.cs
+In GraphLibrary/Graph.cs
 ```csharp
 namespace GraphLibrary;
 
-public class AdjacencyListGraph<T1, T2>
+public class Graph<T1, T2>
 where T1 : BasicVertexProperty, new()
 where T2 : BasicEdgeProperty, new()
 {
@@ -815,7 +815,7 @@ where T2 : BasicEdgeProperty, new()
 
 
     // Constructors
-    public AdjacencyListGraph()
+    public Graph()
     {
         _vertices = new LinkedList<Vertex<T1>>();
         _edges = new LinkedList<Edge<T2>>();
@@ -826,7 +826,7 @@ where T2 : BasicEdgeProperty, new()
     // Getters and Setters
 
     // Finalizer
-    ~AdjacencyListGraph()
+    ~Graph()
     {
     }
 
