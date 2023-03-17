@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"  
-last_modified_at: 2023-03-15
+last_modified_at: 2023-03-17
 ---
 
 # Other Properties of Methods
@@ -843,32 +843,6 @@ The base keyword is used to access members of the base class from within a deriv
 
 By default, methods are non-virtual. You cannot override a non-virtual method.
 
-## Preventing Inheritance and Overriding
-
-Using the keyword sealed.
-
-In PetLibrary/Animals.cs, add
-```csharp
-public class WildCat : Cat
-{
-    public sealed override string GetName()
-    {
-        return $"{Name}: from {CountryCode}";
-    }  
-}
-
-public class MonsterCat : WildCat
-{
-    public override string GetName()
-    {
-        return "I am a monster.";
-    }
-}
-```
-```bash
-$ cannot override inherited member because it is sealed
-```
-
 
 ## Override and New Keywords [Doc](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/knowing-when-to-use-override-and-new-keywords)
 
@@ -1178,27 +1152,24 @@ $ WildMeow!
 In MyBusiness/Program.cs,
 ```csharp
 using System;
-using Animals;
+namespace CRC_CSD_06;
 
-// namespace
-namespace MyBusiness
+class Program
 {
-    // main program
-    internal class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        // Create a cat array
+        Cat nana = new Cat("Nana", new DateTime(2019, 12, 9));
+        WildCat leopard = new WildCat
         {
-            // Create a cat array
-            Cat nana = new Cat("Nana", new DateTime(2019, 12, 9));
-            WildCat leopard = new WildCat
-            {
-                Name = "Alice",
-                CountryCode = "Taiwan"
-            };
+            Name = "Alice",
+            CountryCode = "Taiwan"
+        };
 
-            nana.Speak();
-            leopard.Speak();
-        }
+        nana.Speak();
+        nana.Move();
+        leopard.Speak();
+        leopard.Move();
     }
 }
 ```
@@ -1213,6 +1184,11 @@ namespace Animals
     public abstract class Animal
     {
         public abstract void Speak();
+        public virtual void Move()
+        {
+            Console.WriteLine("Move like an animal!");
+        }
+
     }
 
     public class Cat : Animal
@@ -1227,15 +1203,11 @@ namespace Animals
         // The birthday of the cat
         public DateTime DateOfBirth;
 
-        /*
-        Class methods, where functions should be implemented
-        */
-
         // Constructors
         // Default constructor. It will be called by default
         public Cat()
         {
-            Name = "Unknown";
+            Name = "UnknownCat";
             DateOfBirth = DateTime.Today;
         }
         // Parameterized Constructor
@@ -1249,9 +1221,17 @@ namespace Animals
         {
         }
 
+        /*
+        Class methods, where functions should be implemented
+        */
         public override void Speak()
         {
             Console.WriteLine("Meow!");
+        }
+
+        public override void Move()
+        {
+            Console.WriteLine("Move like a cat!");
         }
 
         // Print out method
@@ -1291,12 +1271,40 @@ namespace Animals
 }
 ```
 
+## Preventing Inheritance and Overriding
+
+Using the keyword sealed.
+
+In PetLibrary/Animals.cs, add
+```csharp
+public class WildCat : Cat
+{
+    public sealed override string GetName()
+    {
+        return $"{Name}: from {CountryCode}";
+    }  
+}
+
+public class MonsterCat : WildCat
+{
+    public override string GetName()
+    {
+        return "I am a monster.";
+    }
+}
+```
+```bash
+$ cannot override inherited member because it is sealed
+```
+
 ---
 # Selected Theory
 
 ## Useful Advanced C# Data Structure
 
 * Collections [Doc](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/collections). We will introduce one-by-one later.
+
+## File Management
 
 * Create and publish a package with the dotnet CLI [Doc](https://learn.microsoft.com/en-us/nuget/quickstart/create-and-publish-a-package-using-the-dotnet-cli)
 
