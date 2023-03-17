@@ -81,41 +81,44 @@ using System;
 using Animals;
 
 // namespace
-namespace MyBusiness
+namespace Animals;
+
+class Program
 {
-    // main program
-    internal class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            // Cat is currently flexible, because any type can be set for the food field and input parameter.
-            // But there is no type checking, so inside the CheckFood method,
-            // we cannot safely do much and the results are sometimes not what you might expect
-            var t1 = new Cat();
-            t1.food = 5;
-            Console.WriteLine($"Cat food with an integer: {t1.CheckFood(5)}");
-            var t2 = new Cat();
-            t2.food = "fish";
-            Console.WriteLine($"Cat food with a string: {t2.CheckFood("fish")}");
+        // Cat is currently flexible, because any type can be set for the food field and input parameter.
+        // But there is no type checking, so inside the CheckFood method,
+        // we cannot safely do much and the results are sometimes not what you might expect
+        Cat cat1 = new Cat();
+        cat1.food = 5;
+        Console.WriteLine($"Cat food with an integer: {cat1.checkFood(5)}");
 
-            // The type is defined at allocation
-            var gt1 = new GenericCat<int>();
-            gt1.food = 5;
-            Console.WriteLine($"Cat food with an integer: {gt1.CheckFood(5)}");
-            var gt2 = new GenericCat<string>();
-            gt2.food = "fish";
-            Console.WriteLine($"Cat food with a string: {gt2.CheckFood("fish")}");
+        Cat cat2 = new Cat();
+        cat2.food = "fish";
+        Console.WriteLine($"Cat food with an integer: {cat2.checkFood("fish")}");
 
-            // generic methods
-            string food1 = "4";
-            Console.WriteLine("Double cat food {0} to {1}",
-              arg0: food1,
-              arg1: GenericMethodCat.DoubleMyFood<string>(food1));
-            byte food2 = 3;
-            Console.WriteLine("Double cat food {0} to {1}",
-              arg0: food2,
-              arg1: GenericMethodCat.DoubleMyFood(food2));
-        }
+        // The type is defined at allocation
+        GenericCat<int> gCat1 = new GenericCat<int>();
+        gCat1.food = 5;
+        Console.WriteLine($"Cat food with an integer: {gCat1.checkFood(5)}");
+
+        GenericCat<string> gCat2 = new GenericCat<string>();
+        gCat2.food = "fish";
+        Console.WriteLine($"Cat food with an integer: {gCat2.checkFood("fish")}");
+
+        // generic methods
+        string food1 = "4";
+        Console.WriteLine("Double cat food {0} to {1}",
+            arg0: food1,
+            arg1: GenericMethodCat.DoubleMyFood<string>(food1)
+        );
+
+        byte food2 = 3;
+        Console.WriteLine("Double cat food {0} to {1}",
+            arg0: food2,
+            arg1: GenericMethodCat.DoubleMyFood<byte>(food2)
+        );
     }
 }
 ```
@@ -123,6 +126,7 @@ namespace MyBusiness
 In PetLibrary/Animals.cs,
 
 ```csharp
+namespace Animals;
 
 public class Cat
 {
@@ -130,7 +134,7 @@ public class Cat
     // object: Supports all classes in the .NET class hierarchy and provides low-level services to derived classes. This is the ultimate base class of all .NET classes; it is the root of the type hierarchy.
     // default: A default value expression produces the default value of a type
 
-    public string CheckFood(object input)
+    public string checkFood(object input)
     {
         if (food == null)
         {
@@ -154,13 +158,12 @@ public class Cat
 public class GenericCat<T> where T : IComparable
 {
     public T? food = default(T?);
-    // A default value expression produces the default value of a type
 
-    public string CheckFood(T input)
+    public string checkFood(T input)
     {
         if (food == null)
         {
-            return "Expected food is empty.";
+            return "Expected food is empty!";
         }
         else if (food.CompareTo(input) == 0)
         {
@@ -187,9 +190,9 @@ public class GenericMethodCat
 ```
 ```bash
 $ Cat food with an integer: Expected food and input are NOT the same.
-$ Cat food with a string: Expected food and input are the same.
 $ Cat food with an integer: Expected food and input are the same.
-$ Cat food with a string: Expected food and input are the same.
+$ Cat food with an integer: Expected food and input are the same.
+$ Cat food with an integer: Expected food and input are the same.
 $ Double cat food 4 to 8
 $ Double cat food 3 to 6
 ```
@@ -198,8 +201,6 @@ $ Double cat food 3 to 6
 
 <!-- ## in (Generic Modifier) [Doc](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/in-generic-modifier) -->
 
-
-You have now seen two ways to change the behavior of an inherited method. We can hide it using the **new** keyword (known as non-polymorphic inheritance), or we can **override** it (known as polymorphic inheritance).
 
 
 ---

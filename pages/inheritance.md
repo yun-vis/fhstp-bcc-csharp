@@ -667,6 +667,7 @@ namespace MyBusiness
     }
 }
 ```
+
 In PetLibrary/Animals.cs,
 ```csharp
 /*
@@ -1146,8 +1147,9 @@ $ Meow!
 $ WildMeow!
 ```
 
-
 ## Abstract Class [Doc](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/abstract)
+
+You have now seen two ways to change the behavior of an inherited method. We can hide it using the **new** keyword (known as non-polymorphic inheritance), or we can **override** it (known as polymorphic inheritance).
 
 In MyBusiness/Program.cs,
 ```csharp
@@ -1183,12 +1185,13 @@ namespace Animals
 {
     public abstract class Animal
     {
+        // Abstract method only defines the method name, but no implementation
         public abstract void Speak();
+        // Virtual method defines the name and implementation
         public virtual void Move()
         {
             Console.WriteLine("Move like an animal!");
         }
-
     }
 
     public class Cat : Animal
