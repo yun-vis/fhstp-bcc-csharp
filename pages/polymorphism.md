@@ -23,72 +23,52 @@ Generics introduces the concept of type parameters to .NET, which make it possib
 Convert.ChangeType [Doc](https://docs.microsoft.com/en-us/dotnet/api/system.convert.changetype?view=net-6.0)
 
 ```csharp
-using System;
+namespace CRC_CSD_06;
 
-// namespace
-namespace MyBusiness
+class Program
 {
-    // main program
-    class Program
+    static void Main(string[] args)
     {
-        // internal is the default if no access modifier is specified.
-        static void Main(string[] args)
-        {
-            /*
-            Function overloading
-            */
-            // int
-            int or = 2;
-            int newOR = DoubleMyResourc(or);
+        int r = 2;
+        // Function overloading
+        int newR = DoubleMyResource(r);
+        Console.WriteLine($"My old resource is {r} and the new one is {newR}");
+        float f = 2.5F;
+        float newF = DoubleMyResource(f);
+        Console.WriteLine($"My old resource is {f} and the new one is {newF}");
 
-            Console.WriteLine($"My old resource is {or} and my new resource is {newOR}");
+        // Generic functions
+        int gr = 2;
+        int newGR = DoubleMyResource<int>(gr);
+        Console.WriteLine($"My old resource is {gr} and the new one is {newGR}");
 
-            // float
-            float of = 2.5F;
-            float newOF = DoubleMyResourc(of);
+        float gf = 2.5F;
+        float newGF = DoubleMyResource<float>(gf);
+        Console.WriteLine($"My old resource is {gf} and the new one is {newGF}");
 
-            Console.WriteLine($"My old resource is {of} and my new resource is {newOF}");
+    }
 
-            /*
-            Generics
-            */
-            // int
-            int gr = 2;
-            int newGR = DoubleMyResourc<int>(gr);
+    public static int DoubleMyResource(int resource)
+    {
+        return 2*resource;
+    }
 
-            Console.WriteLine($"My old resource is {gr} and my new resource is {newGR}");
+    // Function overloading
+    public static float DoubleMyResource(float resource)
+    {
+        return 2.0F*resource;
+    }
 
-            // float
-            float gf = 2.5F;
-            float newGF = DoubleMyResourc<float>(gf);
+    // Generic function
+    public static T DoubleMyResource<T>(T resource) where T : IConvertible
+    {
+        double d = resource.ToDouble(Thread.CurrentThread.CurrentCulture);
+        // ToDouble: A system method to convert a type to a double. We just use it for now.
+        // Thread.CurrentThread.CurrentCulture: ToDouble requires a parameter that implements IFormatProvider to understand the format of numbers for a language and region. We can pass the CurrentCulture property of the current thread to specify the language and region used by your computer. 
 
-            Console.WriteLine($"My old resource is {gf} and my new resource is {newGF}");
-        }
+        d *= 2.0; // r = r * 2.0M
 
-        public static int DoubleMyResourc(int resource)
-        {
-            return 2*resource;
-        }
-
-        public static float DoubleMyResourc(float resource)
-        {
-            return 2.0F*resource;
-        }
-
-        // Compile error! The type conversion is unknown to the compiler.
-        // static T DoubleMyResource<T>(T resource)
-        // {
-        //     return  2 * resource;
-        // }
-
-        public static T DoubleMyResourc<T>(T resource)
-        {
-            // Type conversion is also called "casting"!
-            decimal r = (decimal) Convert.ChangeType(resource, typeof(decimal));
-            r *= 2.0M; // r = r * 2.0
-
-            return (T)Convert.ChangeType(r, typeof(T));
-        }
+        return (T) Convert.ChangeType(d, typeof(T));
     }
 }
 ```
@@ -141,66 +121,65 @@ namespace MyBusiness
 ```
 
 In PetLibrary/Animals.cs,
+
 ```csharp
-/*
-The animal namespace
-*/
-namespace Animals
+public class Cat
 {
-    // Working with non-generic types
-    public class Cat
+    public object? food = default(object);
+    // A default value expression produces the default value of a type
+
+    public string CheckFood(object input)
     {
-        public object? food = default(object);
-        public string CheckFood(object input)
+        if (food == null)
         {
-            if (food == input)
-            {
-                return "Expected food and input are the same.";
-            }
-            else
-            {
-                return "Expected food and input are NOT the same.";
-            }
+            return "Expected food is empty.";
+        }
+        else if (food == input)
+        // else if (food.Equals(input)) // Here, you explicitly compare the value not the address.
+        // Cat is currently flexible, because any type can be set for the food field and input parameter.
+        // But there is no type checking, so inside the Process method, we cannot safely do much and the results are sometimes not what you might expect; for example, when passing int values into an object parameter!
+        // This is because the value 5 stored in the food is stored in a different memory address to the value 5 passed as a parameter and when comparing reference types like any value stored in object, they are only equal if they are stored at the same memory address, that is, the same object, even if their values are equal. We can solve this problem by using generics.
+        {
+            return "Expected food and input are the same.";
+        }
+        else
+        {
+            return "Expected food and input are NOT the same.";
         }
     }
+}
 
-    // Working with generic types
-    // One can consider T as a kind of template
-    public class GenericCat<T> where T : IComparable
+public class GenericCat<T> where T : IComparable
+{
+    public T? food = default(T?);
+    // A default value expression produces the default value of a type
+
+    public string CheckFood(T input)
     {
-        // A default() returns the default value of type parameter. Here is used for initialization.
-        public T? food = default(T?);
-
-        public string CheckFood(T input)
+        if (food == null)
         {
-            if (food == null)
-            {
-                return "Expected food is empty.";
-            }
-            else if (food.CompareTo(input) == 0)
-            {
-                return "Expected food and input are the same.";
-            }
-            else
-            {
-                return "Expected food and input are NOT the same.";
-            }
+            return "Expected food is empty.";
+        }
+        else if (food.CompareTo(input) == 0)
+        {
+            return "Expected food and input are the same.";
+        }
+        else
+        {
+            return "Expected food and input are NOT the same.";
         }
     }
+}
 
-    // Working with generic methods
-    // One can consider T as a kind of template
-    public class GenericMethodCat
+public class GenericMethodCat
+{
+    public static double DoubleMyFood<T>(T input) where T : IConvertible
     {
-        public static double DoubleMyFood<T>(T input)
-        where T : IConvertible
-        {
-            // convert using the current culture
-            double d = input.ToDouble(
-                Thread.CurrentThread.CurrentCulture);   
-                // A system method to convert a string to a double, we simply use it for now.
-            return 2 * d;
-        }
+        double d = input.ToDouble(Thread.CurrentThread.CurrentCulture);
+        // ToDouble: A system method to convert a type to a double. We just use it for now.
+        // Thread.CurrentThread.CurrentCulture: ToDouble requires a parameter that implements IFormatProvider to understand the format of numbers for a language and region. We can pass the CurrentCulture property of the current thread to specify the language and region used by your computer. 
+
+        return 2.0 * d;
     }
 }
 ```
