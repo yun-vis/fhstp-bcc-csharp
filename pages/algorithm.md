@@ -732,7 +732,7 @@ public class Edge
 }
 ```
 
-## Graph (Adjacency List Generic)
+## Graph (Node/Edge List Generic)
 
 In SocialNet/Program.cs
 ```csharp
