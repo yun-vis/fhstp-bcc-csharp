@@ -604,6 +604,10 @@ public class Program
 {
     static void Main(string[] args)
     {
+        // Set console encoding
+        Console.WriteLine("Console.OutputEncoding = " + Console.OutputEncoding);
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+
         CultureInfo globalization = CultureInfo.CurrentCulture;
         CultureInfo localization = CultureInfo.CurrentUICulture;
         Console.WriteLine("The current globalization culture is {0}: {1}",
@@ -653,7 +657,7 @@ $ Enter an ISO culture code: de-At
 $ Enter your name: Yun
 $ Enter your date of birth: 19/8/1999
 $ Enter your salary: 230000
-$ Yun was born on a Donnerstag, is 12 402 720 minutes old, and earns €230.000,00
+$ Yun was born on a Donnerstag, is 12 402 720 minutes old, and earns € 230.000,00
 ```
 
 ---
