@@ -118,8 +118,12 @@ namespace MyBusiness
 {
     class Program
     {
+        // Delegate declaration
+        public delegate int[] GenerateMyNumbers(int x, int y);
+
         static void Main(string[] args)
         {
+            // Create delegate objects/instances, where you put the corresponding methods as input parameters.
             GenerateMyNumbers generateRandom = new GenerateMyNumbers(GetRandomNumber);
             GenerateMyNumbers generateOrdered = new GenerateMyNumbers(GetOrderedNumber);
 
@@ -133,9 +137,7 @@ namespace MyBusiness
             Console.WriteLine();
         }
 
-        // My first delegate
-        public delegate int[] GenerateMyNumbers(int x, int y);
-        // Create an arry with size amount and assign a random value 0-maxNum in this array
+        // Create an array with size amount and assign a random value 0-maxNum in this array
         public static int[] GetRandomNumber(int maxNum, int amount)
         {
             Random random = new Random();
@@ -148,6 +150,7 @@ namespace MyBusiness
             }
             return nums;
         }
+
         // Get an ordered integer sequence from min to max
         public static int[] GetOrderedNumber(int max, int min)
         {
@@ -191,13 +194,13 @@ namespace MyBusiness
 
             // string.Join: method that lets you concatenate each element in an
             // object array without explicitly converting its elements to strings
-            Console.WriteLine(string.Join(",", Change1(array)));
-            Console.WriteLine(string.Join(",", Change2(array)));
-            Console.WriteLine(string.Join(",", Change3(array)));
+            Console.WriteLine(string.Join(",", AddOne(array)));
+            Console.WriteLine(string.Join(",", MultipleTwo(array)));
+            Console.WriteLine(string.Join(",", Square(array)));
         }
 
         // Take out each element in an array and +1
-        public static int[] Change1(int[] _array)
+        public static int[] AddOne(int[] _array)
         {
             int[] array = new int[_array.Length];
             for (int i = 0, c = _array.Length; i < c; i++)
@@ -206,8 +209,9 @@ namespace MyBusiness
             }
             return array;
         }
+
         // Take out each element in an array and *2
-        public static int[] Change2(int[] _array)
+        public static int[] MultipleTwo(int[] _array)
         {
             int[] array = new int[_array.Length];
             for (int i = 0, c = _array.Length; i < c; i++)
@@ -216,8 +220,9 @@ namespace MyBusiness
             }
             return array;
         }
+
         // Take out each element in an array and square it
-        public static int[] Change3(int[] _array)
+        public static int[] Square(int[] _array)
         {
             int[] array = new int[_array.Length];
             for (int i = 0, c = _array.Length; i < c; i++)
@@ -242,16 +247,19 @@ namespace MyBusiness
 {
     class Program
     {
+        // Declaration of the delegete
+        public delegate int ChangeValueDelegate(int x);
+
         static void Main(string[] args)
         {
             int[] array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
             // Create three delegate objects that take differentmethods as parameters
-            MyDelegate myDelegate1 = new MyDelegate(AddOne);
-            MyDelegate myDelegate2 = new MyDelegate(MultipleTwo);
-            MyDelegate myDelegate3 = new MyDelegate(Square);
+            ChangeValueDelegate myDelegate1 = new ChangeValueDelegate(AddOne);
+            ChangeValueDelegate myDelegate2 = new ChangeValueDelegate(MultipleTwo);
+            ChangeValueDelegate myDelegate3 = new ChangeValueDelegate(Square);
             // The following is also a valid syntax;
-            // MyDelegate myDelegate3 = Square;
+            // ChangeValueDelegate myDelegate3 = Square;
 
             // string.Join: method that lets you concatenate each element in an
             // object array without explicitly converting its elements to strings
@@ -260,30 +268,29 @@ namespace MyBusiness
             Console.WriteLine(string.Join(",", Change(array, myDelegate3)));
         }
 
-        // Declaration of the delegete
-        public delegate int MyDelegate(int x);
-
         public static int AddOne(int number)
         {
-            return number+1;
+            return number + 1;
         }
         public static int MultipleTwo(int number)
         {
-            return number*2;
+            return number * 2;
         }
         public static int Square(int number)
         {
             return number * number;
         }
+        // The following is also a valid syntax using lambda expression
+        // public static int Square(int number) => number * number;
 
         // A method Change that takes another method as the input parameters
         // In this case, the method (as a parameter) should be defined as a delegate
-        public static int[] Change(int[] _array, MyDelegate myDelegate)
+        public static int[] Change(int[] _array, ChangeValueDelegate changeValue)
         {
             int[] array = new int[_array.Length];
             for (int i = 0, c = _array.Length; i < c; i++)
             {
-                array[i] = myDelegate(_array[i]);
+                array[i] = changeValue(_array[i]);
             }
             return array;
         }
@@ -302,7 +309,9 @@ $ 1,4,9,16,25,36,49,64,81
 public static int Square(int number) => number * number;
 ```
 
-## Func, Action and Predicate Delegates
+## [Generic Delegates](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/generics/generic-delegates)
+
+## Action, Func, and Predicate Delegates
 
 * **Action Delegate:** Encapsulates a method that has a single parameter and does not return a value. [Doc](https://docs.microsoft.com/en-us/dotnet/api/system.action-1?view=net-6.0)
 
@@ -325,16 +334,16 @@ namespace MyBusiness
         private static void AddNumbers(int param1, int param2)
         {
             int result = param1 + param2;
-            Console.WriteLine($"Addition = {result}");
+            Console.WriteLine($"Addition result = {result}");
         }
     }
 }
 ```
 ```bash
-$ Addition = 30
+$ Addition result = 30
 ```
 
-* **Func<T,TResult> Delegate:** Encapsulates a method that has one parameter and returns a value of the type specified by the TResult parameter. [Doc](https://docs.microsoft.com/en-us/dotnet/api/system.func-2?view=net-6.0)
+* **Func<T,TResult> Delegate:** Encapsulates a method that has parameters (up to 16) and returns a value of the type specified by the TResult parameter. [Doc](https://docs.microsoft.com/en-us/dotnet/api/system.func-2?view=net-6.0)[Example](https://learn.microsoft.com/en-us/dotnet/api/system.func-1?view=net-6.0)
 
 ```csharp
 using System;
@@ -352,7 +361,7 @@ namespace MyBusiness
             // Func<int, int, int> Addition = (param1, param2) => param1 + param2;  
 
             int result = Addition(10, 20);
-            Console.WriteLine($"Addition = {result}");
+            Console.WriteLine($"Addition result = {result}");
         }
 
         // add param1 and param2 and return the sum
@@ -364,7 +373,7 @@ namespace MyBusiness
 }
 ```
 ```bash
-$ Addition = 30
+$ Addition result = 30
 ```
 
 * Advantages of Action and Func Delegates
@@ -374,7 +383,7 @@ $ Addition = 30
 
 * **Predicate Delegate:** Represents the method that defines a set of criteria and determines whether the specified object meets those criteria. [Doc](https://docs.microsoft.com/en-us/dotnet/api/system.predicate-1?view=net-6.0)
 
-Syntax difference between predicate & func is that here in predicate, you don't specify a return type because it is always a **bool**.
+Syntax difference between predicate & func is that here in predicate, you can only take one input parameter and you don't specify a return type because it is always a **bool**.
 
 ```csharp
 using System;
@@ -387,7 +396,7 @@ namespace MyBusiness
         {
             Predicate<string> CheckIfApple = new Predicate<string>(IsApple);
             // Predicate<string> CheckIfApple = IsApple;
-            bool result = IsApple("I Phone X");
+            bool result = IsApple("IPhone X");
             if (result){
                 Console.WriteLine("It's an IPhone");
             }
@@ -396,7 +405,7 @@ namespace MyBusiness
         private static bool IsApple(string modelName)
         {
             // Check if the model name an iPhone
-            if (modelName == "I Phone X")
+            if (modelName == "IPhone X")
                 return true;
             else
                 return false;
