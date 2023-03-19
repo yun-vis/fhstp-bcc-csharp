@@ -311,6 +311,10 @@ public static int Square(int number) => number * number;
 
 ## [Generic Delegates](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/generics/generic-delegates)
 
+```csharp
+public delegate T ChangeValueDelegate<T>(T x);
+```
+
 ## Action, Func, and Predicate Delegates
 
 * **Action Delegate:** Encapsulates a method that has a single parameter and does not return a value. [Doc](https://docs.microsoft.com/en-us/dotnet/api/system.action-1?view=net-6.0)
@@ -419,28 +423,52 @@ $ It\'s an IPhone
 
 # Type-testing Operators and Cast Expression
 
+## [Object Class](https://learn.microsoft.com/en-us/dotnet/api/system.object?view=net-6.0)
+
+Definition: Supports all classes in the .NET class hierarchy and provides low-level services to derived classes. This is the ultimate base class of all .NET classes; it is the root of the type hierarchy.
+
+```csharp
+object myObject1 = new Cat();
+// You can use a base/parent class to refer to your object
+Animal animal1 = new Dog();
+object myObject2 = animal1;
+```
+
+Problem: How do we know/guarantee what information has been stored in the object?
+
 ## Implicit Casting
 
 ```csharp
+// Implicit casting
+Cat nana = new Cat();
 WildCat leopard = new WildCat();
 Cat petCat = leopard;
-// compile error
-// WildCat wCat = petCat;  
+Console.Write($"{petCat.Name} speaks ");
+petCat.Speak();
+// Compile error
+// WildCat wildCat = petCat; 
 ```
 
 ## Explicit Casting
 
 ```csharp
-WildCat wCat = (WildCat)petCat;
+// Explicit casting
+WildCat wildCat = (WildCat)petCat;
+// Runtime error
+// WildCat wildCat = (WildCat)nana;
+Console.Write($"{wildCat.Name} speaks ");
+wildCat.Speak();
 ```
+
+You can also overload the implicit and explicit operators in C#.
 
 ## Avoiding Casting Exceptions
 
 ```csharp
-// WildCat wCat = (WildCat)petCat;
+// Use is operator
 if (petCat is WildCat)
 {
-    Console.WriteLine($"{nameof(petCat)} IS an WildCat");
+    Console.WriteLine($"{petCat.Name} IS an WildCat");
     WildCat wCat = (WildCat)petCat;
     // safely do something with wCat
 }
@@ -450,88 +478,108 @@ if (petCat is WildCat)
 
 The **is** operator will check if the run-time type of an expression is compatible with a given type. The **as** operator considers only reference, nullable, boxing, and unboxing conversions.
 
-```csharp
-if (petCat is WildCat)
-{
-}
-```
-
 ## as Operator
 
 The **as** operator is used to explicitly convert an expression to a given type if its run-time type is compatible with that type. The as operator returns null if the conversion is not possible.
 
-In MyBusiness/Program.cs,
+In Program.cs,
 ```csharp
 using System;
-using Animals;
 
-// namespace
-namespace MyBusiness
+// main program
+public class Program
 {
-    // main program
-    internal class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        object myObject1 = new Cat();
+        Animal animal1 = new Dog();
+        object myObject2 = animal1;
+
+        // Implicit casting
+        Cat nana = new Cat();
+        WildCat leopard = new WildCat();
+        Cat petCat = leopard;
+        Console.Write($"{petCat.Name} speaks ");
+        petCat.Speak();
+        // Compile error
+        // WildCat wildCat = petCat; 
+
+        // Explicit casting
+        WildCat wildCat = (WildCat)petCat;
+        // Runtime error
+        // WildCat wildCat = (WildCat)nana;
+        Console.Write($"{wildCat.Name} speaks ");
+        wildCat.Speak();
+
+        // Use is operator
+        if (petCat is WildCat)
         {
-            // object is a base class of all derived classes in C#
-            object[] myObjects = new object[4];
-            myObjects[0] = new Dog();
-            myObjects[1] = new Cat();
-            myObjects[2] = "Dog";
-            myObjects[3] = "Cat";
+            Console.WriteLine($"{petCat.Name} IS an WildCat");
+            WildCat wCat = (WildCat)petCat;
+            // safely do something with wCat
+        }
 
-            for (int i = 0; i < myObjects.Length; i++)
+        // object is a base class of all derived classes in C#
+        object[] myObjects = new object[4];
+        myObjects[0] = new Dog();
+        myObjects[1] = new Cat();
+        myObjects[2] = "Dog";
+        myObjects[3] = "Cat";
+
+        for (int i = 0; i < myObjects.Length; i++)
+        {
+            // Convert an element in the myobjects array to a string element
+            string? s = myObjects[i] as string;
+            // Print out the current element
+            Console.Write($"Inspecting element: {myObjects[i]}");
+
+            // If converted successfully, s will be a string, otherwise return null.
+            if (s == null)
             {
-                // Convert an element in the myobjects array to a string element
-                string? s = myObjects[i] as string;
-                // Print out the current element
-                Console.Write($"Inspecting element: {myObjects[i]}");
-
-                // If converted successfully, s will be a string, otherwise return null.
-                if (s == null)
-                {
-                    Console.Write(" --> Incompatible type");
-                }
-                else
-                {
-                    Console.Write(" --> Compatible type");
-                }
-                Console.WriteLine(", with string!");
+                Console.Write(" --> Incompatible type");
             }
+            else
+            {
+                Console.Write(" --> Compatible type");
+            }
+            Console.WriteLine(", with string!");
         }
     }
 }
 ```
 
-In PetLibrary/Animals.cs,
+In Animals.cs,
 ```csharp
-/*
-The animal namespace
-*/
-namespace Animals
+public class Animal
 {
-    public class Animal
+    public virtual void Speak()
     {
-        public virtual void Speak()
-        {
-            Console.WriteLine("");
-        }
+        Console.WriteLine("#$&%");
     }
+}
 
-    public class Dog : Animal
+public class Dog : Animal
+{
+    public override void Speak()
     {
-        public override void Speak()
-        {
-            Console.WriteLine("Woof!");
-        }
+        Console.WriteLine("Woof!");
     }
+}
 
-    public class Cat : Animal
+public class Cat : Animal
+{
+    public string Name = "UnknownCat";
+    public override void Speak()
     {
-        public override void Speak()
-        {
-            Console.WriteLine("Meow!");
-        }
+        Console.WriteLine("Meow!");
+    }
+}
+
+public class WildCat : Cat
+{    
+    public override void Speak()
+    {
+        Console.WriteLine("WildMeow!");
     }
 }
 ```
