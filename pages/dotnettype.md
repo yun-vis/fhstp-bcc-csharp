@@ -460,7 +460,7 @@ Console.Write($"{wildCat.Name} speaks ");
 wildCat.Speak();
 ```
 
-You can also overload the implicit and explicit operators in C#.
+You can also overload the implicit and explicit operators in C# [Doc](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/user-defined-conversion-operators).
 
 ## Avoiding Casting Exceptions
 
@@ -582,6 +582,78 @@ public class WildCat : Cat
         Console.WriteLine("WildMeow!");
     }
 }
+```
+
+# Internationalization
+
+Internationalization is the process of enabling your code to run correctly all over the world. It
+has two parts: globalization and localization.
+
+* Globalization is about writing your code to accommodate multiple languages and region
+combinations. The combination of a language and a region is known as a culture.
+
+* Localization is about customizing the user interface to support a language, for example,
+changing the label of a button to be Close (en) or Fermer (fr).
+
+```csharp
+using System;
+using System.Globalization;
+
+// main program
+public class Program
+{
+    static void Main(string[] args)
+    {
+        CultureInfo globalization = CultureInfo.CurrentCulture;
+        CultureInfo localization = CultureInfo.CurrentUICulture;
+        Console.WriteLine("The current globalization culture is {0}: {1}",
+        globalization.Name, globalization.DisplayName);
+        Console.WriteLine("The current localization culture is {0}: {1}",
+        localization.Name, localization.DisplayName);
+        Console.WriteLine();
+        Console.WriteLine("en-US: English (United States)");
+        Console.WriteLine("da-DK: Danish (Denmark)");
+        Console.WriteLine("fr-CA: French (Canada)");
+        Console.WriteLine("de-AT: German (Austria)");
+        Console.Write("Enter an ISO culture code: ");
+        string? newCulture = Console.ReadLine();
+        if (!string.IsNullOrEmpty(newCulture))
+        {
+            var ci = new CultureInfo(newCulture);
+            CultureInfo.CurrentCulture = ci;
+            CultureInfo.CurrentUICulture = ci;
+        }
+        Console.WriteLine();
+        Console.Write("Enter your name: ");
+        string? name = Console.ReadLine();
+        Console.Write("Enter your date of birth: ");
+        string? dob = Console.ReadLine();
+        Console.Write("Enter your salary: ");
+        string? salary = Console.ReadLine();
+        if (dob != null && salary != null)
+        {
+            DateTime date = DateTime.Parse(dob);
+            int minutes = (int)DateTime.Today.Subtract(date).TotalMinutes;
+            decimal earns = decimal.Parse(salary);
+            Console.WriteLine("{0} was born on a {1:dddd}, is {2:N0} minutes old, and earns {3:C}", name, date, minutes, earns);
+        }
+    }
+}
+```
+
+```bash
+$ The current globalization culture is en-US: English (United States)
+$ The current localization culture is en-US: English (United States) 
+
+$ en-US: English (United States)
+$ fr-CA: French (Canada)
+$ de-AT: German (Austria)
+$ Enter an ISO culture code: de-At
+
+$ Enter your name: Yun
+$ Enter your date of birth: 19/8/1999
+$ Enter your salary: 230000
+$ Yun was born on a Donnerstag, is 12 402 720 minutes old, and earns €230.000,00
 ```
 
 ---
