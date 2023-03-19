@@ -6,10 +6,29 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"  
-last_modified_at: 2022-03-23
+last_modified_at: 2023-03-19
 ---
 
 # How to improve code readability?
+
+## Syntactic sugar
+
+Syntactic sugar is syntax within a programming language that is designed to make things easier to read or to express.
+
+# Operator, Expression, and Statement
+
+```csharp
+int num = 2*3;
+```
+
+## [Operator](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/#see-also)
+C# provides a number of operators. Many of them are supported by the built-in types and allow you to perform basic operations with values of those types
+
+## [Expression](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators)
+The simplest C# expressions are literals (for example, integer and real numbers) and names of variables. You can combine them into complex expressions by using operators. Operator precedence and associativity determine the order in which the operations in an expression are performed. You can use parentheses to change the order of evaluation imposed by operator precedence and associativity.
+
+## [Statement](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/statements-expressions-operators/statements)
+The actions that a program takes are expressed in statements. Common actions include declaring variables, assigning values, calling methods, looping through collections, and branching to one or another block of code, depending on a given condition.
 
 # Lambda Expression [Doc](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/lambda-expressions)
 
@@ -42,19 +61,20 @@ namespace MyBusiness
             {
                 return a == b;
             }
-
+            Console.WriteLine(compareMethod(3, 4));
+            
             // Expression lambda
             bool compareLambda(int a, int b) => (a == b);
-            Console.WriteLine(compareMethod(3, 4));
-            // Console.WriteLine(compareLambda(3, 4));
+            Console.WriteLine(compareLambda(3, 4));
 
             // Print a Fibonacci sequence
             for (int i = 0; i < 10; i++)
             {
                 Console.WriteLine("The {0} term of the Fibonacci sequence is {1:N0}.",
                   arg0: i + 1,
-                  arg1: FibLambda(term: i));
                 //   arg1: FibMethod(term: i));
+                  arg1: FibLambda(term: i)); 
+                // N0: The numeric ("N") format specifier converts a number to a string of the form. N0 does not represent any decimal place but rounding is applied to it.
             }
         }
 
@@ -167,7 +187,7 @@ namespace MyBusiness
     {
         static void Main(string[] args)
         {
-            var array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            int[] array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
             // string.Join: method that lets you concatenate each element in an
             // object array without explicitly converting its elements to strings
@@ -176,30 +196,30 @@ namespace MyBusiness
             Console.WriteLine(string.Join(",", Change3(array)));
         }
 
-        // Take out each elemnt in an array and +1
+        // Take out each element in an array and +1
         public static int[] Change1(int[] _array)
         {
-            var array = new int[_array.Length];
+            int[] array = new int[_array.Length];
             for (int i = 0, c = _array.Length; i < c; i++)
             {
                 array[i] = _array[i] + 1;
             }
             return array;
         }
-        // Take out each elemnt in an array and *2
+        // Take out each element in an array and *2
         public static int[] Change2(int[] _array)
         {
-            var array = new int[_array.Length];
+            int[] array = new int[_array.Length];
             for (int i = 0, c = _array.Length; i < c; i++)
             {
                 array[i] = _array[i] * 2;
             }
             return array;
         }
-        // Take out each elemnt in an array and square it
+        // Take out each element in an array and square it
         public static int[] Change3(int[] _array)
         {
-            var array = new int[_array.Length];
+            int[] array = new int[_array.Length];
             for (int i = 0, c = _array.Length; i < c; i++)
             {
                 array[i] = _array[i] * _array[i];
@@ -224,15 +244,12 @@ namespace MyBusiness
     {
         static void Main(string[] args)
         {
-            var array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            int[] array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
             // Create three delegate objects that take differentmethods as parameters
             MyDelegate myDelegate1 = new MyDelegate(AddOne);
             MyDelegate myDelegate2 = new MyDelegate(MultipleTwo);
             MyDelegate myDelegate3 = new MyDelegate(Square);
-            // Syntactic sugar
-            // syntactic sugar is syntax within a programming language that is
-            // designed to make things easier to read or to express.
             // The following is also a valid syntax;
             // MyDelegate myDelegate3 = Square;
 
@@ -263,7 +280,7 @@ namespace MyBusiness
         // In this case, the method (as a parameter) should be defined as a delegate
         public static int[] Change(int[] _array, MyDelegate myDelegate)
         {
-            var array = new int[_array.Length];
+            int[] array = new int[_array.Length];
             for (int i = 0, c = _array.Length; i < c; i++)
             {
                 array[i] = myDelegate(_array[i]);
@@ -519,3 +536,5 @@ namespace Animals
 
 ---
 # Selected Theory
+
+## [Standard Numeric Format Strings](https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings)
