@@ -774,26 +774,26 @@ namespace SocialNet
 ```
 ```bash
 The total number of vertices is 4
-The total number of edges is 3   
-==============================   
-V(0) = Helen
-V(1) = Tony
-V(2) = Yun
-V(3) = Tim
-==============================   
-E(0) = V(0) -- V(1)
-E(1) = V(0) -- V(2)
-E(2) = V(1) -- V(2)
-==============================   
-The total number of vertices is 3
-The total number of edges is 1   
-==============================   
-V(1) = Tony
-V(2) = Yun
-V(3) = Tim
-==============================   
-E(2) = V(1) -- V(2)
+The total number of edges is 3
 ==============================
+$ V(0) = Helen
+$ V(1) = Tony
+$ V(2) = Yun
+$ V(3) = Tim
+$ ==============================
+$ E(0) = V(0) -- V(1)
+$ E(1) = V(0) -- V(2)
+$ E(2) = V(1) -- V(2)
+$ ==============================
+$ The total number of vertices is 3
+$ The total number of edges is 3
+$ ==============================
+$ V(1) = Tony
+$ V(2) = Yun
+$ V(3) = Tim
+$ ==============================
+$ E(2) = V(1) -- V(2)
+$ ==============================
 ```
 
 In GraphLibrary/Graph.cs
@@ -806,21 +806,21 @@ where T2 : BasicEdgeProperty, new()
 {
     // Fields
     // The list of vertices in the graph
-    private LinkedList<Vertex<T1>> _vertices;
-    private LinkedList<Edge<T2>> _edges;
+    private Dictionary<uint, Vertex<T1>> _vertices;
+    private Dictionary<uint, Edge<T2>> _edges;
 
     // The number of vertices
-    private uint _nVertices;
-    private uint _nEdges;
+    private uint _vIndex;
+    private uint _eIndex;
 
 
     // Constructors
     public Graph()
     {
-        _vertices = new LinkedList<Vertex<T1>>();
-        _edges = new LinkedList<Edge<T2>>();
-        _nVertices = 0;
-        _nEdges = 0;
+        _vertices = new Dictionary<uint, Vertex<T1>>();
+        _edges = new Dictionary<uint, Edge<T2>>();
+        _vIndex = 0;
+        _eIndex = 0;
     }
 
     // Getters and Setters
@@ -836,20 +836,22 @@ where T2 : BasicEdgeProperty, new()
     {
         Vertex<T1> v = new Vertex<T1>();
         // Add attributes
-        v.Property.Id = _nVertices;
+        v.Property.Id = _vIndex;
         v.Property.Name = name;
 
-        _vertices.AddLast(v);
-        _nVertices++;
-        return _nVertices - 1;
+        _vertices.Add(_vIndex, v);
+        _vIndex++;
+        return _vIndex - 1;
     }
 
     public void RemoveVertex(string name)
     {
-        Vertex<T1>? v = HasVertex(name);
+        uint? vKey = HasVertex(name);
 
-        if (v != null)
+        if (vKey != null)
         {
+            Vertex<T1> v = _vertices[(uint)vKey];
+
             // Remove the adjacent edges
             bool allChecked = false;
             while (!allChecked)
@@ -857,46 +859,46 @@ where T2 : BasicEdgeProperty, new()
                 allChecked = true;
                 for (int i = 0; i < _edges.Count; i++)
                 {
+                    KeyValuePair<uint, Edge<T2>> eItem = _edges.ElementAt(i);
+
                     // Equal to source id
-                    if (_edges.ElementAt(i).Property.SourceId == v.Property.Id)
+                    if (eItem.Value.Property.SourceId == v.Property.Id)
                     {
-                        _edges.Remove(_edges.ElementAt(i));
-                        _nEdges--;
+                        _edges.Remove(eItem.Key);
                         allChecked = false;
                     }
                     // Equal to target id
-                    if (_edges.ElementAt(i).Property.TargetId == v.Property.Id)
+                    if (eItem.Value.Property.TargetId == v.Property.Id)
                     {
-                        _edges.Remove(_edges.ElementAt(i));
-                        _nEdges--;
+                        _edges.Remove(eItem.Key);
                         allChecked = false;
                     }
                 }
             }
 
             // Remove the vertex
-            _vertices.Remove(v);
-            _nVertices--;
+            _vertices.Remove((uint)vKey);
+            _vIndex--;
         }
     }
 
-    public Vertex<T1>? HasVertex(string name)
+    public uint? HasVertex(string name)
     {
         for (int i = 0; i < _vertices.Count; i++)
         {
-            if (_vertices.ElementAt(i).Property.Name == name)
-                return _vertices.ElementAt(i);
+            if (_vertices.ElementAt(i).Value.Property.Name == name)
+                return _vertices.ElementAt(i).Key;
         }
         return null;
     }
 
     // Function overloading
-    public Vertex<T1>? HasVertex(uint id)
+    public uint? HasVertex(uint id)
     {
         for (int i = 0; i < _vertices.Count; i++)
         {
-            if (_vertices.ElementAt(i).Property.Id == id)
-                return _vertices.ElementAt(i);
+            if (_vertices.ElementAt(i).Value.Property.Id == id)
+                return _vertices.ElementAt(i).Key;
         }
         return null;
     }
@@ -904,12 +906,13 @@ where T2 : BasicEdgeProperty, new()
     // Edge
     public void AddEdge(uint sourceId, uint targetId)
     {
-        Edge<T2>? e = HasEdge(sourceId, targetId);
-        if (e == null)
+        uint? eKey = HasEdge(sourceId, targetId);
+
+        if (eKey == null)
         {
-            Vertex<T1>? sourceV = HasVertex(sourceId);
-            Vertex<T1>? targetV = HasVertex(targetId);
-            if (sourceV == null || targetV == null)
+            uint? sourceKey = HasVertex(sourceId);
+            uint? targetKey = HasVertex(targetId);
+            if (sourceKey == null || targetKey == null)
             {
                 Console.WriteLine("Source or Target Vertex could not be found. Please add vertices first");
                 return;
@@ -917,35 +920,35 @@ where T2 : BasicEdgeProperty, new()
             else
             {
                 Edge<T2> newE = new Edge<T2>();
-                // Edge<T2> newE = new Edge<T2>(_nEdges, sourceId, targetId);
                 // Add attributes
-                newE.Property.Id = _nEdges;
+                newE.Property.Id = _eIndex;
                 newE.Property.SourceId = sourceId;
                 newE.Property.TargetId = targetId;
 
-                _edges.AddLast(newE);
-                _nEdges++;
+                _edges.Add(_eIndex, newE);
+                _eIndex++;
             }
         }
     }
 
     public void RemoveEdge(uint sourcdId, uint targetId)
     {
-        Edge<T2>? e = HasEdge(sourcdId, targetId);
-        if (e != null)
+        uint? eKey = HasEdge(sourcdId, targetId);
+
+        if (eKey != null)
         {
-            _edges.Remove(e);
-            _nEdges--;
+            _edges.Remove((uint)eKey);
+            _eIndex--;
         }
     }
 
-    public Edge<T2>? HasEdge(uint sourcdId, uint targetId)
+    public uint? HasEdge(uint sourcdId, uint targetId)
     {
         for (int i = 0; i < _edges.Count; i++)
         {
-            if ((_edges.ElementAt(i).Property.SourceId == sourcdId) &&
-                (_edges.ElementAt(i).Property.TargetId == targetId))
-                return _edges.ElementAt(i);
+            if ((_edges.ElementAt(i).Value.Property.SourceId == sourcdId) &&
+                (_edges.ElementAt(i).Value.Property.TargetId == targetId))
+                return _edges.ElementAt(i).Key;
         }
         return null;
     }
@@ -953,21 +956,21 @@ where T2 : BasicEdgeProperty, new()
     // Graph
     public void PrintGraph()
     {
-        Console.WriteLine("The total number of vertices is " + _nVertices);
-        Console.WriteLine("The total number of edges is " + _nEdges);
+        Console.WriteLine("The total number of vertices is " + _vIndex);
+        Console.WriteLine("The total number of edges is " + _eIndex);
         Console.WriteLine("==============================");
 
         // Vertex list
         for (int i = 0; i < _vertices.Count; i++)
         {
-            Console.WriteLine($"V({_vertices.ElementAt(i).Property.Id}) = {_vertices.ElementAt(i).Property.Name}");
+            Console.WriteLine($"V({_vertices.ElementAt(i).Value.Property.Id}) = {_vertices.ElementAt(i).Value.Property.Name}");
         }
         Console.WriteLine("==============================");
 
         // Edge list
         for (int i = 0; i < _edges.Count; i++)
         {
-            Console.WriteLine($"E({_edges.ElementAt(i).Property.Id}) = V({_edges.ElementAt(i).Property.SourceId}) -- V({_edges.ElementAt(i).Property.TargetId})");
+            Console.WriteLine($"E({_edges.ElementAt(i).Value.Property.Id}) = V({_edges.ElementAt(i).Value.Property.SourceId}) -- V({_edges.ElementAt(i).Value.Property.TargetId})");
         }
         Console.WriteLine("==============================");
     }
