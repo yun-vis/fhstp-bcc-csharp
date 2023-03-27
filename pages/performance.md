@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"  
-last_modified_at: 2022-03-13
+last_modified_at: 2023-03-27
 ---
 
 ## .NET Processes
@@ -394,6 +394,8 @@ Coffee is at angry level: 4.
 - **Process:** A process, with one example being each of the console applications we have created has resources like memory and threads allocated to it.
 
 - **Thread:** A thread executes your code, statement by statement. By default, each process only has one thread, and this can cause problems when we need to do more than one **task** at the same time.
+
+- **Task:** A task is a set of program instructions that are loaded in memory.
 
 ## Running multiple actions synchronously
 
