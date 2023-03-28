@@ -585,7 +585,6 @@ namespace MyBusiness
     // main program
     internal class Program
     {
-        static Random r = new Random();
         static string Message = ""; // a shared resource
 
         static void Main(string[] args)
@@ -615,7 +614,7 @@ namespace MyBusiness
             {
                 for (int i = 0; i < 5; i++)
                 {
-                    Thread.Sleep(r.Next(2000));
+                    Thread.Sleep(2000);
                     Message += "A";
                     Console.Write(".");
                 }
@@ -628,7 +627,7 @@ namespace MyBusiness
             {
                 for (int i = 0; i < 5; i++)
                 {
-                    Thread.Sleep(r.Next(2000));
+                    Thread.Sleep(2000);
                     Message += "B";
                     Console.Write(".");
                 }

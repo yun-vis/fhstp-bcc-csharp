@@ -195,7 +195,7 @@ namespace MyBusiness
             // string.Join: method that lets you concatenate each element in an
             // object array without explicitly converting its elements to strings
             Console.WriteLine(string.Join(",", AddOne(array)));
-            Console.WriteLine(string.Join(",", MultipleTwo(array)));
+            Console.WriteLine(string.Join(",", MultiplyTwo(array)));
             Console.WriteLine(string.Join(",", Square(array)));
         }
 
@@ -211,7 +211,7 @@ namespace MyBusiness
         }
 
         // Take out each element in an array and *2
-        public static int[] MultipleTwo(int[] _array)
+        public static int[] MultiplyTwo(int[] _array)
         {
             int[] array = new int[_array.Length];
             for (int i = 0, c = _array.Length; i < c; i++)
@@ -256,7 +256,7 @@ namespace MyBusiness
 
             // Create three delegate objects that take differentmethods as parameters
             ChangeValueDelegate myDelegate1 = new ChangeValueDelegate(AddOne);
-            ChangeValueDelegate myDelegate2 = new ChangeValueDelegate(MultipleTwo);
+            ChangeValueDelegate myDelegate2 = new ChangeValueDelegate(MultiplyTwo);
             ChangeValueDelegate myDelegate3 = new ChangeValueDelegate(Square);
             // The following is also a valid syntax;
             // ChangeValueDelegate myDelegate3 = Square;
@@ -272,7 +272,7 @@ namespace MyBusiness
         {
             return number + 1;
         }
-        public static int MultipleTwo(int number)
+        public static int MultiplyTwo(int number)
         {
             return number * 2;
         }
@@ -458,6 +458,26 @@ WildCat wildCat = (WildCat)petCat;
 // WildCat wildCat = (WildCat)nana;
 Console.Write($"{wildCat.Name} speaks ");
 wildCat.Speak();
+```
+
+```csharp
+public class Cat
+{
+    public string Name = "ACat";
+    public virtual void Speak()
+    {
+        Console.WriteLine("Meow!");
+    }
+}
+
+public class WildCat : Cat
+{
+    public int Age = 0;
+    public override void Speak()
+    {
+        Console.WriteLine("WildMeow!");
+    }
+}
 ```
 
 You can also overload the implicit and explicit operators in C# [Doc](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/user-defined-conversion-operators).
