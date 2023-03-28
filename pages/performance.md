@@ -399,45 +399,46 @@ Coffee is at angry level: 4.
 
 ## Running multiple actions synchronously
 
-```csharp
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Diagnostics;
+### Stopwatch Class [Doc](https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.stopwatch?view=net-6.0)
 
-// namespace
-namespace MyBusiness
+The Stopwatch class assists the manipulation of timing-related performance counters within managed code.
+
+```csharp
+// using System;
+// using System.Threading;
+// using System.Threading.Tasks;
+using System.Diagnostics;
+namespace CRC_CSD_09;
+
+// main program
+public class Program
 {
-    // main program
-    internal class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            var timer = Stopwatch.StartNew();
-            Console.WriteLine("Running methods synchronously on one thread.");
-            MethodA();
-            MethodB();
-            MethodC();
-            Console.WriteLine($"{timer.ElapsedMilliseconds:#,##0}ms elapsed.");
-        }
-        static void MethodA()
-        {
-            Console.WriteLine("Starting Method A...");
-            Thread.Sleep(3000); // simulate three seconds of work
-            Console.WriteLine("Finished Method A.");
-        }
-        static void MethodB()
-        {
-            Console.WriteLine("Starting Method B...");
-            Thread.Sleep(2000); // simulate two seconds of work
-            Console.WriteLine("Finished Method B.");
-        }
-        static void MethodC()
-        {
-            Console.WriteLine("Starting Method C...");
-            Thread.Sleep(1000); // simulate one second of work
-            Console.WriteLine("Finished Method C.");
-        }
+        Stopwatch timer = Stopwatch.StartNew();
+        Console.WriteLine("Running methods synchronously on one thread.");
+        MethodA();
+        MethodB();
+        MethodC();
+        Console.WriteLine($"{timer.ElapsedMilliseconds:#,##0}ms elapsed.");
+    }
+    static void MethodA()
+    {
+        Console.WriteLine("Starting Method A...");
+        Thread.Sleep(3000); // simulate three seconds of work
+        Console.WriteLine("Finished Method A.");
+    }
+    static void MethodB()
+    {
+        Console.WriteLine("Starting Method B...");
+        Thread.Sleep(2000); // simulate two seconds of work
+        Console.WriteLine("Finished Method B.");
+    }
+    static void MethodC()
+    {
+        Console.WriteLine("Starting Method C...");
+        Thread.Sleep(1000); // simulate one second of work
+        Console.WriteLine("Finished Method C.");
     }
 }
 ```
@@ -457,7 +458,7 @@ $ 6,033ms elapsed.
 ```csharp
 static void Main(string[] args)
 {
-    var timer = Stopwatch.StartNew();
+    Stopwatch timer = Stopwatch.StartNew();
     // WriteLine("Running methods synchronously on one thread.");
     // MethodA();
     // MethodB();
@@ -466,8 +467,10 @@ static void Main(string[] args)
     Console.WriteLine("Running methods asynchronously on multiple threads.");
     Task taskA = new Task(MethodA);
     taskA.Start();
+    // Task.Run(action) internally uses the default TaskScheduler, which means it always offloads a task to the thread pool. StartNew(action), on the other hand, uses the scheduler of the current thread which may not use thread pool at all! This can be a matter of concern particularly when we work with the UI thread!
     Task taskB = Task.Factory.StartNew(MethodB);
     Task taskC = Task.Run(new Action(MethodC));
+    // Task taskC = Task.Factory.StartNew(A, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Default);        
     Console.WriteLine($"{timer.ElapsedMilliseconds:#,##0}ms elapsed.");
 }
 ```
@@ -564,6 +567,12 @@ $ 8,677 elapsed milliseconds.
 
 ## Applying a mutually exclusive lock to a resource
 
+### lock statement [Doc](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/lock)
+
+The lock statement acquires the mutual-exclusion lock for a given object, executes a statement block, and then releases the lock. While a lock is held, the thread that holds the lock can again acquire and release the lock. Any other thread is blocked from acquiring the lock and waits until the lock is released. The lock statement ensures that a single thread has exclusive access to that object.
+
+A lock statement of the form lock(x)..., where x is an expression of a reference type.
+
 ```csharp
 using System;
 using System.Threading;
@@ -594,10 +603,14 @@ namespace MyBusiness
             Console.WriteLine($"Results: {Message}.");
             Console.WriteLine($"{watch.ElapsedMilliseconds:#,##0} elapsed milliseconds.");
         }
-        static object conch = new object();
+
+        // You can consider conch is a token, and who has it in hand owns the resource.
+        private static object conch = new object();
+
         static void MethodA()
         {
             // add 5 times char A in the message
+            // The statements of the critical section. A critical section is a piece of code that accesses a shared resource (data structure or device) but the condition is that only one thread can enter in this section in a time.
             lock (conch)
             {
                 for (int i = 0; i < 5; i++)
