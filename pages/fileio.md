@@ -18,7 +18,7 @@ last_modified_at: 2023-04-13
 - **Language Compilers:** These turn your source code written with languages C# into intermediate language (IL) code stored in assemblies.
 With C# 6.0 and later, Microsoft switched to an open source rewritten compiler known as **Roslyn** that is also used by Visual Basic.
 
-- **Assembly:** Assemblies form the fundamental units of deployment, version control, reuse, activation scoping, and security permissions for .NET-based applications. An assembly is a collection of types and resources that are built to work together and form a logical unit of functionality. Assemblies take the form of executable (.exe) or dynamic link library (.dll) files, and are the building blocks of .NET applications. [Doc](https://docs.microsoft.com/en-us/dotnet/standard/assembly/)
+- **Assembly:** Assemblies form the fundamental units of deployment, version control, reuse, activation scoping, and security permissions for .NET-based applications. An assembly is a collection of types and resources that are built to work together and form a logical unit of functionality. Assemblies take the form of executable (.exe) or dynamic link library (.dll, so, .dylib) files, and are the building blocks of .NET applications. [Doc](https://docs.microsoft.com/en-us/dotnet/standard/assembly/)
 
 - **Common Language Runtime (CLR):** This runtime loads assemblies, compiles
 the IL code stored in them into native code instructions for your computer's CPU, and
@@ -67,8 +67,8 @@ any APIs.
 </Project>
 ```
 ```bash
-$ ls C:\Program Files\dotnet\sdk // Windows 10
-$ ls /usr/local/share/dotnet/sdk // MacOS
+$ cd C:\Program Files\dotnet\sdk // Windows 10
+$ cd /usr/local/share/dotnet/sdk // MacOS
 ```
 
 ```csharp
@@ -150,6 +150,7 @@ For example, if you want to add a package created by a third-party developer, fo
 ```bash
 $ dotnet list package
 ```
+
 ```csharp
 <Project Sdk="Microsoft.NET.Sdk">
 
