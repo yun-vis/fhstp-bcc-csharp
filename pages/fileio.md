@@ -104,6 +104,7 @@ namespace MyBusiness
         static void Main(string[] args)
         {
             Console.WriteLine("I can run everywhere!");
+            string? name = Console.ReadLine();
         }
     }
 }
@@ -173,7 +174,7 @@ $ dotnet list package
 - **Release Mode:** Release usually has optimizations enabled.
 
 ```bash
-$ dotnet publish -c Release -r osx-x64
+$ dotnet publish -c Release -r osx-x64 --self-contained=true
 ```
 
 ## Publishing a Single-File App
@@ -189,7 +190,7 @@ $ dotnet build -c Release
 $ dotnet pack -c Release
 ```
 
-# Managing the filesystem
+# Managing the Filesystem
 
 ## Internationalization
 
@@ -419,7 +420,7 @@ namespace MyBusiness
         static void WorkWithDirectories()
         {
             // define a directory path for a new folder // starting in the user's folder
-            var newFolder = Combine(
+            string newFolder = Combine(
                 GetFolderPath(SpecialFolder.Personal),
                 "Desktop", "MyNewFolder");
             WriteLine($"Working with: {newFolder}"); // check if it exists
@@ -468,7 +469,7 @@ namespace MyBusiness
         static void WorkWithFiles()
         {
             // define a directory path to output files // starting in the user's folder
-            var dir = Combine(
+            string dir = Combine(
                 GetFolderPath(SpecialFolder.Personal),
                 "Desktop", "MyNewFiles");
             CreateDirectory(dir);
@@ -524,6 +525,18 @@ WriteLine($"File Extension: {GetExtension(textFile)}");
 WriteLine($"Random File Name: {GetRandomFileName()}");
 WriteLine($"Temporary File Name: {GetTempFileName()}");
 ```
+
+On Windows
+```bash
+$ Folder Name: C:\Users\lbwu\Documents\Desktop\MyNewFiles
+$ File Name: Dummy.txt
+$ File Name without Extension: Dummy
+$ File Extension: .txt
+$ Random File Name: thi4osvc.sk0
+$ Temporary File Name: C:\Users\lbwu\AppData\Local\Temp\tmpD3BF.tmp
+```
+
+On MacOS
 ```bash
 $ Folder Name: /Users/yun/Desktop/MyNewFiles
 $ File Name: Dummy.txt
@@ -536,12 +549,22 @@ $ Temporary File Name: /var/folders/y_/jv3nd6kn7_v88vmf3378p6p40000gn/T/tmpfQQNS
 ## Getting file information
 
 ```csharp
-var info = new FileInfo(backupFile);
+FileInfo info = new FileInfo(backupFile);
 WriteLine($"{backupFile}:");
 WriteLine($"Contains {info.Length} bytes");
 WriteLine($"Last accessed {info.LastAccessTime}");
-WriteLine($"Has readonly set to {info.IsReadOnly}")
+WriteLine($"Has readonly set to {info.IsReadOnly}");
 ```
+
+On Windows
+```bash
+$ C:\Users\lbwu\Documents\Desktop\MyNewFiles\Dummy.bak:
+$ Contains 12 bytes
+$Last accessed 4/13/2023 9:11:26 PM
+$ Has readonly set to False
+```
+
+On MacOS
 ```bash
 $ /Users/yun/Desktop/MyNewFiles/Dummy.bak:
 $ Contains 11 bytes
@@ -866,7 +889,7 @@ $ A pint of milk is ?1.99
 ## Serializing Objects
 
 - **Serialization:** is the process of converting a live object into a sequence of bytes using a specified format.
-- **Deserialization:** is the reverse process of **Serialization:**.
+- **Deserialization:** is the reverse process of **Serialization**.
 
 There are dozens of formats you can specify, but the two most common ones are **eXtensible Markup Language (XML)** and **JavaScript Object Notation (JSON)**.
 
@@ -890,7 +913,7 @@ namespace MyBusiness
         static void Main(string[] args)
         {
             // create an object graph
-            var people = new List<Person> {
+            List<Person> people = new List<Person> {
             new Person(30000M) { FirstName = "Alice",
                 LastName = "Smith",
                 DateOfBirth = new DateTime(1974, 3, 14) },
@@ -906,7 +929,7 @@ namespace MyBusiness
                     DateOfBirth = new DateTime(2000, 7, 12) } } }
             };
             // create object that will format a List of Persons as XML
-            var xs = new XmlSerializer(typeof(List<Person>));
+            XmlSerializer xs = new XmlSerializer(typeof(List<Person>));
             // create a file to write to
             string path = Combine(CurrentDirectory, "people.xml");
             using (FileStream stream = File.Create(path))
@@ -943,16 +966,40 @@ namespace Animals
         {
             Salary = initialSalary;
         }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
-        public HashSet<Person> Children { get; set; }
+        public HashSet<Person>? Children { get; set; }
         protected decimal Salary { get; set; }
     }
 }
 ```
 ```bash
-$ <?xml version="1.0" encoding="utf-8"?><ArrayOfPerson xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><Person><FirstName>Alice</FirstName><LastName>Smith</LastName><DateOfBirth>1974-03-14T00:00:00</DateOfBirth></Person><Person><FirstName>Bob</FirstName><LastName>Jones</LastName><DateOfBirth>1969-11-23T00:00:00</DateOfBirth></Person><Person><FirstName>Charlie</FirstName><LastName>Cox</LastName><DateOfBirth>1984-05-04T00:00:00</DateOfBirth><Children><Person><FirstName>Sally</FirstName><LastName>Cox</LastName><DateOfBirth>2000-07-12T00:00:00</DateOfBirth></Person></Children></Person></ArrayOfPerson>
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfPerson xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Person>
+    <FirstName>Alice</FirstName>
+    <LastName>Smith</LastName>
+    <DateOfBirth>1974-03-14T00:00:00</DateOfBirth>
+  </Person>
+  <Person>
+    <FirstName>Bob</FirstName>
+    <LastName>Jones</LastName>
+    <DateOfBirth>1969-11-23T00:00:00</DateOfBirth>
+  </Person>
+  <Person>
+    <FirstName>Charlie</FirstName>
+    <LastName>Cox</LastName>
+    <DateOfBirth>1984-05-04T00:00:00</DateOfBirth>
+    <Children>
+      <Person>
+        <FirstName>Sally</FirstName>
+        <LastName>Cox</LastName>
+        <DateOfBirth>2000-07-12T00:00:00</DateOfBirth>
+      </Person>
+    </Children>
+  </Person>
+</ArrayOfPerson>
 ```
 
 ## Deserializing XML files
@@ -961,11 +1008,17 @@ $ <?xml version="1.0" encoding="utf-8"?><ArrayOfPerson xmlns:xsi="http://www.w3.
 using (FileStream xmlLoad = File.Open(path, FileMode.Open))
 {
     // deserialize and cast the object graph into a List of Person
-    var loadedPeople = (List<Person>)xs.Deserialize(xmlLoad);
-    foreach (var item in loadedPeople)
+    List<Person>? loadedPeople = (List<Person>?)xs.Deserialize(xmlLoad);
+    if (loadedPeople != null)
     {
-        WriteLine("{0} has {1} children.",
-          item.LastName, item.Children.Count);
+        foreach (Person item in loadedPeople)
+        {
+            if (item.Children != null)
+            {
+                WriteLine("{0} has {1} children.",
+                    item.LastName, item.Children.Count);
+            }
+        }
     }
 }
 ```
