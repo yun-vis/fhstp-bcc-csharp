@@ -232,7 +232,7 @@ public class Program
         string? newCulture = Console.ReadLine();
         if (!string.IsNullOrEmpty(newCulture))
         {
-            var ci = new CultureInfo(newCulture);
+            CultureInfo ci = new CultureInfo(newCulture);
             CultureInfo.CurrentCulture = ci;
             CultureInfo.CurrentUICulture = ci;
         }
@@ -694,6 +694,34 @@ $   <callsign>Athena</callsign>
 $   <callsign>Helo</callsign>
 $   <callsign>Racetrack</callsign>
 $ </callsigns>
+```
+
+## Reading XML from streams
+
+```csharp
+using (XmlReader reader = XmlReader.Create("streams.xml"))
+{
+    while (reader.Read())
+    {
+        // check if we are on an element node named callsign
+        if ((reader.NodeType == XmlNodeType.Element)
+        && (reader.Name == "callsign"))
+        {
+            reader.Read(); // move to the text inside element
+            WriteLine($"{reader.Value}"); // read its value
+        }
+    }
+}
+```
+```bash
+$ Husker
+$ Starbuck
+$ Apollo
+$ Boomer
+$ Bulldog
+$ Athena
+$ Helo
+$ Racetrack
 ```
 
 ## Disposing of file resources
