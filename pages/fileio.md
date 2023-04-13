@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"  
-last_modified_at: 2023-03-19
+last_modified_at: 2023-04-13
 ---
 
 # Program Deployment
@@ -67,8 +67,8 @@ any APIs.
 </Project>
 ```
 ```bash
-$ cd C:\Program Files\dotnet\sdk // Windows 10
-$ cd /usr/local/share/dotnet/sdk // MacOS
+$ ls C:\Program Files\dotnet\sdk // Windows 10
+$ ls /usr/local/share/dotnet/sdk // MacOS
 ```
 
 ```csharp
@@ -108,6 +108,7 @@ namespace MyBusiness
     }
 }
 ```
+
 ```csharp
 <Project Sdk="Microsoft.NET.Sdk">
 
@@ -139,12 +140,15 @@ You can find the currently supported Runtime Identifier (RID) values from [Doc](
 - dotnet publish: This compiles and then publishes the project, either with dependencies
 or as a self-contained application.
 - dotnet add package: This adds a reference to a package or class library to the project.
+```bash
+$ dotnet add package Newtonsoft.Json --version 13.0.3
+```
+For example, if you want to add a package created by a third-party developer, for example,
+[Newtonsoft.Json](https://www.nuget.org/packages/Newtonsoft.Json/) from [nuget](https://www.nuget.org/).
 - dotnet remove package: This removes a reference to a package or class library from the project.
 - dotnet list package: This lists the package or class library references for the project.
-
 ```bash
 $ dotnet list package
-$ dotnet add package Newtonsoft.Json --version 13.0.1
 ```
 ```csharp
 <Project Sdk="Microsoft.NET.Sdk">
@@ -157,7 +161,7 @@ $ dotnet add package Newtonsoft.Json --version 13.0.1
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 </Project>
 ```
@@ -185,6 +189,83 @@ $ dotnet pack -c Release
 ```
 
 # Managing the filesystem
+
+## Internationalization
+
+Internationalization is the process of enabling your code to run correctly all over the world. It has two parts: globalization and localization.
+
+* Globalization is about writing your code to accommodate multiple languages and region
+combinations (e.g., [Number Formating](https://learn.microsoft.com/en-us/globalization/locale/number-formatting), etc.). The combination of a language and a region is known as a culture.
+
+* Localization is about customizing the user interface to support a language, for example,
+changing the label of a button to be Close (en) or Fermer (fr).
+
+* [ISO Language Code Table](https://lingohub.com/developers/supported-locales/language-designators-with-regions)
+
+```csharp
+using System;
+using System.Globalization;
+
+// main program
+public class Program
+{
+    static void Main(string[] args)
+    {
+        // Set console encoding
+        Console.WriteLine("Console.OutputEncoding = " + Console.OutputEncoding);
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+        CultureInfo globalization = CultureInfo.CurrentCulture;
+        CultureInfo localization = CultureInfo.CurrentUICulture;
+        Console.WriteLine("The current globalization culture is {0}: {1}",
+        globalization.Name, globalization.DisplayName);
+        Console.WriteLine("The current localization culture is {0}: {1}",
+        localization.Name, localization.DisplayName);
+        Console.WriteLine();
+        Console.WriteLine("en-US: English (United States)");
+        Console.WriteLine("da-DK: Danish (Denmark)");
+        Console.WriteLine("fr-CA: French (Canada)");
+        Console.WriteLine("de-AT: German (Austria)");
+        Console.Write("Enter an ISO culture code: ");
+        string? newCulture = Console.ReadLine();
+        if (!string.IsNullOrEmpty(newCulture))
+        {
+            var ci = new CultureInfo(newCulture);
+            CultureInfo.CurrentCulture = ci;
+            CultureInfo.CurrentUICulture = ci;
+        }
+        Console.WriteLine();
+        Console.Write("Enter your name: ");
+        string? name = Console.ReadLine();
+        Console.Write("Enter your date of birth: ");
+        string? dob = Console.ReadLine();
+        Console.Write("Enter your salary: ");
+        string? salary = Console.ReadLine();
+        if (dob != null && salary != null)
+        {
+            DateTime date = DateTime.Parse(dob);
+            int minutes = (int)DateTime.Today.Subtract(date).TotalMinutes;
+            decimal earns = decimal.Parse(salary);
+            Console.WriteLine("{0} was born on a {1:dddd}, is {2:N0} minutes old, and earns {3:C}", name, date, minutes, earns);
+        }
+    }
+}
+```
+
+```bash
+$ The current globalization culture is en-US: English (United States)
+$ The current localization culture is en-US: English (United States) 
+
+$ en-US: English (United States)
+$ fr-CA: French (Canada)
+$ de-AT: German (Austria)
+$ Enter an ISO culture code: de-At
+
+$ Enter your name: Yun
+$ Enter your date of birth: 19/8/1999
+$ Enter your salary: 230000
+$ Yun was born on a Donnerstag, is 12 402 720 minutes old, and earns € 230.000,00
+```
 
 ## Handling cross-platform environments and filesystems
 
