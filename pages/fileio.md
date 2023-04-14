@@ -419,11 +419,14 @@ namespace MyBusiness
         }
         static void WorkWithDirectories()
         {
-            // define a directory path for a new folder // starting in the user's folder
+            // define a directory path for a new folder 
+            // starting in the user's folder
+            // SpecialFolder.Personal is defined differently on Windows and MacOS
             string newFolder = Combine(
-                GetFolderPath(SpecialFolder.Personal),
-                "Desktop", "MyNewFolder");
-            WriteLine($"Working with: {newFolder}"); // check if it exists
+                GetFolderPath(SpecialFolder.Desktop), "MyNewFolder");
+
+            Console.WriteLine("Working with:" + newFolder);
+            // check if it exists
             WriteLine($"Does it exist? {Exists(newFolder)}");
             // create directory
             WriteLine("Creating it...");
@@ -589,10 +592,9 @@ namespace MyBusiness
         {
             WorkWithText();
         }
-        // define an array of Viper pilot call signs
-        static string[] callsigns = new string[] {
-            "Husker", "Starbuck", "Apollo", "Boomer",
-            "Bulldog", "Athena", "Helo", "Racetrack" };
+        // define an array of cat types
+        static string[] cattypes = new string[] {
+            "SiameseCat", "BritishShorthair", "MaineCoon", "PersianCat", "Ragdoll", "SphynxCat" };
         static void WorkWithText()
         {
             // define a file to write to
@@ -601,7 +603,7 @@ namespace MyBusiness
             StreamWriter text = File.CreateText(textFile);
             // enumerate the strings, writing each one
             // to the stream on a separate line
-            foreach (string item in callsigns)
+            foreach (string item in cattypes)
             {
                 text.WriteLine(item);
             }
@@ -644,10 +646,9 @@ namespace MyBusiness
         {
             WorkWithXml();
         }
-        // define an array of Viper pilot call signs
-        static string[] callsigns = new string[] {
-            "Husker", "Starbuck", "Apollo", "Boomer",
-            "Bulldog", "Athena", "Helo", "Racetrack" };
+        // define an array of cat types
+        static string[] cattypes = new string[] {
+            "SiameseCat", "BritishShorthair", "MaineCoon", "PersianCat", "Ragdoll", "SphynxCat" };
         static void WorkWithXml()
         {
             // define a file to write to
@@ -661,11 +662,11 @@ namespace MyBusiness
             // write the XML declaration
             xml.WriteStartDocument();
             // write a root element
-            xml.WriteStartElement("callsigns");
+            xml.WriteStartElement("cattypes");
             // enumerate the strings writing each one to the stream
-            foreach (string item in callsigns)
+            foreach (string item in cattypes)
             {
-                xml.WriteElementString("callsign", item);
+                xml.WriteElementString("cattype", item);
             }
             // write the close root element
             xml.WriteEndElement();
@@ -684,16 +685,16 @@ namespace MyBusiness
 ```bash
 $ /Users/yun/Dropbox/FH/BCC/C-Sharp/Codes/CRC_CSD-09/MyBusiness/streams.xml contains 310 bytes.
 $ <?xml version="1.0" encoding="utf-8"?>
-$ <callsigns>
-$   <callsign>Husker</callsign>
-$   <callsign>Starbuck</callsign>
-$   <callsign>Apollo</callsign>
-$   <callsign>Boomer</callsign>
-$   <callsign>Bulldog</callsign>
-$   <callsign>Athena</callsign>
-$   <callsign>Helo</callsign>
-$   <callsign>Racetrack</callsign>
-$ </callsigns>
+$ <cattypes>
+$   <cattype>Husker</cattype>
+$   <cattype>Starbuck</cattype>
+$   <cattype>Apollo</cattype>
+$   <cattype>Boomer</cattype>
+$   <cattype>Bulldog</cattype>
+$   <cattype>Athena</cattype>
+$   <cattype>Helo</cattype>
+$   <cattype>Racetrack</cattype>
+$ </cattypes>
 ```
 
 ## Reading XML from streams
@@ -703,9 +704,9 @@ using (XmlReader reader = XmlReader.Create("streams.xml"))
 {
     while (reader.Read())
     {
-        // check if we are on an element node named callsign
+        // check if we are on an element node named cattype
         if ((reader.NodeType == XmlNodeType.Element)
-        && (reader.Name == "callsign"))
+        && (reader.Name == "cattype"))
         {
             reader.Read(); // move to the text inside element
             WriteLine($"{reader.Value}"); // read its value
@@ -744,7 +745,7 @@ namespace MyBusiness
             WorkWithXml();
         }
         // define an array of Viper pilot call signs
-        static string[] callsigns = new string[] {
+        static string[] cattypes = new string[] {
             "Husker", "Starbuck", "Apollo", "Boomer",
             "Bulldog", "Athena", "Helo", "Racetrack" };
         static void WorkWithXml()
@@ -764,11 +765,11 @@ namespace MyBusiness
                 // write the XML declaration
                 xml.WriteStartDocument();
                 // write a root element
-                xml.WriteStartElement("callsigns");
+                xml.WriteStartElement("cattypes");
                 // enumerate the strings writing each one to the stream
-                foreach (string item in callsigns)
+                foreach (string item in cattypes)
                 {
-                    xml.WriteElementString("callsign", item);
+                    xml.WriteElementString("cattype", item);
                 }
                 // write the close root element
                 xml.WriteEndElement();
@@ -805,16 +806,16 @@ namespace MyBusiness
 ```bash
 $ 0 contains 1 bytes.
 $ <?xml version="1.0" encoding="utf-8"?>
-$ <callsigns>
-$   <callsign>Husker</callsign>
-$   <callsign>Starbuck</callsign>
-$   <callsign>Apollo</callsign>
-$   <callsign>Boomer</callsign>
-$   <callsign>Bulldog</callsign>
-$   <callsign>Athena</callsign>
-$   <callsign>Helo</callsign>
-$   <callsign>Racetrack</callsign>
-$ </callsigns>
+$ <cattypes>
+$   <cattype>Husker</cattype>
+$   <cattype>Starbuck</cattype>
+$   <cattype>Apollo</cattype>
+$   <cattype>Boomer</cattype>
+$   <cattype>Bulldog</cattype>
+$   <cattype>Athena</cattype>
+$   <cattype>Helo</cattype>
+$   <cattype>Racetrack</cattype>
+$ </cattypes>
 $ The XML writer\'s unmanaged resources have been disposed.
 $ The file stream\'s unmanaged resources have been disposed.
 ```
