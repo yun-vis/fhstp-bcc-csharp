@@ -618,15 +618,13 @@ namespace MyBusiness
 }
 ```
 ```bash
-/Users/yun/Dropbox/FH/BCC/C-Sharp/Codes/CRC_CSD-09/MyBusiness/streams.txt contains 60 bytes.
-$ Husker
-$ Starbuck
-$ Apollo
-$ Boomer
-$ Bulldog
-$ Athena
-$ Helo
-$ Racetrack
+/Users/yun/Dropbox/FH/BCC/C-Sharp/Codes/CRC_CSD-09/MyBusiness/streams.txt contains 73 bytes.
+$ SiameseCat
+$ BritishShorthair
+$ MaineCoon
+$ PersianCat
+$ Ragdoll
+$ SphynxCat
 ```
 
 ## Writing to XML streams
@@ -683,17 +681,15 @@ namespace MyBusiness
 }
 ```
 ```bash
-$ /Users/yun/Dropbox/FH/BCC/C-Sharp/Codes/CRC_CSD-09/MyBusiness/streams.xml contains 310 bytes.
+$ /Users/yun/Dropbox/FH/BCC/C-Sharp/Codes/CRC_CSD-09/MyBusiness/streams.xml contains 265 bytes.
 $ <?xml version="1.0" encoding="utf-8"?>
 $ <cattypes>
-$   <cattype>Husker</cattype>
-$   <cattype>Starbuck</cattype>
-$   <cattype>Apollo</cattype>
-$   <cattype>Boomer</cattype>
-$   <cattype>Bulldog</cattype>
-$   <cattype>Athena</cattype>
-$   <cattype>Helo</cattype>
-$   <cattype>Racetrack</cattype>
+$   <cattype>SiameseCat</cattype>
+$   <cattype>BritishShorthair</cattype>
+$   <cattype>MaineCoon</cattype>
+$   <cattype>PersianCat</cattype>
+$   <cattype>Ragdoll</cattype>
+$   <cattype>SphynxCat</cattype>
 $ </cattypes>
 ```
 
@@ -715,14 +711,12 @@ using (XmlReader reader = XmlReader.Create("streams.xml"))
 }
 ```
 ```bash
-$ Husker
-$ Starbuck
-$ Apollo
-$ Boomer
-$ Bulldog
-$ Athena
-$ Helo
-$ Racetrack
+$ SiameseCat
+$ BritishShorthair
+$ MaineCoon
+$ PersianCat
+$ Ragdoll
+$ SphynxCat
 ```
 
 ## Disposing of file resources
@@ -744,10 +738,9 @@ namespace MyBusiness
         {
             WorkWithXml();
         }
-        // define an array of Viper pilot call signs
+        // define an array of cat types
         static string[] cattypes = new string[] {
-            "Husker", "Starbuck", "Apollo", "Boomer",
-            "Bulldog", "Athena", "Helo", "Racetrack" };
+            "SiameseCat", "BritishShorthair", "MaineCoon", "PersianCat", "Ragdoll", "SphynxCat" };
         static void WorkWithXml()
         {
             FileStream? xmlFileStream = null;
@@ -807,14 +800,12 @@ namespace MyBusiness
 $ 0 contains 1 bytes.
 $ <?xml version="1.0" encoding="utf-8"?>
 $ <cattypes>
-$   <cattype>Husker</cattype>
-$   <cattype>Starbuck</cattype>
-$   <cattype>Apollo</cattype>
-$   <cattype>Boomer</cattype>
-$   <cattype>Bulldog</cattype>
-$   <cattype>Athena</cattype>
-$   <cattype>Helo</cattype>
-$   <cattype>Racetrack</cattype>
+$   <cattype>SiameseCat</cattype>
+$   <cattype>BritishShorthair</cattype>
+$   <cattype>MaineCoon</cattype>
+$   <cattype>PersianCat</cattype>
+$   <cattype>Ragdoll</cattype>
+$   <cattype>SphynxCat</cattype>
 $ </cattypes>
 $ The XML writer\'s unmanaged resources have been disposed.
 $ The file stream\'s unmanaged resources have been disposed.
@@ -961,6 +952,8 @@ namespace MyBusiness
             XmlSerializer xs = new XmlSerializer(typeof(List<Person>));
             // create a file to write to
             string path = Combine(CurrentDirectory, "people.xml");
+
+            // using allows us not to forget stream.Close();
             using (FileStream stream = File.Create(path))
             {
                 // serialize the object graph to the stream
@@ -1099,5 +1092,7 @@ Environment.SpecialFolder.UserProfile = /Users/yun
 
 ---
 # Selected Theory
+
+* [Numerals in various writing systems](https://omniglot.com/language/numerals.htm)
 
 # File System
