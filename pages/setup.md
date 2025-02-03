@@ -6,41 +6,44 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"
-last_modified_at: 2023-03-16
+last_modified_at: 2025-02-03
 ---
 
-![C# Logo](/assets/images/c-sharp.png)
+![C# Logo](/fhstp-bcc-csharp/assets/images/c-sharp.png)
 
 # C# Environment Setup
 
 Windows:
-  * Visual Studio Code: .Net 6, support PUML Class Diagram
+  * Visual Studio Code: .Net 8 (tested on Windows 10)
 
 MacOS:
-  * Visual Studio Code: .Net 6, support PUML Class Diagram (tested on Mojave)
+  * Visual Studio Code: .Net 8 (tested on ??)
 
 Linux:
-  * Visual Studio Code: .Net 6, support PUML Class Diagram (tested Unbuntu 22.04)
+  * Visual Studio Code: .Net 8, support PUML Class Diagram (tested on Unbuntu 24.04)
 
-## Install Visual Studio Code and .NET 6 SDKs
+## Install Visual Studio Code and .NET 8 SDKs
 
   * [Visual Studio Code](https://code.visualstudio.com/)
-  * [.Net 6 SDKs](https://dotnet.microsoft.com/en-us/download/dotnet)
+  * [.Net 8 SDKs (Long Term Support)](https://dotnet.microsoft.com/en-us/download/dotnet)
 
 ### Install Visual Studio Code Extension
 
-  * [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
-  * [CSharp to PlantUML](https://marketplace.visualstudio.com/items?itemName=pierre3.csharp-to-plantuml)
-  * [PlantUML](http://www.plantuml.com/plantuml)
-  * [Markdown All in One](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one)
+  * [.NET MAUI](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit): official Microsoft extension for MAUI developers.
+    * The following two extensions should come automatically.
+    * [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
+    * [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
+  * [Markdown All in One](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one): Extension for Markdown documents.
+  * [CSharp to PlantUML](https://marketplace.visualstudio.com/items?itemName=pierre3.csharp-to-plantuml): Extension for converting Calss relationship in C# to PUML format. 
+  * [PlantUML](https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml): Extension for visualizing PUML format in an image.
   
 ### Additional Settings (Optional)
-  * Turn on Word Wrap in the Setting
+  * Turn on Word Wrap in the Setting if preferred.
 
-## CSharp to PlantUML via Extension
+## CSharp to PlantUML via Extension of VSCode
   * Usage: Ctrl+Shift+P to enable the vscode Command Palette and run the command "csharp2plantuml.classDiagram".
 
-## CSharp to PlantUML (Optional, in case you don't find the extension through Visual Studio Code)
+<!-- ## CSharp to PlantUML (Optional, in case you don't find the extension through Visual Studio Code)
 
   * [CSharp to PlantUML](https://github.com/pierre3/PlantUmlClassDiagramGenerator)
   * Install
@@ -51,45 +54,48 @@ Linux:
   ```bash
   $ puml-gen ./Program.cs -public
   ```
-  * Copy the text from *.puml and visualize using [PUML Viewer](https://www.planttext.com)
+  * Copy the text from *.puml and visualize using [PUML Viewer](https://www.planttext.com) -->
 
-## PlantUML via Extension 
+## PlantUML via Extension of VSCode
   * PlantUML is an Extension for viewing *.puml files.
-  * Prerequisite: 
+  * Prerequisite maybe needed (check the documentation of the extension): 
     * Windows: [Java runtime](https://www.java.com/en/download/)
-    * Mac OS: [Java runtime](https://www.java.com/en/download/) + graphviz ($ brew install graphviz) 
-  * Usage: Alt+D to enable the preview function
+    * Mac OS: [Java runtime](https://www.java.com/en/download/) + graphviz 
+  * Usage: Alt+D (Windows)/Option+D (Mac OS) to enable the preview function
 
 ## Markdown All in One via Extension
   * Usage: Ctrl K+V to preview the file
 
-
 ## First Console Program
 
 ```bash
-$ dotnet --info // check the version installed in your system
-$ dotnet new console // Use top-level statements
-$ dotnet new console --use-program-main // Skip top-level statements and include Main()
+// check the installed .Net in your system
+$ dotnet --info 
+// check the .Net Version
+$ dotnet --version
+// Use top-level statements
+$ dotnet new console 
+// Skip top-level statements and include Main()
+$ dotnet new console --use-program-main 
 ```
+or call .NET New Project in the [VSCode Command Palette](https://code.visualstudio.com/docs/getstarted/userinterface#:~:text=The%20most%20important%20key%20combination,for%20the%20most%20common%20operations.)
 
 In Program.cs [Doc](https://aka.ms/new-console-template)
+### Use top-level statements
 ```csharp
 // See https://aka.ms/new-console-template for more information
 Console.WriteLine("Hello, World!");
 ```
 
+### Skip top-level statements and include Main
 ```csharp
-using System;
+namespace CRC_CSD_01;
 
-namespace CRC_CSD_01
+class Program
 {
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args) // Where the application begins
-        {
-            Console.WriteLine("Hello World!");
-            // Equal to System.Console.WriteLine("Hello World!");
-        }
+        Console.WriteLine("Hello, World!");
     }
 }
 ```
@@ -100,8 +106,7 @@ In CRC_CSD-00.csproj [Doc](https://docs.microsoft.com/en-us/aspnet/web-forms/ove
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>CRC_CSD_01</RootNamespace>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -109,82 +114,54 @@ In CRC_CSD-00.csproj [Doc](https://docs.microsoft.com/en-us/aspnet/web-forms/ove
 </Project>
 ```
 
-## How to Check the .Net Version
+## How to Run the Program
 
 ```bash
-$ dotnet --version
-```
-
-## How to Build the Program
-
-```bash
+// Build the program
 $ dotnet build
-```
-
-## How to Run the Program (Including Build)
-
-```bash
+// Run the program (Including Build, so you can skip the above command) 
 $ dotnet run
 ```
 
-## Namespace
+## Namespace in C#
 ```csharp
 using System;         // System namespace (defined by C#)
                       // The "using" Directive
-
-namespace CRC_CSD_01  // Application namespace (defined by the programmer)
-{
-    class Program
-    {
-        // static: shared method of all instances by the class
-        // void: return "nothing" in the method
-        // string[] args: parameters passed to the main function.
-        // The parameters can be taken when lauching the application.
-        static void Main(string[] args) // Where the application begins
-        {
-            Console.WriteLine("Hello World!");  // Console is a system class
-        }
-    }
-}
-```
-
-```csharp
-using static System.Console;  // Console is a static system class
+// or
+// using static System.Console;  // Console is a static system class
 /*
 A static class is basically the same as a non-static class,
 but there is one difference: a static class cannot be instantiated.
 */
 
-namespace CRC_CSD_01  // Application namespace (defined by the programmer)
+namespace CRC_CSD_01; // Application namespace (defined by the programmer)
+
+class Program
 {
-    class Program
+    // static: shared method of all instances by the class
+    // void: return "nothing" in the method
+    // string[] args: parameters passed to the main function.
+    // The parameters can be taken when lauching the application.
+    static void Main(string[] args)  // Where the application begins
     {
-        // static: shared method of all instances by the class
-        // void: return "nothing" in the method
-        // string[] args: parameters passed to the main function.
-        // The parameters can be taken when lauching the application.
-        static void Main(string[] args) // Where the application begins
-        {
-            WriteLine("Hello World!");
-        }
+        Console.WriteLine("Hello, World!");   // Console is a system class
     }
 }
 ```
 
+## Console Program with Accompanying Parameters
 ```csharp
 using System;
 
-namespace CRC_CSD_01
+namespace CRC_CSD_01;
+class Program
 {
-    class Program
+    // string[] args: parameters passed to the main function.
+    static void Main(string[] args) // Where the application begins
     {
-        // string[] args: parameters passed to the main function.
-        static void Main(string[] args) // Where the application begins
-        {
-            Console.WriteLine("The length of the arguments: " + args.Length);
-            for( int i = 0; i < args.Length; i++ ){
-                Console.WriteLine(args[i]);
-            }
+        Console.WriteLine("The length of the arguments: " + args.Length);
+        for( int i = 0; i < args.Length; i++ ){
+            Console.WriteLine(args[i]);
         }
     }
 }
@@ -195,7 +172,7 @@ namespace CRC_CSD_01
   * [Markdown Guide](https://www.markdownguide.org/)
 
 
-## Writing a README.mk file
+## Example for a README.md file in your Project
 
   * [Best README Template](https://github.com/othneildrew/Best-README-Template)
 
@@ -223,7 +200,7 @@ Use pascal casing ("PascalCasing") when naming a class, record, or struct. When 
 ### Camel Case
 Use camel casing ("camelCasing") when naming private or internal fields, and prefix them with _.
 
-## Comments
+## Comments, an Example
 ```csharp
 // This is a single line comment
 
@@ -237,24 +214,22 @@ of comment symbol is reached
 The following codes show how I often add comments to my programs.
 This is a my application namespace, called My Business.
 */
-namespace CRC_CSD_01
+namespace CRC_CSD_01;
+/*
+The class of my main program
+*/
+class Program
 {
     /*
-    The class of my main program
+    Main: The class of my main program, where the application begins.
+    Input:
+      args: input parameters
+    Output:
+      none
     */
-    class Program
+    static void Main(string[] args)
     {
-        /*
-        Main: The class of my main program, where the application begins.
-        Input:
-          args: input parameters
-        Output:
-          none
-        */
-        static void Main(string[] args)
-        {
-            System.Console.WriteLine("Hello World!");
-        }
+        System.Console.WriteLine("Hello World!");
     }
 }
 ```
