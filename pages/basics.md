@@ -9,9 +9,9 @@ header:
 last_modified_at: 2023-03-05
 ---
 
-C# is a general-purpose, type-safe, object-oriented programming language.
+C# is a general-purpose, type-safe, object-oriented programming language. Now it is also open source.
 
-# C# Basic Syntax
+# C# Basic Syntax (PART I)
 
 ## Hello, world! Example
 
@@ -370,6 +370,10 @@ namespace CollatzConjecture
     }
 }
 ```
+
+
+# C# Basic Syntax (PART II)
+
 
 ## Using Methods
 

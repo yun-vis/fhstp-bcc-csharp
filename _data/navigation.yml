@@ -16,6 +16,10 @@ main:
     url: /pages/collection
   - title: ".Net Type"
     url: /pages/dotnettype
+  - title: "Nuget"
+    url: /pages/nuget
+  - title: ".Net MAUI"
+    url: /pages/dotnetmaui
   - title: "File IO"
     url: /pages/fileio
   - title: "Performance"
@@ -24,15 +28,4 @@ main:
     url: /pages/snake
   - title: "Assignment"
     url: /pages/assignment
-  # - title: "Knitting for Fun"
-  #   url: /pages/knitting
-  # - title: "Maker Gallery"
-  #   url: /pages/gallery
-  # - title: "About"
-  #   url: https://mmistakes.github.io/minimal-mistakes/about/
-  # - title: "Sample Posts"
-  #   url: /year-archive/
-  # - title: "Sample Collections"
-  #   url: /collection-archive/
-  # - title: "Sitemap"
-  #   url: /sitemap/
+ 

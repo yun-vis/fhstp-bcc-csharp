@@ -9,7 +9,7 @@ header:
 last_modified_at: 2025-02-03
 ---
 
-![C# Logo](/fhstp-bcc-csharp/assets/images/c-sharp.png)
+<!-- ![C# Logo](/fhstp-bcc-csharp/assets/images/c-sharp.png) -->
 
 # C# Environment Setup
 
@@ -29,10 +29,11 @@ Linux:
 
 ### Install Visual Studio Code Extension
 
-  * [.NET MAUI](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit): official Microsoft extension for MAUI developers.
+  * [.NET MAUI (Optional)](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit): official Microsoft extension for MAUI developers.
     * The following two extensions should come automatically.
-    * [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
-    * [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
+    * [C# Dev Kit (Mandatory)](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
+      * Using C# Dev Kit requires you to sign in with a Microsoft account that has an active Visual Studio subscription. Visual Studio Community, for example.
+    * [C# (Mandatory)](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
   * [Markdown All in One](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one): Extension for Markdown documents.
   * [CSharp to PlantUML](https://marketplace.visualstudio.com/items?itemName=pierre3.csharp-to-plantuml): Extension for converting Calss relationship in C# to PUML format. 
   * [PlantUML](https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml): Extension for visualizing PUML format in an image.
@@ -234,5 +235,19 @@ class Program
 }
 ```
 
+# Potential Errors
+
+* Explorer in VSCode is missing. Ctrl+Shift+P to enable the vscode Command Palette and run the command "View: Reset View Locations".
+
+
 ---
 # External Resources
+
+* Additional IDEs
+  * [Visual Studio 2022](https://visualstudio.microsoft.com/vs/)
+    * [Install Visual Studio](https://learn.microsoft.com/en-us/visualstudio/install/install-visual-studio?view=vs-2022)
+  * [JetBrain Ridar](https://www.jetbrains.com/rider/)
+* [Microsoft Learn](https://learn.microsoft.com/en-us/)
+* [Debugging in VS Code](https://code.visualstudio.com/docs/csharp/debugging)
+* [Announcing the .NET MAUI extension for Visual Studio Code](https://devblogs.microsoft.com/visualstudio/announcing-the-dotnet-maui-extension-for-visual-studio-code/) 
+* [Creating C4 and UML Diagrams Using PlantUML with VSCode Extension](https://medium.com/@robertdennyson/creating-c4-and-uml-diagrams-using-plantuml-with-vscode-extension-90032a21ec43)

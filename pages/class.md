@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"  
-last_modified_at: 2023-03-06
+last_modified_at: 2025-02-05
 ---
 
 
@@ -223,6 +223,10 @@ namespace Animals
 $ Meow!
 $ Nana is pooping!
 ```
+
+# [Properties and Encapsulation](https://www.w3schools.com/cs/cs_properties.php)
+
+## C# Fields & Properties, What is the difference?
 
 ## C# Property [Doc](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/properties)
 

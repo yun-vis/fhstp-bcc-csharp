@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"  
-last_modified_at: 2023-03-19
+last_modified_at: 2025-02-06
 ---
 
 # How to improve code readability?
@@ -30,7 +30,8 @@ The simplest C# expressions are literals (for example, integer and real numbers)
 ## [Statement](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/statements-expressions-operators/statements)
 The actions that a program takes are expressed in statements. Common actions include declaring variables, assigning values, calling methods, looping through collections, and branching to one or another block of code, depending on a given condition.
 
-# Lambda Expression [Doc](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/lambda-expressions)
+
+# Lambda Expression and Anonymous Functions [Doc](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/lambda-expressions)
 
 You use a lambda expression to create an anonymous function. Use the lambda declaration operator **=>** to separate the lambda's parameter list from its body. A lambda expression can be of any of the following two forms:
 
