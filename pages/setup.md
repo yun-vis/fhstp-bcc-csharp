@@ -17,10 +17,10 @@ Windows:
   * Visual Studio Code: .Net 8 (tested on Windows 10)
 
 MacOS:
-  * Visual Studio Code: .Net 8 (tested on ??)
+  * Visual Studio Code: .Net 8 (tested on Sequoia 15.3)
 
 Linux:
-  * Visual Studio Code: .Net 8, support PUML Class Diagram (tested on Unbuntu 24.04)
+  * Visual Studio Code: .Net 8 (tested on Unbuntu 24.04)
 
 ## Install Visual Studio Code and .NET 8 SDKs
 
@@ -67,13 +67,24 @@ Linux:
 ## Markdown All in One via Extension
   * Usage: Ctrl K+V to preview the file
 
-## First Console Program
+## Check Your Installed .Net SDK
 
 ```bash
 // check the installed .Net in your system
 $ dotnet --info 
-// check the .Net Version
+// check the .Net Version used for command line
 $ dotnet --version
+// check all installed SDKs
+$ dotnet --list-sdks
+// If you want to change your .Net Version, add the globaljson file
+$ dotnet new globaljson --sdk-version 8.0.302 --roll-forward latestFeature
+```
+
+More about globaljson can be found [here](https://learn.microsoft.com/en-us/dotnet/core/tools/global-json).
+
+## First Console Program
+
+```bash
 // Use top-level statements
 $ dotnet new console 
 // Skip top-level statements and include Main()

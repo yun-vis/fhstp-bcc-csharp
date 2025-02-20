@@ -9,7 +9,7 @@ header:
 last_modified_at: 2025-02-04
 ---
 
-# [An introduction to NuGet](https://learn.microsoft.com/en-us/nuget/what-is-nuget)
+# [An Introduction to NuGet](https://learn.microsoft.com/en-us/nuget/what-is-nuget)
 An essential tool for any modern development platform is a mechanism through which developers can create, share, and consume useful code. Often such code is bundled into "packages" that contain compiled code (as DLLs) along with other content needed in the projects that consume these packages.
 
 For .NET (including .NET Core), the Microsoft-supported mechanism for sharing code is NuGet, which defines how packages for .NET are created, hosted, and consumed, and provides the tools for each of those roles.
