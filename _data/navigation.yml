@@ -6,12 +6,12 @@ main:
     url: /pages/basics
   - title: "Class"
     url: /pages/class
-  - title: "Data Structure & Algorithm"
-    url: /pages/algorithm
   - title: "Inheritance"
     url: /pages/inheritance
   - title: "Polymorphism"
     url: /pages/polymorphism
+  - title: "Data Structure & Algorithm"
+    url: /pages/algorithm
   - title: "Collections"
     url: /pages/collection
   - title: ".Net Type"

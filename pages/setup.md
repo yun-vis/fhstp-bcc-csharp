@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"
-last_modified_at: 2025-02-03
+last_modified_at: 2025-02-20
 ---
 
 <!-- ![C# Logo](/fhstp-bcc-csharp/assets/images/c-sharp.png) -->
@@ -70,6 +70,8 @@ Linux:
 ## Check Your Installed .Net SDK
 
 ```bash
+// Display help
+$ dotnet -h|--help
 // check the installed .Net in your system
 $ dotnet --info 
 // check the .Net Version used for command line
