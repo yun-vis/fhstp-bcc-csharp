@@ -347,6 +347,94 @@ foreach (int element in fibNumbers)
 // 0 1 1 2 3 5 8 13
 ```
 
+## Main args()
+```csharp
+//Simple calculator showing the use of args(), switch, and loops
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        if (args.Length < 2)
+        {
+            Console.WriteLine("Usage: dotnet run -[operation] numbers...");
+            Console.WriteLine("Operations:");
+            Console.WriteLine("  -mul x y z...    (Multiply numbers)");
+            Console.WriteLine("  -sum x y z...    (Add numbers)");
+            Console.WriteLine("  -div x y         (Divide x by y)");
+            Console.WriteLine("  -sub x y         (Subtract y from x)");
+            return;
+        }
+
+        string operation = args[0];
+        double[] numbers = new double[args.Length - 1];
+
+        // Convert input strings to numbers manually
+        for (int i = 1; i < args.Length; i++)
+        {
+            if (!double.TryParse(args[i], out numbers[i - 1]))
+            {
+                Console.WriteLine($"Error: '{args[i]}' is not a valid number.");
+                return;
+            }
+        }
+
+        double result = 0;
+
+        switch (operation)
+        {
+            case "-mul":
+                result = 1; // Start with 1 for multiplication
+                for (int i = 0; i < numbers.Length; i++)
+                {
+                    result *= numbers[i];
+                }
+                Console.WriteLine($"Result: {result}");
+                break;
+
+            case "-sum":
+                result = 0; // Start with 0 for addition
+                for (int i = 0; i < numbers.Length; i++)
+                {
+                    result += numbers[i];
+                }
+                Console.WriteLine($"Result: {result}");
+                break;
+
+            case "-div":
+                if (numbers.Length != 2)
+                {
+                    Console.WriteLine("Error: Division requires exactly two numbers.");
+                    return;
+                }
+                if (numbers[1] == 0)
+                {
+                    Console.WriteLine("Error: Division by zero is not allowed.");
+                    return;
+                }
+                result = numbers[0] / numbers[1];
+                Console.WriteLine($"Result: {result}");
+                break;
+
+            case "-sub":
+                if (numbers.Length != 2)
+                {
+                    Console.WriteLine("Error: Subtraction requires exactly two numbers.");
+                    return;
+                }
+                result = numbers[0] - numbers[1];
+                Console.WriteLine($"Result: {result}");
+                break;
+
+            default:
+                Console.WriteLine("Error: Unknown operation. Use -mul, -sum, -div, or -sub.");
+                break;
+        }
+    }
+}
+```
+
 ### C# Jump Statements [Doc](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/statements/jump-statements)
 
 ### Collatz Conjecture as an example
