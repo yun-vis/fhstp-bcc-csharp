@@ -29,11 +29,11 @@ Linux:
 
 ### Install Visual Studio Code Extension
 
-  * [.NET MAUI (Optional)](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit): official Microsoft extension for MAUI developers.
-    * The following two extensions should come automatically.
-    * [C# Dev Kit (Mandatory)](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
+  <!-- * [.NET MAUI (Optional)](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-maui): official Microsoft extension for MAUI developers. -->
+  <!-- * The following two extensions should come automatically. -->
+  * [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
       * Using C# Dev Kit requires you to sign in with a Microsoft account that has an active Visual Studio subscription. Visual Studio Community, for example.
-    * [C# (Mandatory)](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
+  * [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
   * [Markdown All in One](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one): Extension for Markdown documents.
   * [CSharp to PlantUML](https://marketplace.visualstudio.com/items?itemName=pierre3.csharp-to-plantuml): Extension for converting Calss relationship in C# to PUML format. 
   * [PlantUML](https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml): Extension for visualizing PUML format in an image.
