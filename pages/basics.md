@@ -118,6 +118,28 @@ else
 
 ```
 
+#### Best practices for var
+✅ Use var when it improves readability, especially with long type names:
+```csharp
+var customers = new Dictionary<int, List<string>>();
+```
+✅ Use var in foreach loops:
+```csharp
+foreach (var item in myList)
+{
+    Console.WriteLine(item);
+}
+```
+❌ Avoid var for simple types (like int, string, bool):
+```csharp
+var age = 25;  // Bad
+int age = 25;  // Better
+```
+❌ Avoid var when the type is not obvious:
+```csharp
+var result = ProcessData(); // What does this return?
+```
+
 ### null value
 ```csharp
 int myNum = 4;
