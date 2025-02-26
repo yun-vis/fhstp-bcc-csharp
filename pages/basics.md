@@ -437,6 +437,7 @@ class Program
 
 ### C# Jump Statements [Doc](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/statements/jump-statements)
 
+
 ### Collatz Conjecture as an example
 
 ```csharp
@@ -489,101 +490,77 @@ namespace CollatzConjecture
 
 A method is a code block that contains a series of statements.
 
+In C#, a method declaration includes
+OptionalModifier ReturnType TheMethodName( ParameterType parameterName )
+Also note that **return** only takes one parameter.
+
 ### Variables Inside Methods (The Scope of Methods)
 
 Parameters and variables declared inside of a method can be only used under the scope of the method.
+Return type should be matched.
+A method can have optional parameters
 
 ```csharp
 using System;
 
-namespace CRC_CSD_02
+namespace CRC_CSD_03; // File scoped namespaces
+
+class Program
 {
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            // Any of the following are valid method calls.
-            AddSomeNumbers(1);          // Returns 6.
-            AddSomeNumbers(1, 1);       // Returns 4.
-            AddSomeNumbers(3, 3, 3);    // Returns 9.
+        // Any of the following are valid method calls.
+        AddSomeNumbers(1);          // Returns 6.
+        AddSomeNumbers(1, 1);       // Returns 4.
+        AddSomeNumbers(3, 3, 3);    // Returns 9.
 
-            a = 10; // compile error!
+        int value = 0;
+        if (args.Length == 0)
+        {
+            Console.WriteLine($"The value is {value}.");
+        }
+        else if (args.Length == 1)
+        { 
+            // int.Parse is a system method: Convert string to int
+            value = AddSomeNumbers(int.Parse(args[0]));
+            Console.WriteLine($"The value is {value}.");
+        }
+        else if (args.Length == 2)
+        { 
+            value = AddSomeNumbers(int.Parse(args[0]), int.Parse(args[1]));
+            Console.WriteLine($"The value is {value}.");
+        }
+        else
+        { 
+            value = AddSomeNumbers(int.Parse(args[0]), int.Parse(args[1]), int.Parse(args[2]));
+            Console.WriteLine($"The value is {value}.");
         }
 
-        static int AddSomeNumbers(int x, int y = 3, int z = 2)
-        {
-            int a = 5;
-            return x + y + z + a;
-        }
+        // a = 10; // compile error! The scope for a is not correct!
+        PrintMyName("Yun");
     }
-}
-```
 
-### Return Type
-
-```csharp
-using System;
-
-namespace CRC_CSD_02
-{
-    class Program
+    /*
+    Main: The class of my main program, where the application begins.
+    Input:
+        x: int
+        y: int, optional
+        z: int, optional
+    Output:
+        int
+    */
+    static int AddSomeNumbers(int x, int y = 3, int z = 2)
     {
-        static void Main(string[] args)
-        {
-            // Any of the following are valid method calls.
-            AddSomeNumbers(1);          // Returns 6.
-            AddSomeNumbers(1, 1);       // Returns 4.
-            AddSomeNumbers(3, 3, 3);    // Returns 9.
-
-            PrintMyName("Yun");
-        }
+        int a = 5;
 
         // return int
-        static int AddSomeNumbers(int x, int y = 3, int z = 2)
-        {
-            int a = 5;
-            return x + y + z + a;
-        }
-
-        // return void, nothing to return
-        static void PrintMyName(string myName)
-        {
-            Console.WriteLine($"My name is {myName}.");
-        }
+        return x + y + z + a;
     }
-}
-```
 
-### Optional Parameters
-
-```csharp
-using System;
-
-namespace CRC_CSD_02
-{
-    class Program
+    // return void, nothing to return
+    static void PrintMyName(string myName)
     {
-        static void Main(string[] args)
-        {
-            // Any of the following are valid method calls.
-            AddSomeNumbers(1);          // Returns 6.
-            AddSomeNumbers(1, 1);       // Returns 4.
-            AddSomeNumbers(3, 3, 3);    // Returns 9.
-        }
-
-        /*
-        Main: The class of my main program, where the application begins.
-        Input:
-          x: int
-          y: int, optional
-          z: int, optional
-        Output:
-          int
-        */
-        static int AddSomeNumbers(int x, int y = 3, int z = 2)
-        {
-            return x + y + z;
-        }
+        Console.WriteLine($"My name is {myName}.");
     }
 }
 ```
@@ -598,13 +575,6 @@ Console.WriteLine(Math.Sqrt(9));
 $ 3
 ```
 
-### Method Declaration
-
-In C#, a method declaration includes
-
-OptionalModifier ReturnType TheMethodName( ParameterType parameterName )
-
-Also note that **return** only takes one parameter.
 
 ### Call by Value vs. Call by Reference
 Passing parameters in a method can be done by deep copying or referencing.
@@ -612,7 +582,7 @@ Passing parameters in a method can be done by deep copying or referencing.
 ```csharp
 using System;
 
-namespace CRC_CSD_02
+namespace CRC_CSD_03
 {
     class Program
     {
@@ -863,3 +833,9 @@ namespace CRC_CSD_02
 $ A Fibonacci Sequence of elements 5 using Recursion is: 0 1 1 2 3
 $ A Fibonacci Sequence of elements 5 using Iteration is: 0 1 1 2 3
 ```
+
+
+---
+# External Resources
+
+* [File Scoped Namespaces](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-10.0/file-scoped-namespaces)
