@@ -639,7 +639,7 @@ Factorial of a Given Number can be implemented using **Recursion** or **Iteratio
 ```csharp
 using System;
 
-namespace CRC_CSD_02
+namespace CRC_CSD_03
 {
     class Program
     {
@@ -664,7 +664,7 @@ namespace CRC_CSD_02
         */
         static int FactorialUsingRecursion(int n)
         {
-            if (n == 0)
+            if (n == 1)
                 return 1;
 
             // recursion call
@@ -704,7 +704,7 @@ Fibonacci Sequence can be implemented using **Recursion** or **Iteration**.
 ```csharp
 using System;
 
-namespace CRC_CSD_02
+namespace CRC_CSD_03
 {
     class Program
     {

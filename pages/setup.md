@@ -79,10 +79,28 @@ $ dotnet --version
 // check all installed SDKs
 $ dotnet --list-sdks
 // If you want to change your .Net Version, add the globaljson file
+// The global.json file allows you to define which .NET SDK version 
+// is used when you run .NET CLI commands.
+// Uses the highest installed feature band and patch level that matches 
+// the requested major and minor with a feature band and patch level that's 
+// greater than or equal to the specified value. If not found, fails.
 $ dotnet new globaljson --sdk-version 8.0.302 --roll-forward latestFeature
+// Check for update
+$ dotnet sdk check
 ```
 
 More about globaljson can be found [here](https://learn.microsoft.com/en-us/dotnet/core/tools/global-json).
+
+## Check Your Installed .Net SDK
+
+In Program.csproj
+```bash
+// You build your project against APIs defined in a target framework moniker (TFM). You specify the target framework in the project file.
+  <TargetFramework>net9.0</TargetFramework>
+// or multiple target frameworks. Note that the element name is now plural.
+  <TargetFrameworks>net8.0;net47</TargetFrameworks>
+```
+
 
 ## First Console Program
 
@@ -91,6 +109,8 @@ More about globaljson can be found [here](https://learn.microsoft.com/en-us/dotn
 $ dotnet new console 
 // Skip top-level statements and include Main()
 $ dotnet new console --use-program-main 
+// Create a new console project with a specific project name
+$ dotnet new console --name MyProject
 ```
 or call .NET New Project in the [VSCode Command Palette](https://code.visualstudio.com/docs/getstarted/userinterface#:~:text=The%20most%20important%20key%20combination,for%20the%20most%20common%20operations.)
 
