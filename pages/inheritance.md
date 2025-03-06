@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"  
-last_modified_at: 2023-03-17
+last_modified_at: 2025-03-06
 ---
 
 # Other Properties of Methods
@@ -19,15 +19,11 @@ last_modified_at: 2023-03-17
   * The owner can pair many cat couples at the same time.
 
 ```csharp
-using System;
-using System.Collections.Generic;
 using Animals;
 
-// namespace
-namespace MyBusiness
+namespace program
 {
-    // main program
-    internal class Program
+    class Program
     {
         static void Main(string[] args)
         {
@@ -100,7 +96,7 @@ namespace Animals
         }
         // Finalizer
         ~Cat()
-        {            
+        {
         }
 
         // Print out method
@@ -122,7 +118,7 @@ namespace Animals
         }
 
         // Use operators instead of the above method
-        public static Cat operator * (Cat cat1, Cat cat2)
+        public static Cat operator *(Cat cat1, Cat cat2)
         {
             return Cat.ProduceKitty(cat1, cat2);
         }
@@ -168,14 +164,8 @@ public Cat ProduceKittyWith(Cat partner)
 ---
 # Splitting Files to Organize Them [Doc](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-new)
 ```bash
-// Create a folder named MyBusiness
-CRC_CSD-05> mkdir MyBusiness
-// Enter the folder MyBusiness
-CRC_CSD-05> cd MyBusiness
-// Set up a console application
-CRC_CSD-05/MyBusiness> $ dotnet new console
-// Leave the folder MyBusiness
-CRC_CSD-05/MyBusiness> $ cd ../
+// Create a new project named MyBusiness
+CRC_CSD-05> dotnet new console --use-program-main --name MyBusiness
 // Set up a class library called PetLibrary
 CRC_CSD-05> $ dotnet new classlib --name PetLibrary
 // Change the folder to PetLibrary
@@ -193,8 +183,7 @@ In MyBusiness.csproj, you see the configuration of the program
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>MyBusiness</RootNamespace>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -295,6 +284,8 @@ public class Cat
     }
 
     // Use operators instead of the above method
+    // This is called operator overloading, allowing us to redefine 
+    // an existing operator
     public static Cat operator *(Cat cat1, Cat cat2)
     {
         return Cat.ProduceKitty(cat1, cat2);
@@ -357,28 +348,6 @@ public class OwnPets
 }
 ```
 
----
-# Key OOP Concept
-
-It is like a phylogenetic tree. The higher hierarchy you climb, the more abstract concept about the object you get.
-
-* **Objects:** instances of classes. E.g., my cat.
-
-* **Class:** the blueprint for the data type (variables) and available methods for a given type or class of object. E.g., cat. Something that is cute, fluffy, with two eyes, four legs and a tail.
-
----
-* **Encapsulation:** the combination of the data and actions that are related to an object. Achieve by using access modifiers, which is a way to ensure security. E.g., a cat can access its toilet.
-
-* **Composition:** is about what an object is made of. E.g., A cat has two eyes, four legs and a tail.
-
-* **Aggregation:** is about what can be combined with an object. E.g., a cat does not have a horn. You cannot ask a cat to fly like a bird, but it can walk like a quadruped.
-
-* **Inheritance:** reuse code by having a subclass derive from a base or superclass. All functionality in the base class is inherited by and becomes available in the derived class. E.g., quadruped. A cat inherits the function of a quadruped.
-
-* **Polymorphism:** allow a derived class to override an inherited action to provide custom behavior. E.g., animal. Animals like dogs speak "Woof!", but cat speaks "Meow!".
-
-* **Abstraction:** is about capturing the core idea of an object and ignoring the details or specifics. C# has an abstract keyword which formalizes the concept. If a class is not explicitly abstract, then it can be described as being concrete. E.g., define a abstract class called **Animal** (a live creature that moves), but implement its derived class **Cat** by giving actual behaviors of a cat.
-
 
 ---
 # Inheriting Classes
@@ -406,8 +375,10 @@ namespace MyBusiness
         {
             // Create a cat
             Cat nana = new Cat("Nana", new DateTime(2019, 12, 9));
+
+            nana.Speed = 10;
             double speed = nana.SpeedUp(2);
-            Console.WriteLine($"{nana.Name} is running at speed {speed} km/hr."); ;
+            Console.WriteLine($"{nana.Name} is running at speed {speed} km/hr."); 
         }
     }
 }
@@ -465,6 +436,7 @@ namespace Animals
             Speed += velocity;
             return Speed;
         }
+        
     }
 
     // IRun is an interface
@@ -520,9 +492,9 @@ namespace MyBusiness
 
             // Print the array again
             Console.WriteLine("Use Cat's IComparable implementation to sort the cat instance:");
-            for (int i = 0; i < cats.Length; i++)
+            foreach (Cat cat in cats)
             {
-                Console.WriteLine($"{cats[i].Name}");
+                Console.WriteLine($"{cat.Name}");
             }
         }
     }

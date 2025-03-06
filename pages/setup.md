@@ -82,7 +82,7 @@ $ dotnet --list-sdks
 // The global.json file allows you to define which .NET SDK version 
 // is used when you run .NET CLI commands.
 // Uses the highest installed feature band and patch level that matches 
-// the requested major and minor with a feature band and patch level that's 
+// the requested major and minor with a feature band and patch level that is 
 // greater than or equal to the specified value. If not found, fails.
 $ dotnet new globaljson --sdk-version 8.0.302 --roll-forward latestFeature
 // Check for update
