@@ -28,32 +28,36 @@ namespace program
         static void Main(string[] args)
         {
             // Create 3 cats and initialize them
-            Cat nana = new Cat("Nana", new DateTime(2019, 12, 9));
-            Cat coffee = new Cat("Coffee", new DateTime(2019, 6, 20));
-            Cat kiwi = new Cat("Kiwi", new DateTime(2018, 11, 19));
+            Cat[] cats = {
+                new Cat("Nana", new DateTime(2019, 12, 9)),
+                new Cat("Coffee", new DateTime(2019, 6, 20)),
+                new Cat("Kiwi", new DateTime(2018, 11, 19))
+            };
 
             // Print out the present content
-            nana.WriteToConsole();
-            coffee.WriteToConsole();
-            kiwi.WriteToConsole();
+            foreach (Cat cat in cats)
+            {
+                cat.WriteToConsole();
+            }
 
             // Call instance method
-            Cat kitty1 = nana.ProduceKittyWith(coffee);
+            Cat kitty1 = cats[0].ProduceKittyWith(cats[1]);
             kitty1.Name = "Naffee";
             // Call static method
-            Cat kitty2 = Cat.ProduceKitty(kiwi, coffee);
+            Cat kitty2 = Cat.ProduceKitty(cats[2], cats[1]);
             // The following statement functions as the above one
             // Cat kitty2 = kiwi * coffee;
-            kitty1.Name = "Kiffee";
+            kitty2.Name = "Kiffee";
 
             // Print out the kitty name
-            Console.WriteLine($"{nana.Name} has {nana.Children.Count} kitty.");
-            Console.WriteLine($"{coffee.Name} has {coffee.Children.Count} kitty.");
-            Console.WriteLine($"{kiwi.Name} has {kiwi.Children.Count} kitty.");
+            foreach (Cat cat in cats)
+            {
+                Console.WriteLine($"{cat.Name} has {cat.Children.Count} kitty.");
+            }
             Console.WriteLine(
             format: "{0}'s first kitty is named \"{1}\".",
-            arg0: coffee.Name,
-            arg1: coffee.Children[0].Name);
+            arg0: cats[1].Name,
+            arg1: cats[1].Children[0].Name);
         }
     }
 }
@@ -85,7 +89,7 @@ namespace Animals
         // Default constructor. It will be called by default
         public Cat()
         {
-            Name = "Unknown";
+            Name = "UnknownCat";
             DateOfBirth = DateTime.Today;
         }
         // Parameterized Constructor
@@ -94,7 +98,7 @@ namespace Animals
             this.Name = name;
             this.DateOfBirth = dateOfBirth;
         }
-        // Finalizer
+        // Finalizer/Desctructor
         ~Cat()
         {
         }
@@ -208,7 +212,7 @@ using PetLibrary;
 // namespace
 namespace MyBusiness
 {
-    // main program
+    // Main program
     public class Program
     {
         static void Main(string[] args)
@@ -368,7 +372,7 @@ using Animals;
 // namespace
 namespace MyBusiness
 {
-    // main program
+    // Main program
     internal class Program
     {
         static void Main(string[] args)
@@ -413,7 +417,7 @@ namespace Animals
         public Cat()
         {
             Speed = 0.0;
-            Name = "Unknown";
+            Name = "UnknownCat";
             DateOfBirth = DateTime.Today;
         }
         // Parameterized Constructor
@@ -436,7 +440,6 @@ namespace Animals
             Speed += velocity;
             return Speed;
         }
-        
     }
 
     // IRun is an interface
@@ -482,9 +485,9 @@ namespace MyBusiness
             };
 
             // Print the array
-            for (int i = 0; i < cats.Length; i++)
+            foreach (Cat cat in cats)
             {
-                Console.WriteLine($"{cats[i].Name}");
+                cat.WriteToConsole();
             }
 
             // Sort the array
@@ -494,7 +497,7 @@ namespace MyBusiness
             Console.WriteLine("Use Cat's IComparable implementation to sort the cat instance:");
             foreach (Cat cat in cats)
             {
-                Console.WriteLine($"{cat.Name}");
+                cat.WriteToConsole();
             }
         }
     }
@@ -528,7 +531,7 @@ namespace Animals
         // Default constructor. It will be called by default
         public Cat()
         {
-            Name = "Unknown";
+            Name = "UnknownCat";
             DateOfBirth = DateTime.Today;
         }
         // Parameterized Constructor
@@ -561,13 +564,13 @@ namespace Animals
 }
 ```
 ```bash
-$ Nana
-$ Coffee
-$ Kiwi
+$ Nana was born on a Monday.
+$ Coffee was born on a Thursday.
+$ Kiwi was born on a Monday.
 $ Use Cat\'s IComparable implementation to sort the cat instance:
-$ Coffee
-$ Kiwi
-$ Nana
+$ Coffee was born on a Thursday.
+$ Kiwi was born on a Monday.
+$ Nana was born on a Monday.
 ```
 
 # Class Inheritance [Doc](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/object-oriented/inheritance)
@@ -581,13 +584,25 @@ public class WildCat : Cat
     public string? CountryCode { get; set; }
     public DateTime FoundDate { get; set; }
 
-    // overridden methods
+    // Default Constructor
+    public WildCat()
+    {
+    }
+
+    // Parameterized Constructor
+    public WildCat(Cat cat)
+    {
+        this.Name = cat.Name;
+        this.DateOfBirth = cat.DateOfBirth;
+    }
+
+    // Overridden methods
     public override string ToString()
     {
         return $"{Name}'s code is {CountryCode}";
     }
 
-    // hidden methods
+    // Hidden methods
     public new void WriteToConsole()
     {
         Console.WriteLine(format:
@@ -628,10 +643,13 @@ namespace MyBusiness
                 Name = "Alice",
                 CountryCode = "Taiwan"
             };
+
             Cat petCat = leopard;
 
+            // Method that used new keyword
             leopard.WriteToConsole();
             petCat.WriteToConsole();
+            // Method that used override keyword
             Console.WriteLine(leopard.GetName());
             Console.WriteLine(petCat.GetName());        
             // It is calling the method from the derived class. Strange?
@@ -669,7 +687,7 @@ namespace Animals
         // Default constructor. It will be called by default
         public Cat()
         {
-            Name = "Unknown";
+            Name = "UnknownCat";
             DateOfBirth = DateTime.Today;
         }
         // Parameterized Constructor
@@ -707,8 +725,8 @@ namespace Animals
         public string? CountryCode { get; set; }
         public DateTime FoundDate { get; set; }
 
-        // overridden methods
-        // based on the keyword override
+        // Overridden methods
+        // Based on the keyword override
         public override string ToString()
         {
             return $"{Name}: from {CountryCode}";
@@ -719,8 +737,8 @@ namespace Animals
             return $"{Name}: from {CountryCode}";
         }
 
-        // hidden methods
-        // based on the keyword new
+        // Hidden methods
+        // Based on the keyword new
         public new void WriteToConsole()
         {
             Console.WriteLine(format:
@@ -751,7 +769,7 @@ using Animals;
 // namespace
 namespace MyBusiness
 {
-    // main program
+    // Main program
     internal class Program
     {
         static void Main(string[] args)
@@ -763,6 +781,7 @@ namespace MyBusiness
                 Name = "Alice",
                 CountryCode = "Taiwan"
             };
+
             WildCat nanaQ = new WildCat(nana);
 
             nana.WriteToConsole();
@@ -792,8 +811,8 @@ public class WildCat : Cat
         this.DateOfBirth = cat.DateOfBirth;
     }
 
-    // hidden methods
-    // based on the keyword new
+    // Hidden methods
+    // Based on the keyword new
     public new void WriteToConsole()
     {
         // base.WriteToConsole();
@@ -809,7 +828,6 @@ public class WildCat : Cat
 ## base Keyword [Doc](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/base)
 
 The base keyword is used to access members of the base class from within a derived class.
-
 
 
 ## Virtual Function [Doc](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/virtual)
@@ -903,7 +921,7 @@ namespace Animals
         // Default constructor. It will be called by default
         public Cat()
         {
-            Name = "Unknown";
+            Name = "UnknownCat";
             DateOfBirth = DateTime.Today;
         }
         // Parameterized Constructor
@@ -939,13 +957,20 @@ namespace Animals
         {
         }
 
+        // Parameterized Constructor
+        public WildCat(Cat cat)
+        {
+            this.Name = cat.Name;
+            this.DateOfBirth = cat.DateOfBirth;
+        }
+
         public override void Speak()
         {
             Console.WriteLine("WildMeow!");
         }
 
-        // hidden methods
-        // based on the keyword new
+        // Hidden methods
+        // Based on the keyword new
         public new void WriteToConsole()
         {
             base.WriteToConsole();
@@ -1058,7 +1083,7 @@ namespace Animals
         // Default constructor. It will be called by default
         public Cat()
         {
-            Name = "Unknown";
+            Name = "UnknownCat";
             DateOfBirth = DateTime.Today;
         }
         // Parameterized Constructor
@@ -1093,14 +1118,21 @@ namespace Animals
         public WildCat()
         {
         }
+     
+        // Parameterized Constructor
+        public WildCat(Cat cat)
+        {
+            this.Name = cat.Name;
+            this.DateOfBirth = cat.DateOfBirth;
+        }
 
         public override void Speak()
         {
             Console.WriteLine("WildMeow!");
         }
 
-        // hidden methods
-        // based on the keyword new
+        // Hidden methods
+        // Based on the keyword new
         public new void WriteToConsole()
         {
             base.WriteToConsole();
@@ -1225,14 +1257,21 @@ namespace Animals
         public WildCat()
         {
         }
+    
+        // Parameterized Constructor
+        public WildCat(Cat cat)
+        {
+            this.Name = cat.Name;
+            this.DateOfBirth = cat.DateOfBirth;
+        }        
 
         public override void Speak()
         {
             Console.WriteLine("WildMeow!");
         }
 
-        // hidden methods
-        // based on the keyword new
+        // Hidden methods
+        // Based on the keyword new
         public new void WriteToConsole()
         {
             base.WriteToConsole();
