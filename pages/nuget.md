@@ -48,3 +48,18 @@ $ dotnet list package
 $ dotnet remove package Package_Name
 ```
 
+# Solution
+What is a solution?
+
+## Project Management
+
+## Create a new solution
+```bash
+$ dotnet new solution
+```
+
+## Add project to a Solution
+
+```bash
+$ dotnet sln add YourProject.csproj
+```

@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"  
-last_modified_at: 2025-03-06
+last_modified_at: 2025-03-12
 ---
 
 
@@ -44,46 +44,71 @@ Generics introduces the concept of type parameters to .NET, which make it possib
 
 ## Generic Method
 
-Convert.ChangeType [Doc](https://docs.microsoft.com/en-us/dotnet/api/system.convert.changetype?view=net-6.0)
+Convert.ChangeType [Doc](https://learn.microsoft.com/en-us/dotnet/api/system.convert.changetype?view=net-8.0)
+IConvertible Interface [Doc](https://learn.microsoft.com/en-us/dotnet/api/system.iconvertible?view=net-8.0)
 
 ```csharp
-namespace CRC_CSD_06;
+namespace CRC_CSD_07;
 
 class Program
 {
     static void Main(string[] args)
     {
-        int r = 2;
         // Function overloading
+        int r = 2;
         int newR = DoubleMyResource(r);
         Console.WriteLine($"My old resource is {r} and the new one is {newR}");
-        float f = 2.5F;
+        float f = 2.5f;
         float newF = DoubleMyResource(f);
         Console.WriteLine($"My old resource is {f} and the new one is {newF}");
+        List<int> s = new List<int> { 1, 2, 3 };
+        List<int> newS = DoubleMyResource(s);
+        Console.WriteLine("My old resource is {" + string.Join(", ", s) + "} and the new one is {" + string.Join(", ", newS) + "}");
 
         // Generic functions
         int gr = 2;
         int newGR = DoubleMyResource<int>(gr);
         Console.WriteLine($"My old resource is {gr} and the new one is {newGR}");
 
-        float gf = 2.5F;
+        float gf = 2.5f;
         float newGF = DoubleMyResource<float>(gf);
         Console.WriteLine($"My old resource is {gf} and the new one is {newGF}");
-
-    }
-
-    public static int DoubleMyResource(int resource)
-    {
-        return 2*resource;
     }
 
     // Function overloading
+    public static int DoubleMyResource(int resource)
+    {
+        resource *= 2;
+        return resource;
+    }
+
     public static float DoubleMyResource(float resource)
     {
-        return 2.0F*resource;
+        resource *= 2.0f;
+        return resource;
+    }
+
+    public static List<int> DoubleMyResource(List<int> resource)
+    {
+        List<int> newResource = new List<int>();
+        // List<int> newResource = resource;
+
+        // Copy the resource to a new list
+        foreach (int r in resource)
+        {
+            newResource.Add(r);
+        }
+        // Add the elements in the newResource to the resource list
+        foreach (int r in newResource)
+        {
+            resource.Add(r);
+        }
+        return resource;
     }
 
     // Generic function
+    // T stands for a type that implements the IConvertible interface
+    // IConvertible: Defines methods that convert the value of the implementing reference or value type to a common language runtime type that has an equivalent value.
     public static T DoubleMyResource<T>(T resource) where T : IConvertible
     {
         double d = resource.ToDouble(Thread.CurrentThread.CurrentCulture);
@@ -92,9 +117,16 @@ class Program
 
         d *= 2.0; // r = r * 2.0M
 
-        return (T) Convert.ChangeType(d, typeof(T));
+        return (T)Convert.ChangeType(d, typeof(T));
     }
 }
+```
+```bash
+$ My old resource is 2 and the new one is 4
+$ My old resource is 2,5 and the new one is 5
+$ My old resource is {1, 2, 3, 1, 2, 3} and the new one is {1, 2, 3, 1, 2, 3}
+$ My old resource is 2 and the new one is 4
+$ My old resource is 2,5 and the new one is 5
 ```
 
 ## Generic Class
@@ -147,7 +179,7 @@ class Program
 }
 ```
 
-In PetLibrary/Animals.cs,
+In PetLibrary/Cat.cs,
 
 ```csharp
 namespace Animals;
@@ -221,7 +253,16 @@ $ Double cat food 4 to 8
 $ Double cat food 3 to 6
 ```
 
+Do not forget to add the environment variables in MyBusiness.csproj
+```csharp
+  <ItemGroup>
+    <ProjectReference
+      Include="../PetLibrary/PetLibrary.csproj" />
+  </ItemGroup>
+```
+
 ## Thread.CurrentUICulture Property [Doc](https://docs.microsoft.com/en-us/dotnet/api/system.threading.thread.currentuiculture?view=net-6.0)
+
 
 <!-- ## in (Generic Modifier) [Doc](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/in-generic-modifier) -->
 
