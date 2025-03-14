@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"  
-last_modified_at: 2025-03-12
+last_modified_at: 2025-03-14
 ---
 
 
@@ -73,6 +73,10 @@ class Program
         float gf = 2.5f;
         float newGF = DoubleMyResource<float>(gf);
         Console.WriteLine($"My old resource is {gf} and the new one is {newGF}");
+
+        string gs = "12.5";
+        string newGS = DoubleMyResource<string>(gs);
+        Console.WriteLine($"My old resource is {gs} and my new resource is {newGS}");
     }
 
     // Function overloading
@@ -123,10 +127,11 @@ class Program
 ```
 ```bash
 $ My old resource is 2 and the new one is 4
-$ My old resource is 2,5 and the new one is 5
+$ My old resource is 2.5 and the new one is 5
 $ My old resource is {1, 2, 3, 1, 2, 3} and the new one is {1, 2, 3, 1, 2, 3}
 $ My old resource is 2 and the new one is 4
-$ My old resource is 2,5 and the new one is 5
+$ My old resource is 2.5 and the new one is 5
+$ My old resource is 12.5 and my new resource is 25
 ```
 
 ## Generic Class
