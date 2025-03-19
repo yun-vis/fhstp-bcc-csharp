@@ -112,14 +112,19 @@ class Program
 
     // Generic function
     // T stands for a type that implements the IConvertible interface
-    // IConvertible: Defines methods that convert the value of the implementing reference or value type to a common language runtime type that has an equivalent value.
+    // IConvertible: Defines methods that convert the value of the implementing 
+    // reference or value type to a common language runtime type that has an 
+    // equivalent value.
     public static T DoubleMyResource<T>(T resource) where T : IConvertible
     {
         double d = resource.ToDouble(Thread.CurrentThread.CurrentCulture);
         // ToDouble: A system method to convert a type to a double. We just use it for now.
-        // Thread.CurrentThread.CurrentCulture: ToDouble requires a parameter that implements IFormatProvider to understand the format of numbers for a language and region. We can pass the CurrentCulture property of the current thread to specify the language and region used by your computer. 
-
-        d *= 2.0; // r = r * 2.0M
+        // Thread.CurrentThread.CurrentCulture: ToDouble requires a parameter 
+        // that implements IFormatProvider to understand the format of numbers 
+        // for a language and region. We can pass the CurrentCulture property 
+        // of the current thread to specify the language and region used by 
+        // your computer. 
+        d *= 2.0; // is equal to r = r * 2.0M
 
         return (T)Convert.ChangeType(d, typeof(T));
     }
@@ -148,16 +153,17 @@ class Program
 {
     static void Main(string[] args)
     {
-        // Cat is currently flexible, because any type can be set for the food field and input parameter.
-        // But there is no type checking, so inside the CheckFood method,
-        // we cannot safely do much and the results are sometimes not what you might expect
+        // Cat is currently flexible, because any type can be set for the food 
+        // field and input parameter. But there is no type checking, so inside 
+        // the CheckFood method, we cannot safely do much and the results are 
+        // sometimes not what you might expect
         Cat cat1 = new Cat();
         cat1.food = 5;
         Console.WriteLine($"Cat food with an integer: {cat1.checkFood(5)}");
 
         Cat cat2 = new Cat();
         cat2.food = "fish";
-        Console.WriteLine($"Cat food with an integer: {cat2.checkFood("fish")}");
+        Console.WriteLine($"Cat food with a string: {cat2.checkFood("fish")}");
 
         // The type is defined at allocation
         GenericCat<int> gCat1 = new GenericCat<int>();
@@ -166,7 +172,7 @@ class Program
 
         GenericCat<string> gCat2 = new GenericCat<string>();
         gCat2.food = "fish";
-        Console.WriteLine($"Cat food with an integer: {gCat2.checkFood("fish")}");
+        Console.WriteLine($"Cat food with a string: {gCat2.checkFood("fish")}");
 
         // generic methods
         string food1 = "4";
@@ -192,7 +198,9 @@ namespace Animals;
 public class Cat
 {
     public object? food = default(object);
-    // object: Supports all classes in the .NET class hierarchy and provides low-level services to derived classes. This is the ultimate base class of all .NET classes; it is the root of the type hierarchy.
+    // object: Supports all classes in the .NET class hierarchy and provides low-level 
+    // services to derived classes. This is the ultimate base class of all .NET 
+    // classes; it is the root of the type hierarchy.
     // default: A default value expression produces the default value of a type
 
     public string checkFood(object input)
@@ -202,10 +210,17 @@ public class Cat
             return "Expected food is empty.";
         }
         else if (food == input)
-        // else if (food.Equals(input)) // Here, you explicitly compare the value not the address.
-        // Cat is currently flexible, because any type can be set for the food field and input parameter.
-        // But there is no type checking, so inside the Process method, we cannot safely do much and the results are sometimes not what you might expect; for example, when passing int values into an object parameter!
-        // This is because the value 5 stored in the food is stored in a different memory address to the value 5 passed as a parameter and when comparing reference types like any value stored in object, they are only equal if they are stored at the same memory address, that is, the same object, even if their values are equal. We can solve this problem by using generics.
+        // else if (food.Equals(input)) // Here, you explicitly compare the value not the address. 
+        // Cat is currently flexible, because any type can be set for the food 
+        // field and input parameter. But there is no type checking, so inside 
+        // the Process method, we cannot safely do much and the results are sometimes 
+        // not what you might expect; for example, when passing int values into 
+        // an object parameter! This is because the value 5 stored in the food is 
+        // stored in a different memory address to the value 5 passed as a parameter 
+        // and when comparing reference types like any value stored in object, they 
+        // are only equal if they are stored at the same memory address, that is, the 
+        // same object, even if their values are equal. We can solve this problem by 
+        // using generics.
         {
             return "Expected food and input are the same.";
         }
@@ -243,7 +258,10 @@ public class GenericMethodCat
     {
         double d = input.ToDouble(Thread.CurrentThread.CurrentCulture);
         // ToDouble: A system method to convert a type to a double. We just use it for now.
-        // Thread.CurrentThread.CurrentCulture: ToDouble requires a parameter that implements IFormatProvider to understand the format of numbers for a language and region. We can pass the CurrentCulture property of the current thread to specify the language and region used by your computer. 
+        // Thread.CurrentThread.CurrentCulture: ToDouble requires a parameter that 
+        // implements IFormatProvider to understand the format of numbers for a language 
+        // and region. We can pass the CurrentCulture property of the current thread to 
+        // specify the language and region used by your computer. 
 
         return 2.0 * d;
     }

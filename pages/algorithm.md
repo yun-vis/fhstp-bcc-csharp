@@ -16,7 +16,7 @@ last_modified_at: 2023-03-15
 ```csharp
 using System;
 
-namespace CRC_CSD_04
+namespace CRC_CSD_09
 {
     class Program
     {
@@ -24,70 +24,55 @@ namespace CRC_CSD_04
         static void Main(string[] args) 
         {
             // Single linked list
-            SingleLinkedList singleList = new SingleLinkedList();
-            singleList.InsertLast(4);
-            singleList.InsertLast(6);
-            singleList.InsertFront(2);
-            singleList.printList();
-            singleList.DeleteNodebyKey(2);
-            singleList.printList();
-            singleList.InsertAfter(singleList.FindbyKey(4),5);
-            singleList.printList();
+            SinglyLinkedList list = new SinglyLinkedList();
+            list.InsertLast(6);
+            list.InsertLast(4);
+            list.InsertFront(2);
+            list.printList();
+            list.DeleteNodebyKey(2);
+            list.printList();
+            list.InsertAfter(list.FindbyKey(4), 5);
+            list.printList();
+            list.Sort();
+            list.printList();
         }
     }
 
     public class Node
     {
         // Fields
-        private int _data;
-        private Node? _next;
+        public int Data;
+        public Node? Next;
 
         // Constructors
         public Node(int d)
         {
-            _data = d;
-            _next = null;
+            Data = d;
+            Next = null;
         }
-
-        // Getters and Setters
-        public int Data
-        {
-            get { return _data; }
-            set { _data = value; }
-        }
-
-        public Node? Next
-        {
-            get { return _next; }
-            set { _next = value; }
-        }
-
+        
         // Finalizers
         ~Node() { }
     }
 
-    public class SingleLinkedList
+    public class SinglyLinkedList
     {
         // Fields
         private Node? _head;
 
         // Constructors
-        public SingleLinkedList()
+        public SinglyLinkedList()
         {
             _head = null;
         }
 
-        // Getters and Setters
-        public Node? Head
-        {
-            get { return _head; }
-            set { _head = value; }
-        }
-
         // Finalizer
-        ~SingleLinkedList() { }
+        ~SinglyLinkedList() { }
 
         // Methods
+        // Private Methods
+
+        // Public Methods
         public void InsertFront(int newData)
         {
             Node new_node = new Node(newData);
@@ -176,10 +161,39 @@ namespace CRC_CSD_04
                 prev.Next = temp.Next;
         }
 
+        public void Sort()
+        {
+            Node? current = _head;
+
+            if (_head == null)
+            {
+                return;
+            }
+            else
+            {
+                while (current != null)
+                {
+                    Node? index = current.Next;
+
+                    while (index != null)
+                    {
+                        if (current.Data < index.Data)
+                        {
+                            int temp = current.Data;
+                            current.Data = index.Data;
+                            index.Data = temp;
+                        }
+                        index = index.Next;
+                    }
+                    current = current.Next;
+                }
+            }
+        }
+        
         public void printList()
         {
             Node? temp = _head;
-            Console.Write("The singleLinkedList: ");
+            Console.Write("The singlyLinkedList: ");
             while ((temp != null))
             {
                 Console.Write(temp.Data + " ");
@@ -203,84 +217,60 @@ The singleLinkedList: 4 5 6
 ```csharp
 using System;
 
-namespace CRC_CSD_04
+namespace CRC_CSD_09
 {
     class Program
     {
         // Where the application begins
         static void Main(string[] args) 
         {
-            // double linked list
-            DoubleLinkedList doubleList = new DoubleLinkedList();
-            doubleList.InsertLast(4);
-            doubleList.InsertLast(6);
-            doubleList.InsertFront(2);
-            doubleList.printList();
-            doubleList.DeleteNodebyKey(2);
-            doubleList.printList();
-            doubleList.InsertAfter(doubleList.FindbyKey(4),5);
-            doubleList.printList();
+            // Single linked list
+            // SinglyLinkedList list = new SinglyLinkedList();
+            // Doubly linked list
+            DoublyLinkedList list = new DoublyLinkedList();
+            list.InsertLast(6);
+            list.InsertLast(4);
+            list.InsertFront(2);
+            list.printList();
+            list.DeleteNodebyKey(2);
+            list.printList();
+            list.InsertAfter(list.FindbyKey(4), 5);
+            list.printList();
         }
     }
 
     public class DNode
     {
         // Fields
-        private int _data;
-        private DNode? _prev;
-        private DNode? _next;
+        public int Data;
+        public DNode? Prev;
+        public DNode? Next;
 
         // Constructors
         public DNode(int d)
         {
-            _data = d;
-            _prev = null;
-            _next = null;
-        }
-
-        // Getters and Setters
-        public int Data
-        {
-            get { return _data; }
-            set { _data = value; }
-        }
-
-        public DNode? Prev
-        {
-            get { return _prev; }
-            set { _prev = value; }
-        }
-
-        public DNode? Next
-        {
-            get { return _next; }
-            set { _next = value; }
+            Data = d;
+            Prev = null;
+            Next = null;
         }
 
         // Finalizers
         ~DNode() { }
     }
 
-    public class DoubleLinkedList
+    public class DoublyLinkedList
     {
         // Fields
         private DNode? _head;
 
         // Constructors
-        public DoubleLinkedList()
+        public DoublyLinkedList()
         {
             _head = null;
         }
 
-        // Getters abd Setters
-        public DNode? Head
-        {
-            get { return _head; }
-            set { _head = value; }
-        }
-
         // Finalizer
-        ~DoubleLinkedList() { }
+        ~DoublyLinkedList() { }
 
         // Methods
         public void InsertFront(int data)
@@ -391,7 +381,7 @@ namespace CRC_CSD_04
         public void printList()
         {
             DNode? temp = _head;
-            Console.Write("The doubleLinkedList: ");
+            Console.Write("The doublyLinkedList: ");
             while ((temp != null))
             {
                 Console.Write(temp.Data + " ");
@@ -400,6 +390,7 @@ namespace CRC_CSD_04
             Console.WriteLine("");
         }
     }
+
 }
 ```
 
