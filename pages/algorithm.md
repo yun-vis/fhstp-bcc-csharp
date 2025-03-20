@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"
-last_modified_at: 2023-03-15
+last_modified_at: 2025-03-20
 ---
 
 # Data Structure
@@ -70,41 +70,45 @@ namespace CRC_CSD_09
         ~SinglyLinkedList() { }
 
         // Methods
-        // Private Methods
-
         // Public Methods
         public void InsertFront(int newData)
         {
-            Node new_node = new Node(newData);
-            new_node.Next = _head;
-            _head = new_node;
+            Node newNode = new Node(newData);
+
+            newNode.Next = _head;
+            _head = newNode;
         }
 
         public void InsertLast(int newData)
         {
-            Node new_node = new Node(newData);
+            Node newNode = new Node(newData);
+
             if (_head == null)
             {
-                _head = new_node;
+                _head = newNode;
             }
             else
             {
                 Node? lastNode = GetLastNode();
-
-                if (lastNode != null)
-                {
-                    lastNode.Next = new_node;
-                }
+                // Exclamation mark ! tells C# compiler explicitly that lastNode 
+                // at this moment is not a null object. This is a way to bypass the 
+                // warning.
+                lastNode!.Next = newNode;
             }
         }
 
         public Node? GetLastNode()
         {
             Node? temp = _head;
-            while ((temp != null) && (temp.Next != null))
+
+            if (temp != null)
             {
-                temp = temp.Next;
+                while (temp.Next != null)
+                {
+                    temp = temp.Next;
+                }
             }
+
             return temp;
         }
 
@@ -129,9 +133,13 @@ namespace CRC_CSD_09
             while (temp != null)
             {
                 if (temp.Data == data)
+                {
                     return temp;
+                }
                 temp = temp.Next;
             }
+
+            // The target data is not found
             return null;
         }
 
@@ -140,30 +148,35 @@ namespace CRC_CSD_09
             Node? temp = _head;
             Node? prev = null;
 
-            // The key is equal to head
-            if (temp != null && temp.Data == key)
+            if (temp != null)
             {
-                _head = temp.Next;
-                return;
-            }
-            while (temp != null && temp.Data != key)
-            {
-                prev = temp;
-                temp = temp.Next;
-            }
-            // Do not find the key in the list
-            if (temp == null)
-            {
-                return;
-            }
+                // 1st node is the key
+                if (temp.Data == key)
+                {
+                    _head = temp.Next;
+                    return;
+                }
+                else
+                {
+                    // Navigate the list to find the key
+                    while (temp!.Data != key)
+                    {
+                        prev = temp;
+                        temp = temp.Next;
 
-            if (prev != null)
-                prev.Next = temp.Next;
+                        // The key is not found when reaching to the end of the list
+                        if (temp == null) return;
+                    }
+
+                    // The node that has the target key is found
+                    prev!.Next = temp.Next;
+                }
+            }
         }
 
         public void Sort()
         {
-            Node? current = _head;
+            Node? temp = _head;
 
             if (_head == null)
             {
@@ -171,21 +184,21 @@ namespace CRC_CSD_09
             }
             else
             {
-                while (current != null)
+                while (temp != null)
                 {
-                    Node? index = current.Next;
+                    Node? index = temp.Next;
 
                     while (index != null)
                     {
-                        if (current.Data < index.Data)
+                        if (temp.Data > index.Data)
                         {
-                            int temp = current.Data;
-                            current.Data = index.Data;
-                            index.Data = temp;
+                            int tempData = temp.Data;
+                            temp.Data = index.Data;
+                            index.Data = tempData;
                         }
                         index = index.Next;
                     }
-                    current = current.Next;
+                    temp = temp.Next;
                 }
             }
         }
