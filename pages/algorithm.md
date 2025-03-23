@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"
-last_modified_at: 2025-03-20
+last_modified_at: 2025-03-23
 ---
 
 # Data Structure
@@ -426,15 +426,16 @@ class Program
     static void Main(string[] args)
     {
         Graph graph = new Graph();
-        int v1 = graph.AddVertex("Victor");
-        int v2 = graph.AddVertex("Markus");
-        int v3 = graph.AddVertex("Yun");
-        int v4 = graph.AddVertex("Anna");
+        Vertex v1 = graph.AddVertex("Victor");
+        Vertex v2 = graph.AddVertex("Markus");
+        Vertex v3 = graph.AddVertex("Yun");
+        Vertex v4 = graph.AddVertex("Anna");
         // graph.RemoveVertex("Yun");
         graph.AddEdge(v1, v2);
         graph.AddEdge(v1, v3);
         graph.AddEdge(v2, v3);
         graph.AddEdge(v3, v4);
+        graph.AddEdge(v3, graph.HasVertex("Victor"));
         graph.PrintGraph();
         graph.RemoveVertex("Victor");
         // graph.RemoveEdge(v1, v3);
@@ -443,30 +444,31 @@ class Program
 }
 ```
 ```bash
-The total number of vertices is 4
-The total number of edges is 4
-==============================
-V(0) = Victor
-V(1) = Markus
-V(2) = Yun
-V(3) = Anna
-==============================
-E(0) = V(0) -- V(1)
-E(1) = V(0) -- V(2)
-E(2) = V(1) -- V(2)
-E(3) = V(2) -- V(3)
-==============================
-The total number of vertices is 3
-The total number of edges is 3
-==============================
-V(1) = Markus
-V(2) = Yun
-V(3) = Anna
-==============================
-E(1) = V(0) -- V(2)
-E(2) = V(1) -- V(2)
-E(3) = V(2) -- V(3)
-==============================
+$ The total number of vertices is 4
+$ The total number of edges is 5
+$ ==============================
+$ V(0) = Victor
+$ V(1) = Markus
+$ V(2) = Yun
+$ V(3) = Anna
+$ ==============================
+$ E(0) = V(Victor) -- V(Markus)
+$ E(1) = V(Victor) -- V(Yun)
+$ E(2) = V(Markus) -- V(Yun)
+$ E(3) = V(Yun) -- V(Anna)
+$ E(4) = V(Yun) -- V(Victor)
+$ ==============================
+$ The total number of vertices is 3
+$ The total number of edges is 3
+$ ==============================
+$ V(1) = Markus
+$ V(2) = Yun
+$ V(3) = Anna
+$ ==============================
+$ E(1) = V(Victor) -- V(Yun)
+$ E(2) = V(Markus) -- V(Yun)
+$ E(3) = V(Yun) -- V(Anna)
+$ ==============================
 ```
 
 In DataStructureLibrary/Graph.cs
@@ -490,12 +492,19 @@ public class Graph
 
     // Methods
     // Manipulate vertices
-    public int AddVertex(string name)
+    public Vertex AddVertex(string name)
     {
-        Vertex v = new Vertex(_vertices.Count, name);
-        _vertices.AddLast(v);
+        Vertex? v = HasVertex(name);
 
-        return v.Id;
+        if (v == null)
+        {
+            Vertex newV = new Vertex((uint)_vertices.Count, name);
+            _vertices.AddLast(newV);
+
+            return newV;
+        }
+
+        return v;
     }
 
     public void RemoveVertex(string name)
@@ -504,16 +513,26 @@ public class Graph
 
         if (v != null)
         {
+            // Unhandled exception. System.InvalidOperationException: 
+            // Collection was modified after the enumerator was instantiated.
+            // foreach (Edge e in _edges)
+            // {
+            //     if (e.Source == v || e.Target == v)
+            //     {
+            //         _edges.Remove(e);
+            //     }
+            // }
+
             // Remove the adjacent edges
             for (int i = 0; i < _edges.Count; i++)
             {
                 // Equal to source id
-                if (_edges.ElementAt(i).SourceId == v.Id)
+                if (_edges.ElementAt(i).Source.Id == v.Id)
                 {
                     _edges.Remove(_edges.ElementAt(i));
                 }
                 // Equal to target id
-                if (_edges.ElementAt(i).TargetId == v.Id)
+                if (_edges.ElementAt(i).Target.Id == v.Id)
                 {
                     _edges.Remove(_edges.ElementAt(i));
                 }
@@ -524,6 +543,7 @@ public class Graph
         }
     }
 
+    // Function overloading
     public Vertex? HasVertex(string name)
     {
         foreach (Vertex v in _vertices)
@@ -535,7 +555,7 @@ public class Graph
     }
 
     // Function overloading
-    public Vertex? HasVertex(int id)
+    public Vertex? HasVertex(uint id)
     {
         foreach (Vertex v in _vertices)
         {
@@ -546,46 +566,53 @@ public class Graph
     }
 
     // Manipulate edges
-    public void AddEdge(int sourceId, int targetId)
+    public Edge? AddEdge(Vertex? source, Vertex? target)
     {
-        Edge? e = HasEdge(sourceId, targetId);
+        // Check if the source and target vertices exist
+        if (source == null || target == null)
+        {
+            Console.WriteLine("Source or Target Vertex could not be found. Please add vertices first");
+            return null;
+        }
+
+        Edge? e = HasEdge(source, target);
 
         if (e == null)
         {
-            Vertex? sourceV = HasVertex(sourceId);
-            Vertex? targetV = HasVertex(targetId);
-
-            // Check if the source and target vertices exist
-            if (sourceV == null || targetV == null)
-            {
-                Console.WriteLine("Source or Target Vertex could not be found. Please add vertices first");
-                return;
-            }
-            else
-            {
-                Edge newE = new Edge(_edges.Count, sourceId, targetId);
-                _edges.AddLast(newE);
-            }
+            Edge newE = new Edge((uint)_edges.Count, source, target);
+            _edges.AddLast(newE);
+            return newE;
         }
+
+        return e;
     }
 
-    public void RemoveEdge(int sourcdId, int targetId)
+    public void RemoveEdge(Vertex? source, Vertex? target)
     {
-        Edge? e = HasEdge(sourcdId, targetId);
+        if (source == null || target == null) return;
+
+        Edge? e = HasEdge(source, target);
         if (e != null)
         {
             _edges.Remove(e);
         }
+        else
+        {
+            Console.WriteLine("Edge could not be found. The method does nothing.");
+        }
     }
 
-    public Edge? HasEdge(int sourcdId, int targetId)
+    public Edge? HasEdge(Vertex? source, Vertex? target)
     {
+        if (source == null || target == null) return null;
+
         foreach (Edge e in _edges)
         {
-            if ((e.SourceId == sourcdId) &&
-                (e.TargetId == targetId))
+            if ((e.Source == source) &&
+                (e.Target == target))
                 return e;
         }
+
         return null;
     }
 
@@ -606,7 +633,7 @@ public class Graph
         // Edge list
         foreach (Edge e in _edges)
         {
-            Console.WriteLine($"E({e.Id}) = V({e.SourceId}) -- V({e.TargetId})");
+            Console.WriteLine($"E({e.Id}) = V({e.Source.Name}) -- V({e.Target.Name})");
         }
         Console.WriteLine("==============================");
     }
@@ -620,11 +647,11 @@ namespace DataStructureLibrary.Graph;
 public class Vertex
 {
     // Fields
-    public int Id;
-    public string Name;
+    public uint Id;
+    public string Name = "unknownName";
 
     // Constructors
-    public Vertex(int id, string name)
+    public Vertex(uint id, string name)
     {
         Id = id;
         Name = name;
@@ -639,341 +666,336 @@ namespace DataStructureLibrary.Graph;
 public class Edge
 {
     // Fields
-    public int Id;
-    public int SourceId;
-    public int TargetId;
+    public uint Id;
+    public Vertex Source;
+    public Vertex Target;
 
     // Constructors
-    public Edge(int id, int source, int target)
+    public Edge(uint id, Vertex source, Vertex target)
     {
         Id = id;
-        SourceId = source;
-        TargetId = target;
+        Source = source;
+        Target = target;
     }
 }
 ```
 
-## Graph (Node/Edge List Refactored)
+## Graph (Node/Edge List Refactored using Abstraction)
 
-In SocialNet/Program.cs
+In MyBusiness/Program.cs
 ```csharp
-using GraphLibrary;
+namespace MyBusiness;
 
-// namespace
-namespace SocialNet
+using DataStructureLibrary.Graph;
+
+class Program
 {
     public class VertexProperty : BasicVertexProperty
     {
     }
 
-    public class EdgeProperty : BasicEdgeProperty
+    public class EdgeProperty<T> : BasicEdgeProperty<T>
     {
-        public float Weight;
+        public double Weight;
     }
 
-    // main program
-    public class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        Graph<VertexProperty, EdgeProperty<Vertex<VertexProperty>>> graph  = new Graph<VertexProperty, EdgeProperty<Vertex<VertexProperty>>>();
+        Vertex<VertexProperty> v1 = graph.AddVertex("Victor");
+        Vertex<VertexProperty> v2 = graph.AddVertex("Markus");
+        Vertex<VertexProperty> v3 = graph.AddVertex("Yun");
+        Vertex<VertexProperty> v4 = graph.AddVertex("Anna");
+        // graph.RemoveVertex("Yun");
+        // graph.RemoveVertex("Anna");
+        Vertex<VertexProperty> v5 = graph.AddVertex("Michael");
+        Edge<Vertex<VertexProperty>, EdgeProperty<Vertex<VertexProperty>>>? e = graph.AddEdge(v1, v2);
+        if(e!=null)
         {
-            Graph<VertexProperty, EdgeProperty> graph = new Graph<VertexProperty, EdgeProperty>();
-            uint v1 = graph.AddVertex("Helen");
-            uint v2 = graph.AddVertex("Tony");
-            uint v3 = graph.AddVertex("Yun");
-            uint v4 = graph.AddVertex("Tim");
-            // graph.RemoveVertex("Yun");
-            graph.AddEdge(v1, v2);
-            graph.AddEdge(v1, v3);
-            graph.AddEdge(v2, v3);
-            graph.PrintGraph();
-            graph.RemoveVertex("Helen");
-            // graph.RemoveEdge(v1, v3);
-            graph.PrintGraph();
+            e.Property.Weight = 1.0;
         }
+        graph.AddEdge(v1, v3);
+        graph.AddEdge(v2, v3);
+        graph.AddEdge(v3, v4);
+        graph.PrintGraph();
+        graph.RemoveVertex("Victor");
+        graph.RemoveEdge(v3, v4);
+        graph.PrintGraph();
     }
 }
 ```
 ```bash
-The total number of vertices is 4
-The total number of edges is 3
-==============================
-$ V(0) = Helen
-$ V(1) = Tony
-$ V(2) = Yun
-$ V(3) = Tim
+$ The total number of vertices is 5
+$ The total number of edges is 4
 $ ==============================
-$ E(0) = V(0) -- V(1)
-$ E(1) = V(0) -- V(2)
-$ E(2) = V(1) -- V(2)
+$ V(Victor)
+$ V(Markus)
+$ V(Yun)
+$ V(Anna)
+$ V(Michael)
 $ ==============================
-$ The total number of vertices is 3
-$ The total number of edges is 3
+$ E(0): V(Victor) -> V(Markus)  
+$ E(1): V(Victor) -> V(Yun)     
+$ E(2): V(Markus) -> V(Yun)     
+$ E(3): V(Yun) -> V(Anna)       
 $ ==============================
-$ V(1) = Tony
-$ V(2) = Yun
-$ V(3) = Tim
+$ The total number of vertices is 4
+$ The total number of edges is 1
 $ ==============================
-$ E(2) = V(1) -- V(2)
+$ V(Markus)
+$ V(Yun)
+$ V(Anna)
+$ V(Michael)
+$ ==============================
+$ E(2): V(Markus) -> V(Yun)
 $ ==============================
 ```
 
-In GraphLibrary/Graph.cs
+In DataStructureLibrary/Graph.cs
 ```csharp
-namespace GraphLibrary;
+namespace DataStructureLibrary.Graph;
 
-public class Graph<T1, T2>
-where T1 : BasicVertexProperty, new()
-where T2 : BasicEdgeProperty, new()
+public class Graph<TVertexProperty, TEdgeProperty>
+where TVertexProperty : BasicVertexProperty, new()
+where TEdgeProperty : BasicEdgeProperty<Vertex<TVertexProperty>>, new()
 {
     // Fields
     // The list of vertices in the graph
-    private Dictionary<uint, Vertex<T1>> _vertices;
-    private Dictionary<uint, Edge<T2>> _edges;
-
-    // The number of vertices
-    private uint _vIndex;
-    private uint _eIndex;
-
+    private readonly LinkedList<Vertex<TVertexProperty>> _vertices;
+    private readonly LinkedList<Edge<Vertex<TVertexProperty>, TEdgeProperty>> _edges;
 
     // Constructors
     public Graph()
     {
-        _vertices = new Dictionary<uint, Vertex<T1>>();
-        _edges = new Dictionary<uint, Edge<T2>>();
-        _vIndex = 0;
-        _eIndex = 0;
-    }
-
-    // Getters and Setters
-
-    // Finalizer
-    ~Graph()
-    {
+        _vertices = new LinkedList<Vertex<TVertexProperty>>();
+        _edges = new LinkedList<Edge<Vertex<TVertexProperty>, TEdgeProperty>>();
     }
 
     // Methods
-    // Vertex
-    public uint AddVertex(string name)
+    // Manipulate vertices
+    public Vertex<TVertexProperty> AddVertex(string name)
     {
-        Vertex<T1> v = new Vertex<T1>();
-        // Add attributes
-        v.Property.Id = _vIndex;
-        v.Property.Name = name;
+        Vertex<TVertexProperty>? v = HasVertex(name);
 
-        _vertices.Add(_vIndex, v);
-        _vIndex++;
-        return _vIndex - 1;
+        if (v == null)
+        {
+            Vertex<TVertexProperty> newV = new Vertex<TVertexProperty>();
+
+            // Add vertex attributes
+            newV.Property.Name = name;
+            _vertices.AddLast(newV);
+
+            return newV;
+        }
+
+        return v;
     }
 
     public void RemoveVertex(string name)
     {
-        uint? vKey = HasVertex(name);
+        Vertex<TVertexProperty>? v = HasVertex(name);
 
-        if (vKey != null)
+        if (v != null)
         {
-            Vertex<T1> v = _vertices[(uint)vKey];
+            List<Edge<Vertex<TVertexProperty>, TEdgeProperty>> deleteEdgeList = new List<Edge<Vertex<TVertexProperty>, TEdgeProperty>>();
 
-            // Remove the adjacent edges
-            bool allChecked = false;
-            while (!allChecked)
+            // Collect the adjacent edges to be removed
+            foreach (Edge<Vertex<TVertexProperty>, TEdgeProperty> e in _edges)
             {
-                allChecked = true;
-                for (int i = 0; i < _edges.Count; i++)
+                // Equal to source
+                if (e.Property.Source == v)
                 {
-                    KeyValuePair<uint, Edge<T2>> eItem = _edges.ElementAt(i);
-
-                    // Equal to source id
-                    if (eItem.Value.Property.SourceId == v.Property.Id)
-                    {
-                        _edges.Remove(eItem.Key);
-                        allChecked = false;
-                    }
-                    // Equal to target id
-                    if (eItem.Value.Property.TargetId == v.Property.Id)
-                    {
-                        _edges.Remove(eItem.Key);
-                        allChecked = false;
-                    }
+                    deleteEdgeList.Add(e);
+                }
+                // Equal to target
+                if (e.Property.Target == v)
+                {
+                    deleteEdgeList.Add(e);
                 }
             }
+            // Remove the collected edges
+            foreach (Edge<Vertex<TVertexProperty>, TEdgeProperty> e in deleteEdgeList)
+            {
+                _edges.Remove(e);
+            }
 
-            // Remove the vertex
-            _vertices.Remove((uint)vKey);
-            _vIndex--;
+            // Remove the vertex from the list
+            _vertices.Remove(v);
         }
     }
 
-    public uint? HasVertex(string name)
+    public Vertex<TVertexProperty>? HasVertex(string name)
     {
-        for (int i = 0; i < _vertices.Count; i++)
+        foreach (Vertex<TVertexProperty> v in _vertices)
         {
-            if (_vertices.ElementAt(i).Value.Property.Name == name)
-                return _vertices.ElementAt(i).Key;
+            if (v.Property.Name == name)
+                return v;
         }
         return null;
     }
 
     // Function overloading
-    public uint? HasVertex(uint id)
+    public Vertex<TVertexProperty>? HasVertex(uint id)
     {
-        for (int i = 0; i < _vertices.Count; i++)
+        foreach (Vertex<TVertexProperty> v in _vertices)
         {
-            if (_vertices.ElementAt(i).Value.Property.Id == id)
-                return _vertices.ElementAt(i).Key;
+            if (v.Property.Id == id)
+                return v;
         }
         return null;
     }
 
-    // Edge
-    public void AddEdge(uint sourceId, uint targetId)
+    // Manipulate edges
+    public Edge<Vertex<TVertexProperty>, TEdgeProperty>? AddEdge(Vertex<TVertexProperty>? source, Vertex<TVertexProperty>? target)
     {
-        uint? eKey = HasEdge(sourceId, targetId);
-
-        if (eKey == null)
+        // Check if the source and target vertices exist
+        if (source == null || target == null)
         {
-            uint? sourceKey = HasVertex(sourceId);
-            uint? targetKey = HasVertex(targetId);
-            if (sourceKey == null || targetKey == null)
-            {
-                Console.WriteLine("Source or Target Vertex could not be found. Please add vertices first");
-                return;
-            }
-            else
-            {
-                Edge<T2> newE = new Edge<T2>();
-                // Add attributes
-                newE.Property.Id = _eIndex;
-                newE.Property.SourceId = sourceId;
-                newE.Property.TargetId = targetId;
+            Console.WriteLine("Source or Target Vertex could not be found. Please add vertices first");
+            return null;
+        }
 
-                _edges.Add(_eIndex, newE);
-                _eIndex++;
-            }
+        Edge<Vertex<TVertexProperty>, TEdgeProperty>? e = HasEdge(source, target);
+
+        if (e == null)
+        {
+            Edge<Vertex<TVertexProperty>, TEdgeProperty> newE = new Edge<Vertex<TVertexProperty>, TEdgeProperty>(source, target);
+            _edges.AddLast(newE);
+
+            return newE;
+        }
+
+        return e;
+    }
+
+    public void RemoveEdge(Vertex<TVertexProperty>? source, Vertex<TVertexProperty>? target)
+    {
+        if (source == null || target == null) return;
+
+        Edge<Vertex<TVertexProperty>, TEdgeProperty>? e = HasEdge(source, target);
+        if (e != null)
+        {
+            _edges.Remove(e);
+        }
+        else
+        {
+            Console.WriteLine("Edge could not be found. The method does nothing.");
         }
     }
 
-    public void RemoveEdge(uint sourcdId, uint targetId)
+    public Edge<Vertex<TVertexProperty>, TEdgeProperty>? HasEdge(Vertex<TVertexProperty>? source, Vertex<TVertexProperty>? target)
     {
-        uint? eKey = HasEdge(sourcdId, targetId);
+        if (source == null || target == null) return null;
 
-        if (eKey != null)
+        foreach (Edge<Vertex<TVertexProperty>, TEdgeProperty> e in _edges)
         {
-            _edges.Remove((uint)eKey);
-            _eIndex--;
+            if ((e.Property.Source == source) &&
+                (e.Property.Target == target))
+                return e;
         }
-    }
-
-    public uint? HasEdge(uint sourcdId, uint targetId)
-    {
-        for (int i = 0; i < _edges.Count; i++)
-        {
-            if ((_edges.ElementAt(i).Value.Property.SourceId == sourcdId) &&
-                (_edges.ElementAt(i).Value.Property.TargetId == targetId))
-                return _edges.ElementAt(i).Key;
-        }
+        
         return null;
     }
 
     // Graph
     public void PrintGraph()
     {
-        Console.WriteLine("The total number of vertices is " + _vIndex);
-        Console.WriteLine("The total number of edges is " + _eIndex);
+        Console.WriteLine("The total number of vertices is " + _vertices.Count);
+        Console.WriteLine("The total number of edges is " + _edges.Count);
         Console.WriteLine("==============================");
 
         // Vertex list
-        for (int i = 0; i < _vertices.Count; i++)
+        foreach (Vertex<TVertexProperty> v in _vertices)
         {
-            Console.WriteLine($"V({_vertices.ElementAt(i).Value.Property.Id}) = {_vertices.ElementAt(i).Value.Property.Name}");
+            Console.WriteLine(v);
+            // Console.WriteLine($"V({v.Property.Id}) = {v.Property.Name}");
         }
         Console.WriteLine("==============================");
 
         // Edge list
-        for (int i = 0; i < _edges.Count; i++)
+        foreach (Edge<Vertex<TVertexProperty>, TEdgeProperty> e in _edges)
         {
-            Console.WriteLine($"E({_edges.ElementAt(i).Value.Property.Id}) = V({_edges.ElementAt(i).Value.Property.SourceId}) -- V({_edges.ElementAt(i).Value.Property.TargetId})");
+            Console.WriteLine(e);
+            // Console.WriteLine($"E({e.Property.Id}) = V({e.Property.Source!.Property.Name}) -- V({e.Property.Target!.Property.Name})");
         }
         Console.WriteLine("==============================");
     }
 }
 ```
 
-In GraphLibrary/Vertex.cs
+In DataStructureLibrary/Vertex.cs
 ```csharp
-namespace GraphLibrary;
+namespace DataStructureLibrary.Graph;
 
 public abstract class BasicVertexProperty
 {
     // Fields
     public uint Id;
-    public string Name = "Unknown_Name";
+    public string Name = "unknownName";
 }
 
 // BasicVertexProperty, new() are generic type constraints
-public class Vertex<T> where T : BasicVertexProperty, new()
+public class Vertex<TVertexProperty> where TVertexProperty : BasicVertexProperty, new()
 {
     // Fields
-    private T _property;
-
+    public TVertexProperty Property;
+    // starts from 0
+    private static uint _idCounter = 0; 
+    
     // Constructors
     public Vertex()
     {
-        _property = new T();
+        Property = new TVertexProperty();
+        Property.Id = _idCounter++;
     }
 
-    // Getters and Setters
-    public T Property
+    // Do we need to override Equals()?
+    // public override bool Equals(object? obj)
+    // {
+    //     return obj is Vertex<TVertexProperty> vertex && Property.Id == vertex.Property.Id;
+    // }
+
+    public override string ToString()
     {
-        get { return _property; }
-        set { _property = value; }
+        return $"V({Property.Name})";
     }
-
-    // Finalizer
-    ~Vertex()
-    {
-    }
-
-    // Methods
 }
 ```
 
-In GraphLibrary/Edge.cs
+In DataStructureLibrary/Edge.cs
 ```csharp
-namespace GraphLibrary;
+namespace DataStructureLibrary.Graph;
 
-public abstract class BasicEdgeProperty
+public abstract class BasicEdgeProperty<TVertex>
 {
     // Fields
     public uint Id;
-    public uint SourceId;
-    public uint TargetId;
+    public TVertex? Source;
+    public TVertex? Target;
 }
 
 // BasicEdgeProperty, new() are generic type constraints
-public class Edge<T> where T : BasicEdgeProperty, new()
+public class Edge<TVertex, TEdgeProperty> where TEdgeProperty : BasicEdgeProperty<TVertex>, new()
 {
     // Fields
-    private T _property;
+    public TEdgeProperty Property;
+    // starts from 0
+    private static uint _idCounter = 0;
 
     // Constructors
-    public Edge()
+    public Edge(TVertex source, TVertex target)
     {
-        _property = new T();
+        Property = new TEdgeProperty();
+        Property.Id = _idCounter++;
+        Property.Source = source;
+        Property.Target = target;
     }
 
-    // Getters and Setters
-    public T Property
+    public override string ToString()
     {
-        get { return _property; }
-        set { _property = value; }
+        // check how to make it generic
+        return $"E({Property.Id}): {Property.Source} -> {Property.Target}";
     }
-
-    // Finalizer
-    ~Edge()
-    {
-    }
-
-    // Methods
 }
 ```
 
