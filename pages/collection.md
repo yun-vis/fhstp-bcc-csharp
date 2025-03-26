@@ -795,6 +795,104 @@ $ 1, 2, 3, 31, 32, 4, 5,
 $ 1, 2, 31, 32, 4, 5,
 ```
 
+## Using different Collections to do things for you
+In class we saw a few progressive examples where just by selecting the right data structure a lot of common tasks in programming can be automated and simplified. Here is the full code:
+
+```csharp
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        //reading from input
+        Console.WriteLine("### Enter a sentence:");
+        string input = Console.ReadLine();
+
+        //splitting the input into words and cleaning
+        string[] words = input.Split(' ');
+        for (int i = 0; i < words.Length; i++)
+        {
+            words[i] = words[i].ToLower().Trim('.', ',', '!', '?', ';', ':');
+        }
+
+        Console.WriteLine("### Cleaned up words:");
+        foreach (string word in words)
+        {
+            Console.Write(word + " ");
+        }
+
+        //filtering unique words by using HashShet
+        HashSet<string> uniqueWords = new HashSet<string>(words);
+        Console.WriteLine("\n### Unique words:");
+        foreach (string word in uniqueWords)
+        {
+            Console.Write(word + " ");
+        }
+        //sorting them by using SortedSet
+        SortedSet<string> sortedWords = new SortedSet<string>(words);
+        Console.WriteLine("\n### Sorted words:");
+        foreach (string word in sortedWords)
+        {
+            Console.Write(word + " ");
+        }
+        //counting individual occurences by using Dictionary
+        Dictionary<string, int> wordCount = new Dictionary<string, int>();
+        foreach (string word in words)
+        {
+            if (wordCount.ContainsKey(word))
+            {
+                wordCount[word]++;
+            }
+            else
+            {
+                wordCount[word] = 1;
+            }
+        }
+        //grouping them by first letter
+        Dictionary<char, List<string>> wordsByFirstLetter = new Dictionary<char, List<string>>();
+        foreach (string word in words)
+        {
+            char firstLetter = word[0];
+            if (wordsByFirstLetter.ContainsKey(firstLetter))
+            {
+                wordsByFirstLetter[firstLetter].Add(word);
+            }
+            else
+            {
+                wordsByFirstLetter[firstLetter] = new List<string> { word };
+            }
+        }
+        Console.WriteLine("\n### Words by first letter:");
+        foreach (KeyValuePair<char, List<string>> pair in wordsByFirstLetter)
+        {
+            Console.WriteLine(pair.Key + ": " + string.Join(", ", pair.Value));
+        }
+        //selecting the unique words by first letter by using a HashSet instead of List
+        Dictionary<char, HashSet<string>> uniqueWordsByFirstLetter = new Dictionary<char, HashSet<string>>();
+        foreach (string word in words)
+        {
+            char firstLetter = word[0];
+            if (uniqueWordsByFirstLetter.ContainsKey(firstLetter))
+            {
+                uniqueWordsByFirstLetter[firstLetter].Add(word);
+            }
+            else
+            {
+                uniqueWordsByFirstLetter[firstLetter] = new HashSet<string> { word };
+            }
+        }
+        Console.WriteLine("\n### Unique words by first letter:");
+        foreach (KeyValuePair<char, HashSet<string>> pair in uniqueWordsByFirstLetter)
+        {
+            Console.WriteLine(pair.Key + ": " + string.Join(", ", pair.Value));
+        }
+    }
+
+}
+
+```
 ---
 # Selected Theory
 
@@ -819,3 +917,7 @@ The SortedDictionary<TKey, TValue> generic class is a binary search tree with O(
 | SortedList       | O(1)    | O(log n) | O(n)   | O(n)     | O(n)     | Lesser  |
 | SortedDictionary | O(n)    | O(log n) | O(n)   | O(log n) | O(log n) | Greater |
 |------------------|---------|----------|--------|----------|----------|---------|
+
+
+
+
