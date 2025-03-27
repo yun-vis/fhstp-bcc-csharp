@@ -538,6 +538,26 @@ public class Graph
                 }
             }
 
+            // for (int i = 0; i < _edges.Count; i++)
+            // {
+            //     bool isRemoved = false;
+            //     // Equal to source id
+            //     if (_edges.ElementAt(i).Source.Id == v.Id)
+            //     {
+            //         _edges.Remove(_edges.ElementAt(i));
+            //         isRemoved = true;
+            //     }
+            //     // Equal to target id
+            //     if (_edges.ElementAt(i).Target.Id == v.Id)
+            //     {
+            //         _edges.Remove(_edges.ElementAt(i));
+            //         isRemoved = true;
+            //     }
+
+            //     if (isRemoved == true) i--;
+            //     Console.WriteLine("i = " + i);
+            // }
+            
             // Remove the vertex from the list
             _vertices.Remove(v);
         }
