@@ -422,6 +422,92 @@ namespace MyBusiness
 $ It\'s an IPhone
 ```
 
+## Delegate exercise: magic item damage calculator
+
+###  Starting Code
+```csharp
+```
+### Final Code
+```csharp
+using System;
+
+class BaseWeapon
+{
+    public int BaseDamage { get; set; }
+    public double AttackSpeed { get; set; }
+
+    public double CalculateDPS(DamageModifier damageModifier, double durationInSeconds)
+    {
+        int attackCount = (int)(durationInSeconds / AttackSpeed);
+        double totalDamage = 0;
+
+        for (int i = 0; i < attackCount; i++)
+        {
+            totalDamage += damageModifier(this.BaseDamage);
+        }
+
+        return totalDamage / durationInSeconds;
+    }
+}
+
+//Delegate used to calculate composite damage
+//equivalent to Func<int,int>
+delegate int DamageModifier(int baseDamage);
+
+class Program
+{
+    static void Main()
+    {
+        // Character base stats
+        int strength = 10;
+        int dexterity = 12;
+        int intelligence = 8;
+
+        //Randomizer
+        Random rng = new();
+
+        //Base weapons dictionary
+        var weapons = new Dictionary<string,BaseWeapon>
+        {
+            ["sword"] = new BaseWeapon { BaseDamage = 10, AttackSpeed = 1.0 },
+            ["dagger"] = new BaseWeapon { BaseDamage = 5, AttackSpeed = 0.5 },
+            ["axe"] = new BaseWeapon { BaseDamage = 20, AttackSpeed = 2.0 }
+        };
+
+        // Modifier dictionary: each string maps to a lambda function that modifies damage
+        Dictionary<string, DamageModifier> modifiers = new Dictionary<string, DamageModifier>
+        {
+            ["giant"] = dmg => dmg + strength,
+            ["random"] = dmg => dmg * rng.Next(0, 2)*2,
+            ["brutal"] = dmg => (dmg * dmg)/5
+        };
+
+        // Example item with modifiers
+        List<string> itemModifiers = ["giant","brutal"];
+        string baseWeaponName = "dagger";
+
+        // Compose damage function
+        DamageModifier calculateDamage = dmg => dmg;
+        foreach (var mod in itemModifiers)
+        {
+            if (modifiers.ContainsKey(mod))
+            {
+                DamageModifier modFunc = modifiers[mod];
+                DamageModifier previousFunc = calculateDamage;
+
+                // Compose previous with new modifier
+                calculateDamage = dmg => modFunc(previousFunc(dmg));
+            }
+        }
+
+        int finalDamage = calculateDamage(weapons[baseWeaponName].BaseDamage);
+        string modifierLabel = string.Join(" ", itemModifiers);
+        Console.WriteLine($"Final Damage for the {modifierLabel} {baseWeaponName}: {finalDamage}");
+        Console.WriteLine($"DPS: {weapons[baseWeaponName].CalculateDPS(calculateDamage, 100000)}");
+    }
+}
+```
+
 # Type-testing Operators and Cast Expression
 
 ## [Object Class](https://learn.microsoft.com/en-us/dotnet/api/system.object?view=net-6.0)
