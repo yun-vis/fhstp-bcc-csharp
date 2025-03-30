@@ -513,6 +513,9 @@ public class Graph
 
         if (v != null)
         {
+            // Remove the adjacent edges
+
+            // v.1 with run-time error
             // Unhandled exception. System.InvalidOperationException: 
             // Collection was modified after the enumerator was instantiated.
             // foreach (Edge e in _edges)
@@ -523,41 +526,30 @@ public class Graph
             //     }
             // }
 
-            // Remove the adjacent edges
-            for (int i = 0; i < _edges.Count; i++)
-            {
-                // Equal to source id
-                if (_edges.ElementAt(i).Source.Id == v.Id)
-                {
-                    _edges.Remove(_edges.ElementAt(i));
-                }
-                // Equal to target id
-                if (_edges.ElementAt(i).Target.Id == v.Id)
-                {
-                    _edges.Remove(_edges.ElementAt(i));
-                }
-            }
-
+            // v.2 with logical error
             // for (int i = 0; i < _edges.Count; i++)
             // {
-            //     bool isRemoved = false;
-            //     // Equal to source id
-            //     if (_edges.ElementAt(i).Source.Id == v.Id)
+            //     // Equal to source id or target id
+            //     if ((_edges.ElementAt(i).Source == v) || (_edges.ElementAt(i).Target == v))
             //     {
             //         _edges.Remove(_edges.ElementAt(i));
-            //         isRemoved = true;
             //     }
-            //     // Equal to target id
-            //     if (_edges.ElementAt(i).Target.Id == v.Id)
-            //     {
-            //         _edges.Remove(_edges.ElementAt(i));
-            //         isRemoved = true;
-            //     }
-
-            //     if (isRemoved == true) i--;
-            //     Console.WriteLine("i = " + i);
             // }
-            
+
+            // v.3 no error
+            for (int i = 0; i < _edges.Count; i++)
+            {
+                bool isRemoved = false;
+                // Equal to source id or target id
+                if ((_edges.ElementAt(i).Source == v) || (_edges.ElementAt(i).Target == v))
+                {
+                    _edges.Remove(_edges.ElementAt(i));
+                    isRemoved = true;
+                }
+
+                if (isRemoved == true) i--;
+            }
+
             // Remove the vertex from the list
             _vertices.Remove(v);
         }
@@ -811,33 +803,56 @@ where TEdgeProperty : BasicEdgeProperty<Vertex<TVertexProperty>>, new()
         return v;
     }
 
-    public void RemoveVertex(string name)
+public void RemoveVertex(string name)
     {
         Vertex<TVertexProperty>? v = HasVertex(name);
 
         if (v != null)
         {
-            List<Edge<Vertex<TVertexProperty>, TEdgeProperty>> deleteEdgeList = new List<Edge<Vertex<TVertexProperty>, TEdgeProperty>>();
+            // v1
+            for (int i = 0; i < _edges.Count; i++)
+            {
+                bool isRemoved = false;
+                // Equal to source or target
+                if ((_edges.ElementAt(i).Property.Source == v) || (_edges.ElementAt(i).Property.Target == v))
+                {
+                    _edges.Remove(_edges.ElementAt(i));
+                    isRemoved = true;
+                }
 
+                if (isRemoved == true) i--;
+            }
+
+            // v2
+            // List<Edge<Vertex<TVertexProperty>, TEdgeProperty>> deleteEdgeList = new List<Edge<Vertex<TVertexProperty>, TEdgeProperty>>();
+            // // Collect the adjacent edges to be removed
+            // foreach (Edge<Vertex<TVertexProperty>, TEdgeProperty> e in _edges)
+            // {
+            //     // Equal to source or target
+            //     if ((e.Property.Source == v) || (e.Property.Target == v))
+            //     {
+            //         deleteEdgeList.Add(e);
+            //     }
+            // }
+            // // Remove the collected edges
+            // foreach (Edge<Vertex<TVertexProperty>, TEdgeProperty> e in deleteEdgeList)
+            // {
+            //     _edges.Remove(e);
+            // }
+
+            // v3
             // Collect the adjacent edges to be removed
-            foreach (Edge<Vertex<TVertexProperty>, TEdgeProperty> e in _edges)
-            {
-                // Equal to source
-                if (e.Property.Source == v)
-                {
-                    deleteEdgeList.Add(e);
-                }
-                // Equal to target
-                if (e.Property.Target == v)
-                {
-                    deleteEdgeList.Add(e);
-                }
-            }
-            // Remove the collected edges
-            foreach (Edge<Vertex<TVertexProperty>, TEdgeProperty> e in deleteEdgeList)
-            {
-                _edges.Remove(e);
-            }
+            // List<Edge<Vertex<TVertexProperty>, TEdgeProperty>> deleteEdgeList = _edges.Where(_edges => (_edges.Property.Source == v) ||
+            //                                                                                        (_edges.Property.Target == v)).ToList();
+            // // Remove the collected edges
+            // foreach (Edge<Vertex<TVertexProperty>, TEdgeProperty> e in deleteEdgeList)
+            // {
+            //     // Console.WriteLine(e);
+            //     _edges.Remove(e);
+            // }
+
+            // v4
+            // _edges.RemoveAll(e => e.Property.Source == v || e.Property.Target == v);
 
             // Remove the vertex from the list
             _vertices.Remove(v);
