@@ -318,7 +318,7 @@ public delegate T ChangeValueDelegate<T>(T x);
 
 ## Action, Func, and Predicate Delegates
 
-* **Action Delegate:** Encapsulates a method that has a single parameter and does not return a value. [Doc](https://docs.microsoft.com/en-us/dotnet/api/system.action-1?view=net-6.0)
+* **Action Delegate:** Encapsulates a method that does not return a value. [Doc](https://docs.microsoft.com/en-us/dotnet/api/system.action-1?view=net-6.0)
 
 ```csharp
 using System;
