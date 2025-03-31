@@ -426,6 +426,39 @@ $ It\'s an IPhone
 
 ###  Starting Code
 ```csharp
+using System;
+
+delegate int DamageModifier(int baseDamage);
+class Program
+{
+    static void Main()
+    {
+        // Character base stats
+        int strength = 10;
+        int dexterity = 12;
+        int intelligence = 8;
+
+        //Randomizer
+        Random rng = new();
+
+        // Modifier dictionary: each string maps to a lambda function that modifies damage
+        Dictionary<string, DamageModifier> modifiers = new Dictionary<string, DamageModifier>
+        {
+            ["giant"] = dmg => dmg + strength,
+            ["random"] = dmg => dmg * rng.Next(0, 2)*2,
+            ["brutal"] = dmg => (dmg * dmg)/5
+        };
+
+        int baseDamage = 10;
+        string modifier = "giant";
+
+        int finalDamage = modifiers[modifier](baseDamage);
+        Console.WriteLine($"Final Damage with {modifier} modifier: {finalDamage}");
+
+
+
+    }
+}
 ```
 ### Final Code
 ```csharp
