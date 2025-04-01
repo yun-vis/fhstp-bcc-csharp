@@ -589,16 +589,16 @@ The **is** operator will check if the run-time type of an expression is compatib
 
 The **as** operator is used to explicitly convert an expression to a given type if its run-time type is compatible with that type. The as operator returns null if the conversion is not possible.
 
-In Program.cs,
+In MyBusiness/Program.cs,
 ```csharp
-using System;
+namespace MyBusiness;
 
-// main program
-public class Program
+class Program
 {
     static void Main(string[] args)
     {
         object myObject1 = new Cat();
+        // You can use a base/parent class to refer to your object 
         Animal animal1 = new Dog();
         object myObject2 = animal1;
 
@@ -618,7 +618,7 @@ public class Program
         Console.Write($"{wildCat.Name} speaks ");
         wildCat.Speak();
 
-        // Use is operator
+        // Use is operator to safely check if the types are compatible
         if (petCat is WildCat)
         {
             Console.WriteLine($"{petCat.Name} IS an WildCat");
@@ -630,8 +630,8 @@ public class Program
         object[] myObjects = new object[4];
         myObjects[0] = new Dog();
         myObjects[1] = new Cat();
-        myObjects[2] = "Dog";
-        myObjects[3] = "Cat";
+        myObjects[2] = "StringDog";
+        myObjects[3] = "StringCat";
 
         for (int i = 0; i < myObjects.Length; i++)
         {
@@ -655,7 +655,7 @@ public class Program
 }
 ```
 
-In Animals.cs,
+In AnimalLibrary/Animals.cs,
 ```csharp
 public class Animal
 {

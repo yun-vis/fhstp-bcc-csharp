@@ -1036,3 +1036,27 @@ public class Edge<TVertex, TEdgeProperty> where TEdgeProperty : BasicEdgePropert
 
 ---
 # External Resources
+
+## [C# Extension Methods](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/extension-methods)
+
+```csharp
+public static class LinkedListExtensions
+{
+    public static void RemoveAll<T>(this LinkedList<T> linkedList,
+                                    Func<T, bool> predicate)
+    {
+        if (linkedList != null)
+        {
+            for (LinkedListNode<T> node = linkedList.First!; node != null;)
+            {
+                LinkedListNode<T> next = node.Next!;
+                if (predicate(node.Value))
+                    linkedList.Remove(node);
+                node = next;
+            }
+        }
+    }
+}
+```
+
+## [Functional Programming](https://learn.microsoft.com/en-us/archive/msdn-magazine/2009/october/functional-programming-for-everyday-net-development)

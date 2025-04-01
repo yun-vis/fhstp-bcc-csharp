@@ -16,7 +16,7 @@ main:
     url: /pages/collection
   - title: ".Net Type"
     url: /pages/dotnettype
-  - title: "Nuget"
+  - title: ".Net File Management"
     url: /pages/nuget
   - title: ".Net MAUI"
     url: /pages/dotnetmaui

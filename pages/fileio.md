@@ -917,83 +917,119 @@ There are dozens of formats you can specify, but the two most common ones are **
 
 In Program.cs,
 ```csharp
+// System libraries
 using System; // DateTime
-using System.Collections.Generic; // List<T>, HashSet<T>
+// using System.Collections.Generic; // List<T>, HashSet<T>
+// using System.Xml;
 using System.Xml.Serialization; // XmlSerializer
-using System.Xml;
-using static System.Console;
-using static System.Environment;
+using static System.Environment; // CurrentDirectory
 using static System.IO.Path;
-using Animals;
 
-namespace MyBusiness
+// External libraries
+using AnimalLibrary;
+using GraphLibrary;
+
+namespace MyBusiness;
+
+class Program
 {
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            // create an object graph
-            List<Person> people = new List<Person> {
-            new Person(30000M) { FirstName = "Alice",
+        // create object that will format a List of Persons as XML
+        XmlSerializer xs = new XmlSerializer(typeof(List<Person>));
+        // create a file to write to
+        string path = Combine(CurrentDirectory, "people.xml");
+
+        // create an object list
+        // M refers to the decimal type
+        List<Person> people = new List<Person> {
+            new Person(30000M) {
+                FirstName = "Alice",
                 LastName = "Smith",
-                DateOfBirth = new DateTime(1974, 3, 14) },
-            new Person(40000M) { FirstName = "Bob",
+                DateOfBirth = new DateTime(1974, 3, 14)
+                },
+            new Person(40000M) {
+                FirstName = "Bob",
                 LastName = "Jones",
-                DateOfBirth = new DateTime(1969, 11, 23) },
-            new Person(20000M) { FirstName = "Charlie",
+                DateOfBirth = new DateTime(1969, 11, 23)
+                },
+            new Person(20000M) {
+                FirstName = "Charlie",
                 LastName = "Cox",
                 DateOfBirth = new DateTime(1984, 5, 4),
                 Children = new HashSet<Person> {
                     new Person(0M) { FirstName = "Sally",
                     LastName = "Cox",
-                    DateOfBirth = new DateTime(2000, 7, 12) } } }
+                    DateOfBirth = new DateTime(2000, 7, 12)}
+                    }
+                }
             };
-            // create object that will format a List of Persons as XML
-            XmlSerializer xs = new XmlSerializer(typeof(List<Person>));
-            // create a file to write to
-            string path = Combine(CurrentDirectory, "people.xml");
 
-            // using allows us not to forget stream.Close();
-            using (FileStream stream = File.Create(path))
-            {
-                // serialize the object graph to the stream
-                xs.Serialize(stream, people);
-            }
-            WriteLine("Written {0:N0} bytes of XML to {1}",
-              arg0: new FileInfo(path).Length,
-              arg1: path);
-            WriteLine();
-            // Display the serialized object graph
-            WriteLine(File.ReadAllText(path));
+        // using allows us not to forget stream.Close();
+        using (FileStream stream = File.Create(path))
+        {
+            // serialize the object graph to the stream
+            xs.Serialize(stream, people);
         }
+
+        // The compiler converts above to:
+        // FileStream stream = File.Create(path);
+        // // try-catch-finally statement
+        // // The try-catch statement consists of a try block followed by one or 
+        // // more catch clauses, which specify handlers for different exceptions.
+        // try
+        // {
+        //     // serialize the object graph to the stream
+        //     xs.Serialize(stream, people);
+        // }
+        // catch (Exception ex)
+        // {
+        //     Console.WriteLine($"{ex.GetType()} says {ex.Message}");
+        // }
+        // finally
+        // {
+        //     // if stream is not null, we close it
+        //     if (stream != null) stream.Close();
+        // }
+
+        Console.WriteLine("Written {0:N0} bytes of XML to {1}",
+          arg0: new FileInfo(path).Length,
+          arg1: path);
+        Console.WriteLine();
+        // Display the serialized object graph
+        Console.WriteLine(File.ReadAllText(path));
     }
+
+
+    // static void Main(string[] args)
+    // {
+    //     Graph graph = new Graph("/Data/network-planar.graphml");
+    // }
 }
 ```
-In Animals.cs,
+In AnimalLibrary/Person.cs,
 ```csharp
-using System;
-using System.Collections.Generic;
+namespace AnimalLibrary;
 
-/*
-The animal namespace
-*/
-namespace Animals
+public class Person
 {
-    public class Person
+    // Default constructor
+    public Person()
     {
-        public Person()
-        {
-        }
-        public Person(decimal initialSalary)
-        {
-            Salary = initialSalary;
-        }
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
-        public DateTime DateOfBirth { get; set; }
-        public HashSet<Person>? Children { get; set; }
-        protected decimal Salary { get; set; }
     }
+
+    // Paramerterized constructor
+    public Person(decimal initialSalary)
+    {
+        Salary = initialSalary;
+    }
+
+    // Properties
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public DateTime DateOfBirth { get; set; }
+    public HashSet<Person>? Children { get; set; }
+    protected decimal Salary { get; set; }
 }
 ```
 ```bash
@@ -1024,6 +1060,12 @@ namespace Animals
 </ArrayOfPerson>
 ```
 
+### [using statement - ensure the correct use of disposable objects](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/using)
+### [standard-numeric-format-strings](https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings)
+### [Composite formatting](https://learn.microsoft.com/en-us/dotnet/standard/base-types/composite-formatting)
+### [DateTime.ToString Method](https://learn.microsoft.com/en-us/dotnet/api/system.datetime.tostring)
+### [Standard date and time format strings](https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings)
+
 ## Deserializing XML files
 
 ```csharp
@@ -1037,7 +1079,7 @@ using (FileStream xmlLoad = File.Open(path, FileMode.Open))
         {
             if (item.Children != null)
             {
-                WriteLine("{0} has {1} children.",
+                Console.WriteLine("{0} has {1} children.",
                     item.LastName, item.Children.Count);
             }
         }
