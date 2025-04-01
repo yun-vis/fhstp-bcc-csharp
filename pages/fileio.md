@@ -627,190 +627,6 @@ $ Ragdoll
 $ SphynxCat
 ```
 
-## Writing to XML streams
-
-```csharp
-using System.IO; // types for managing the filesystem
-using static System.Console;
-using static System.IO.Path;
-using static System.Environment;
-using System.Xml;
-
-namespace MyBusiness
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            WorkWithXml();
-        }
-        // define an array of cat types
-        static string[] cattypes = new string[] {
-            "SiameseCat", "BritishShorthair", "MaineCoon", "PersianCat", "Ragdoll", "SphynxCat" };
-        static void WorkWithXml()
-        {
-            // define a file to write to
-            string xmlFile = Combine(CurrentDirectory, "streams.xml");
-            // create a file stream
-            FileStream xmlFileStream = File.Create(xmlFile);
-            // wrap the file stream in an XML writer helper
-            // and automatically indent nested elements
-            XmlWriter xml = XmlWriter.Create(xmlFileStream,
-            new XmlWriterSettings { Indent = true });
-            // write the XML declaration
-            xml.WriteStartDocument();
-            // write a root element
-            xml.WriteStartElement("cattypes");
-            // enumerate the strings writing each one to the stream
-            foreach (string item in cattypes)
-            {
-                xml.WriteElementString("cattype", item);
-            }
-            // write the close root element
-            xml.WriteEndElement();
-            // close helper and stream
-            xml.Close();
-            xmlFileStream.Close();
-            // output all the contents of the file
-            WriteLine("{0} contains {1:N0} bytes.",
-              arg0: xmlFile,
-              arg1: new FileInfo(xmlFile).Length);
-            WriteLine(File.ReadAllText(xmlFile));
-        }
-    }
-}
-```
-```bash
-$ /Users/yun/Dropbox/FH/BCC/C-Sharp/Codes/CRC_CSD-09/MyBusiness/streams.xml contains 265 bytes.
-$ <?xml version="1.0" encoding="utf-8"?>
-$ <cattypes>
-$   <cattype>SiameseCat</cattype>
-$   <cattype>BritishShorthair</cattype>
-$   <cattype>MaineCoon</cattype>
-$   <cattype>PersianCat</cattype>
-$   <cattype>Ragdoll</cattype>
-$   <cattype>SphynxCat</cattype>
-$ </cattypes>
-```
-
-## Reading XML from streams
-
-```csharp
-using (XmlReader reader = XmlReader.Create("streams.xml"))
-{
-    while (reader.Read())
-    {
-        // check if we are on an element node named cattype
-        if ((reader.NodeType == XmlNodeType.Element)
-        && (reader.Name == "cattype"))
-        {
-            reader.Read(); // move to the text inside element
-            WriteLine($"{reader.Value}"); // read its value
-        }
-    }
-}
-```
-```bash
-$ SiameseCat
-$ BritishShorthair
-$ MaineCoon
-$ PersianCat
-$ Ragdoll
-$ SphynxCat
-```
-
-## Disposing of file resources
-
-When you open a file to read or write to it, you are using resources outside of .NET. These are called unmanaged resources and must be disposed of when you are done working with them.
-
-```csharp
-using System.IO; // types for managing the filesystem
-using static System.Console;
-using static System.IO.Path;
-using static System.Environment;
-using System.Xml;
-
-namespace MyBusiness
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            WorkWithXml();
-        }
-        // define an array of cat types
-        static string[] cattypes = new string[] {
-            "SiameseCat", "BritishShorthair", "MaineCoon", "PersianCat", "Ragdoll", "SphynxCat" };
-        static void WorkWithXml()
-        {
-            FileStream? xmlFileStream = null;
-            XmlWriter? xml = null;
-            try
-            {
-                // define a file to write to
-                string xmlFile = Combine(CurrentDirectory, "streams.xml");
-                // create a file stream
-                xmlFileStream = File.Create(xmlFile);
-                // wrap the file stream in an XML writer helper
-                // and automatically indent nested elements
-                xml = XmlWriter.Create(xmlFileStream,
-                new XmlWriterSettings { Indent = true });
-                // write the XML declaration
-                xml.WriteStartDocument();
-                // write a root element
-                xml.WriteStartElement("cattypes");
-                // enumerate the strings writing each one to the stream
-                foreach (string item in cattypes)
-                {
-                    xml.WriteElementString("cattype", item);
-                }
-                // write the close root element
-                xml.WriteEndElement();
-                // close helper and stream
-                xml.Close();
-                xmlFileStream.Close();
-                // output all the contents of the file
-                WriteLine($"{0} contains {1:N0} bytes.",
-                  arg0: xmlFile,
-                  arg1: new FileInfo(xmlFile).Length);
-                WriteLine(File.ReadAllText(xmlFile));
-            }
-            catch (Exception ex)
-            {
-                WriteLine($"{ex.GetType()} says {ex.Message}");
-            }
-            finally
-            {
-                if (xml != null)
-                {
-                    xml.Dispose();
-                    WriteLine("The XML writer's unmanaged resources have been disposed.");
-                }
-                if (xmlFileStream != null)
-                {
-                    xmlFileStream.Dispose();
-                    WriteLine("The file stream's unmanaged resources have been disposed.");
-                }
-            }
-        }
-    }
-}
-```
-```bash
-$ 0 contains 1 bytes.
-$ <?xml version="1.0" encoding="utf-8"?>
-$ <cattypes>
-$   <cattype>SiameseCat</cattype>
-$   <cattype>BritishShorthair</cattype>
-$   <cattype>MaineCoon</cattype>
-$   <cattype>PersianCat</cattype>
-$   <cattype>Ragdoll</cattype>
-$   <cattype>SphynxCat</cattype>
-$ </cattypes>
-$ The XML writer\'s unmanaged resources have been disposed.
-$ The file stream\'s unmanaged resources have been disposed.
-```
-
 ## Encoding strings as byte arrays
 
 ```csharp
@@ -906,28 +722,15 @@ $   57   39     9
 $ A pint of milk is ?1.99
 ```
 
-## Serializing Objects
+## XML Streams
 
-- **Serialization:** is the process of converting a live object into a sequence of bytes using a specified format.
-- **Deserialization:** is the reverse process of **Serialization**.
-
-There are dozens of formats you can specify, but the two most common ones are **eXtensible Markup Language (XML)** and **JavaScript Object Notation (JSON)**.
-
-## Serializing as XML
-
-In Program.cs,
+In MyBusiness/Program.cs,
 ```csharp
 // System libraries
 using System; // DateTime
-// using System.Collections.Generic; // List<T>, HashSet<T>
-// using System.Xml;
-using System.Xml.Serialization; // XmlSerializer
-using static System.Environment; // CurrentDirectory
-using static System.IO.Path;
 
 // External libraries
 using AnimalLibrary;
-using GraphLibrary;
 
 namespace MyBusiness;
 
@@ -935,11 +738,6 @@ class Program
 {
     static void Main(string[] args)
     {
-        // create object that will format a List of Persons as XML
-        XmlSerializer xs = new XmlSerializer(typeof(List<Person>));
-        // create a file to write to
-        string path = Combine(CurrentDirectory, "people.xml");
-
         // create an object list
         // M refers to the decimal type
         List<Person> people = new List<Person> {
@@ -965,48 +763,14 @@ class Program
                 }
             };
 
-        // using allows us not to forget stream.Close();
-        using (FileStream stream = File.Create(path))
-        {
-            // serialize the object graph to the stream
-            xs.Serialize(stream, people);
-        }
-
-        // The compiler converts above to:
-        // FileStream stream = File.Create(path);
-        // // try-catch-finally statement
-        // // The try-catch statement consists of a try block followed by one or 
-        // // more catch clauses, which specify handlers for different exceptions.
-        // try
-        // {
-        //     // serialize the object graph to the stream
-        //     xs.Serialize(stream, people);
-        // }
-        // catch (Exception ex)
-        // {
-        //     Console.WriteLine($"{ex.GetType()} says {ex.Message}");
-        // }
-        // finally
-        // {
-        //     // if stream is not null, we close it
-        //     if (stream != null) stream.Close();
-        // }
-
-        Console.WriteLine("Written {0:N0} bytes of XML to {1}",
-          arg0: new FileInfo(path).Length,
-          arg1: path);
-        Console.WriteLine();
-        // Display the serialized object graph
-        Console.WriteLine(File.ReadAllText(path));
+        // Stream 
+        StreamXML streamXML = new StreamXML();
+        streamXML.Reader(people, "people.xml");
+        streamXML.Writer(people, "stream_new.xml");
     }
-
-
-    // static void Main(string[] args)
-    // {
-    //     Graph graph = new Graph("/Data/network-planar.graphml");
-    // }
 }
 ```
+
 In AnimalLibrary/Person.cs,
 ```csharp
 namespace AnimalLibrary;
@@ -1029,7 +793,227 @@ public class Person
     public string? LastName { get; set; }
     public DateTime DateOfBirth { get; set; }
     public HashSet<Person>? Children { get; set; }
-    protected decimal Salary { get; set; }
+    // Note that System.Xml.Serialization only serializes public properties
+    // and fields. The Salary property is not serialized because it is protected.
+    internal protected decimal Salary { get; set; }
+}
+```
+
+In AnimalLibrary/StreamXML.cs,
+```csharp
+using System.Xml;
+using static System.Environment; // CurrentDirectory
+using static System.IO.Path; // Combine
+
+namespace AnimalLibrary;
+
+public class StreamXML
+{
+    // Default constructor
+    public StreamXML()
+    {
+    }
+
+    // Methods
+    public void Reader(List<Person> people, string filename)
+    {
+        people = new List<Person>();
+
+        // create a file to write to
+        string file = Combine(CurrentDirectory, filename);
+
+        using (XmlReader reader = XmlReader.Create(file))
+        {
+            while (reader.Read())
+            {
+                if (reader.IsStartElement() && reader.Name == "Person")
+                {
+                    var person = ReadPerson(reader);
+                    people.Add(person);
+                }
+            }
+        }
+
+        if (people != null)
+        {
+            foreach (Person item in people)
+            {
+                if (item.Children != null)
+                {
+                    Console.WriteLine("{0} has {1} children.",
+                        item.LastName, item.Children.Count);
+                }
+            }
+        }
+    }
+
+    static Person ReadPerson(XmlReader reader)
+    {
+        // Initialization
+        Person person = new Person();
+        person.Children = new HashSet<Person>();
+
+        // Read the XML node and its attributes
+        while (reader.Read())
+        {
+            if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "Person")
+                break;
+
+            if (reader.IsStartElement())
+            {
+                switch (reader.Name)
+                {
+                    case "FirstName":
+                        person.FirstName = reader.ReadElementContentAsString();
+                        break;
+                    case "LastName":
+                        person.LastName = reader.ReadElementContentAsString();
+                        break;
+                    case "DateOfBirth":
+                        person.DateOfBirth = reader.ReadElementContentAsDateTime();
+                        break;
+                    case "Salary":
+                        person.Salary = reader.ReadElementContentAsDecimal();
+                    break;
+                    case "Children":
+                        while (reader.Read())
+                        {
+                            if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "Children")
+                                break;
+
+                            if (reader.IsStartElement() && reader.Name == "Person")
+                            {
+                                Person child = ReadPerson(reader);
+                                person.Children.Add(child);
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+
+        return person;
+    }
+
+    public void Writer(List<Person> people, string filename)
+    {
+        // create a file to write to
+        string file = Combine(CurrentDirectory, filename);
+
+        // create a file stream
+        // using allows us not to forget stream.Close();
+        using (FileStream xmlFileStream = File.Create(file))
+        {
+            using (XmlWriter writer = XmlWriter.Create(xmlFileStream, new XmlWriterSettings { Indent = true }))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement("People");
+
+                foreach (var person in people)
+                {
+                    WritePerson(writer, person);
+                }
+
+                writer.WriteEndElement(); // People
+                writer.WriteEndDocument();
+            }
+        }
+
+        Console.WriteLine("Written {0:N0} bytes of XML to {1}",
+            arg0: new FileInfo(file).Length,
+            arg1: file);
+        Console.WriteLine();
+        // Display the serialized object graph
+        Console.WriteLine(File.ReadAllText(file));
+    }
+
+    static void WritePerson(XmlWriter writer, Person person)
+    {
+        writer.WriteStartElement("Person");
+
+        writer.WriteElementString("FirstName", person.FirstName);
+        writer.WriteElementString("LastName", person.LastName);
+        // "s" format specifier is used for sortable date/time pattern.
+        writer.WriteElementString("DateOfBirth", person.DateOfBirth.ToString("s"));
+        // writer.WriteElementString("Salary", person.Salary.ToString());
+
+        if (person.Children != null && person.Children.Count > 0)
+        {
+            writer.WriteStartElement("Children");
+            foreach (var child in person.Children)
+            {
+                WritePerson(writer, child); // recursive call for nested children
+            }
+            writer.WriteEndElement(); // Children
+        }
+
+        writer.WriteEndElement(); // Person
+    }
+}
+```
+
+In AnimalLibrary/Person.cs,
+```csharp
+```
+
+## Serializing Objects
+
+- **Serialization:** is the process of converting a live object into a sequence of bytes using a specified format.
+- **Deserialization:** is the reverse process of **Serialization**.
+
+There are dozens of formats you can specify, but the two most common ones are **eXtensible Markup Language (XML)** and **JavaScript Object Notation (JSON)**.
+
+In MyBusiness/Program.cs,
+```csharp
+// System libraries
+using System; // DateTime
+
+// External libraries
+using AnimalLibrary;
+using GraphLibrary;
+
+namespace MyBusiness;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // create an object list
+        // M refers to the decimal type
+        List<Person> people = new List<Person> {
+            new Person(30000M) {
+                FirstName = "Alice",
+                LastName = "Smith",
+                DateOfBirth = new DateTime(1974, 3, 14)
+                },
+            new Person(40000M) {
+                FirstName = "Bob",
+                LastName = "Jones",
+                DateOfBirth = new DateTime(1969, 11, 23)
+                },
+            new Person(20000M) {
+                FirstName = "Charlie",
+                LastName = "Cox",
+                DateOfBirth = new DateTime(1984, 5, 4),
+                Children = new HashSet<Person> {
+                    new Person(0M) { FirstName = "Sally",
+                    LastName = "Cox",
+                    DateOfBirth = new DateTime(2000, 7, 12)}
+                    }
+                }
+            };
+
+        // Stream 
+        // StreamXML streamXML = new StreamXML();
+        // streamXML.Reader(people, "people.xml");
+        // streamXML.Writer(people, "stream_new.xml");
+
+        // Serialization
+        SerializeXML serializeXML = new SerializeXML();
+        serializeXML.Reader(people, "people.xml");
+        serializeXML.Writer(people, "people_new.xml");
+    }
+
 }
 ```
 ```bash
@@ -1066,23 +1050,88 @@ public class Person
 ### [DateTime.ToString Method](https://learn.microsoft.com/en-us/dotnet/api/system.datetime.tostring)
 ### [Standard date and time format strings](https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings)
 
-## Deserializing XML files
+## Serializing as XML and Deserializing XML files
 
 ```csharp
-using (FileStream xmlLoad = File.Open(path, FileMode.Open))
+using System.Xml.Serialization; // XmlSerializer
+using static System.Environment; // CurrentDirectory
+using static System.IO.Path; // Combine
+
+namespace AnimalLibrary;
+
+public class SerializeXML
 {
-    // deserialize and cast the object graph into a List of Person
-    List<Person>? loadedPeople = (List<Person>?)xs.Deserialize(xmlLoad);
-    if (loadedPeople != null)
+    // Default constructor
+    public SerializeXML()
     {
-        foreach (Person item in loadedPeople)
+    }
+
+    // Methods
+    public void Reader(List<Person>? people, string filename)
+    {
+        // create object that will format a List of Persons as XML
+        XmlSerializer xs = new XmlSerializer(typeof(List<Person>));
+        // create a file to read from
+        string file = Combine(CurrentDirectory, filename);
+
+        using (FileStream xmlLoad = File.Open(file, FileMode.Open))
         {
-            if (item.Children != null)
+            // deserialize and cast the object graph into a List of Person
+            people = (List<Person>?)xs.Deserialize(xmlLoad);
+            if (people != null)
             {
-                Console.WriteLine("{0} has {1} children.",
-                    item.LastName, item.Children.Count);
+                foreach (Person item in people)
+                {
+                    if (item.Children != null)
+                    {
+                        Console.WriteLine("{0} has {1} children.",
+                            item.LastName, item.Children.Count);
+                    }
+                }
             }
         }
+    }
+
+    public void Writer(List<Person> people, string filename)
+    {
+        // create object that will format a List of Persons as XML
+        XmlSerializer xs = new XmlSerializer(typeof(List<Person>));
+        // create a file to write to
+        string file = Combine(CurrentDirectory, filename);
+
+        // using allows us not to forget stream.Close();
+        using (FileStream stream = File.Create(file))
+        {
+            // serialize the object graph to the stream
+            xs.Serialize(stream, people);
+        }
+
+        // The compiler converts above to:
+        // try-catch-finally statement
+        // The try-catch statement consists of a try block followed by one or 
+        // more catch clauses, which specify handlers for different exceptions.
+        // FileStream stream = File.Create(file);
+        // try
+        // {
+        //     // serialize the object graph to the stream
+        //     xs.Serialize(stream, people);
+        // }
+        // catch (Exception ex)
+        // {
+        //     Console.WriteLine($"{ex.GetType()} says {ex.Message}");
+        // }
+        // finally
+        // {
+        //     // if stream is not null, we close it
+        //     if (stream != null) stream.Dispose();
+        // }
+
+        Console.WriteLine("Written {0:N0} bytes of XML to {1}",
+          arg0: new FileInfo(file).Length,
+          arg1: file);
+        Console.WriteLine();
+        // Display the serialized object graph
+        Console.WriteLine(File.ReadAllText(file));
     }
 }
 ```
