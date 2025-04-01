@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"  
-last_modified_at: 2023-04-13
+last_modified_at: 2025-04-01
 ---
 
 # Program Deployment
@@ -952,10 +952,6 @@ public class StreamXML
 }
 ```
 
-In AnimalLibrary/Person.cs,
-```csharp
-```
-
 ## Serializing Objects
 
 - **Serialization:** is the process of converting a live object into a sequence of bytes using a specified format.
@@ -1044,11 +1040,11 @@ class Program
 </ArrayOfPerson>
 ```
 
-### [using statement - ensure the correct use of disposable objects](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/using)
-### [standard-numeric-format-strings](https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings)
-### [Composite formatting](https://learn.microsoft.com/en-us/dotnet/standard/base-types/composite-formatting)
-### [DateTime.ToString Method](https://learn.microsoft.com/en-us/dotnet/api/system.datetime.tostring)
-### [Standard date and time format strings](https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings)
+- [using statement - ensure the correct use of disposable objects](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/statements/using)
+- [standard-numeric-format-strings](https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings)
+- [Composite formatting](https://learn.microsoft.com/en-us/dotnet/standard/base-types/composite-formatting)
+- [DateTime.ToString Method](https://learn.microsoft.com/en-us/dotnet/api/system.datetime.tostring)
+- [Standard date and time format strings](https://learn.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings)
 
 ## Serializing as XML and Deserializing XML files
 

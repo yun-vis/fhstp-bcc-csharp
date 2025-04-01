@@ -397,23 +397,74 @@ Coffee is at angry level: 4.
 
 - **Task:** A task is a set of program instructions that are loaded in memory.
 
-## Running multiple actions synchronously
+# Running multiple actions
 
-### Stopwatch Class [Doc](https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.stopwatch?view=net-6.0)
-
-The Stopwatch class assists the manipulation of timing-related performance counters within managed code.
-
+In MyBusiness/Program.cs,
 ```csharp
-// using System;
-// using System.Threading;
-// using System.Threading.Tasks;
-using System.Diagnostics;
-namespace CRC_CSD_09;
+// System libraries
 
-// main program
-public class Program
+namespace MyBusiness;
+
+class Program
 {
     static void Main(string[] args)
+    {
+        Synchronism.Run();
+        // Asynchronism.Run();
+        // AsynchronismWithResource.Run();
+        // AsynchronismWithResourceLocked.Run();
+    }
+}
+```
+
+## Running multiple actions synchronously
+
+In MyBusiness/Method.cs,
+```csharp
+using System.Diagnostics; // Stopwatch
+
+namespace MyBusiness;
+
+public class Method
+{
+    private protected Method()
+    {
+    }
+
+    private protected static void MethodA()
+    {
+        Console.WriteLine("Starting Method A...");
+        Thread.Sleep(3000); // simulate three seconds of work
+        Console.WriteLine("Finished Method A.");
+    }
+    private protected static void MethodB()
+    {
+        Console.WriteLine("Starting Method B...");
+        Thread.Sleep(2000); // simulate two seconds of work
+        Console.WriteLine("Finished Method B.");
+    }
+    private protected static void MethodC()
+    {
+        Console.WriteLine("Starting Method C...");
+        Thread.Sleep(1000); // simulate one second of work
+        Console.WriteLine("Finished Method C.");
+    }
+}
+```
+
+In MyBusiness/Synchronism.cs,
+```csharp
+using System.Diagnostics; // Stopwatch
+
+namespace MyBusiness;
+
+public class Synchronism : Method
+{
+    Synchronism()
+    {
+    }
+
+    public static void Run()
     {
         Stopwatch timer = Stopwatch.StartNew();
         Console.WriteLine("Running methods synchronously on one thread.");
@@ -421,24 +472,6 @@ public class Program
         MethodB();
         MethodC();
         Console.WriteLine($"{timer.ElapsedMilliseconds:#,##0}ms elapsed.");
-    }
-    static void MethodA()
-    {
-        Console.WriteLine("Starting Method A...");
-        Thread.Sleep(3000); // simulate three seconds of work
-        Console.WriteLine("Finished Method A.");
-    }
-    static void MethodB()
-    {
-        Console.WriteLine("Starting Method B...");
-        Thread.Sleep(2000); // simulate two seconds of work
-        Console.WriteLine("Finished Method B.");
-    }
-    static void MethodC()
-    {
-        Console.WriteLine("Starting Method C...");
-        Thread.Sleep(1000); // simulate one second of work
-        Console.WriteLine("Finished Method C.");
     }
 }
 ```
@@ -453,25 +486,41 @@ $ Finished Method C.
 $ 6,033ms elapsed.
 ```
 
+- Stopwatch Class [Doc](https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.stopwatch?view=net-6.0)
+The Stopwatch class assists the manipulation of timing-related performance counters within managed code.
+
+
 ## Running tasks asynchronously
 
+In MyBusiness/Asynchronism.cs,
 ```csharp
-static void Main(string[] args)
-{
-    Stopwatch timer = Stopwatch.StartNew();
-    // WriteLine("Running methods synchronously on one thread.");
-    // MethodA();
-    // MethodB();
-    // MethodC();
+using System.Diagnostics; // Stopwatch
 
-    Console.WriteLine("Running methods asynchronously on multiple threads.");
-    Task taskA = new Task(MethodA);
-    taskA.Start();
-    // Task.Run(action) internally uses the default TaskScheduler, which means it always offloads a task to the thread pool. StartNew(action), on the other hand, uses the scheduler of the current thread which may not use thread pool at all! This can be a matter of concern particularly when we work with the UI thread!
-    Task taskB = Task.Factory.StartNew(MethodB);
-    Task taskC = Task.Run(new Action(MethodC));
-    // Task taskC = Task.Factory.StartNew(A, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Default);        
-    Console.WriteLine($"{timer.ElapsedMilliseconds:#,##0}ms elapsed.");
+namespace MyBusiness;
+
+public class Asynchronism : Method
+{
+    Asynchronism()
+    {
+    }
+
+    public static void Run()
+    {
+        Stopwatch timer = Stopwatch.StartNew();
+        // WriteLine("Running methods synchronously on one thread.");
+        // MethodA();
+        // MethodB();
+        // MethodC();
+
+        Console.WriteLine("Running methods asynchronously on multiple threads.");
+        Task taskA = new Task(MethodA);
+        taskA.Start();
+        // Task.Run(action) internally uses the default TaskScheduler, which means it always offloads a task to the thread pool. StartNew(action), on the other hand, uses the scheduler of the current thread which may not use thread pool at all! This can be a matter of concern particularly when we work with the UI thread!
+        Task taskB = Task.Factory.StartNew(MethodB);
+        Task taskC = Task.Run(new Action(MethodC));
+        // Task taskC = Task.Factory.StartNew(A, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Default);        
+        Console.WriteLine($"{timer.ElapsedMilliseconds:#,##0}ms elapsed.");
+    }
 }
 ```
 ```bash
@@ -503,56 +552,73 @@ $ Finished Method A.
 
 ## Accessing a resource from multiple threads
 
+In MyBusiness/MethodWithResource.cs,
 ```csharp
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Diagnostics;
+using System.Diagnostics; // Stopwatch
 
-// namespace
-namespace MyBusiness
+namespace MyBusiness;
+
+public class MethodWithResource
 {
-    // main program
-    internal class Program
+    public static Random r = new Random();
+    public static string Message = ""; // a shared resource
+
+    private protected MethodWithResource()
     {
-        static Random r = new Random();
-        static string Message = ""; // a shared resource
+    }
 
-        static void Main(string[] args)
+    private protected static void MethodA()
+    {
+        // add 5 times char A in the message
+        for (int i = 0; i < 5; i++)
         {
-            Console.WriteLine("Please wait for the tasks to complete.");
-            Stopwatch watch = Stopwatch.StartNew();
-
-            Task a = Task.Factory.StartNew(MethodA);
-            Task b = Task.Factory.StartNew(MethodB);
-
-            // Wait until all tasks are finished
-            Task.WaitAll(new Task[] { a, b });
-            Console.WriteLine();
-
-            Console.WriteLine($"Results: {Message}.");
-            Console.WriteLine($"{watch.ElapsedMilliseconds:#,##0} elapsed milliseconds.");
+            Thread.Sleep(r.Next(2000));
+            Message += "A";
+            Console.Write(".");
         }
-        static void MethodA()
+    }
+    private protected static void MethodB()
+    {
+        // add 5 times char B in the message
+        for (int i = 0; i < 5; i++)
         {
-            // add 5 times char A in the message
-            for (int i = 0; i < 5; i++)
-            {
-                Thread.Sleep(r.Next(2000));
-                Message += "A";
-                Console.Write(".");
-            }
+            Thread.Sleep(r.Next(2000));
+            Message += "B";
+            Console.Write(".");
         }
-        static void MethodB()
-        {
-            // add 5 times char B in the message
-            for (int i = 0; i < 5; i++)
-            {
-                Thread.Sleep(r.Next(2000));
-                Message += "B";
-                Console.Write(".");
-            }
-        }
+    }
+}
+```
+
+In MyBusiness/AsynchronismWithResource.cs,
+```csharp
+using System.Diagnostics; // Stopwatch
+
+namespace MyBusiness;
+
+public class AsynchronismWithResource : MethodWithResource
+{
+    AsynchronismWithResource()
+    {
+    }
+
+    public static void Run()
+    {
+        // clean the string Messgage
+        Message = "";
+
+        Console.WriteLine("Please wait for the tasks to complete.");
+        Stopwatch watch = Stopwatch.StartNew();
+
+        Task a = Task.Factory.StartNew(MethodA);
+        Task b = Task.Factory.StartNew(MethodB);
+
+        // Wait until all tasks are finished
+        Task.WaitAll(new Task[] { a, b });
+        Console.WriteLine();
+
+        Console.WriteLine($"Results: {Message}.");
+        Console.WriteLine($"{watch.ElapsedMilliseconds:#,##0} elapsed milliseconds.");
     }
 }
 ```
@@ -573,64 +639,65 @@ The lock statement acquires the mutual-exclusion lock for a given object, execut
 
 A lock statement of the form lock(x)..., where x is an expression of a reference type.
 
+In MyBusiness/AsynchronismWithResourceLocked.cs,
 ```csharp
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Diagnostics;
+using System.Diagnostics; // Stopwatch
 
-// namespace
-namespace MyBusiness
+namespace MyBusiness;
+
+public class AsynchronismWithResourceLocked : MethodWithResource
 {
-    // main program
-    internal class Program
+    // You can consider conch is a token, and who has it in hand owns the resource.
+    private static object conch = new object();
+
+    AsynchronismWithResourceLocked()
     {
-        static string Message = ""; // a shared resource
+    }
 
-        static void Main(string[] args)
+    public static void Run()
+    {
+        // clean the string Messgage
+        Message = "";
+
+        Console.WriteLine("Please wait for the tasks to complete.");
+        Stopwatch watch = Stopwatch.StartNew();
+
+        Task a = Task.Factory.StartNew(MethodA);
+        Task b = Task.Factory.StartNew(MethodB);
+
+        // Wait until all tasks are finished
+        Task.WaitAll(new Task[] { a, b });
+        Console.WriteLine();
+
+        Console.WriteLine($"Results: {Message}.");
+        Console.WriteLine($"{watch.ElapsedMilliseconds:#,##0} elapsed milliseconds.");
+    }
+
+    new static void MethodA()
+    {
+        // add 5 times char A in the message
+        // The statements of the critical section. A critical section is a piece of code that accesses a shared resource (data structure or device) but the condition is that only one thread can enter in this section in a time.
+        lock (conch)
         {
-            Console.WriteLine("Please wait for the tasks to complete.");
-            Stopwatch watch = Stopwatch.StartNew();
-
-            Task a = Task.Factory.StartNew(MethodA);
-            Task b = Task.Factory.StartNew(MethodB);
-
-            // Wait until all tasks are finished
-            Task.WaitAll(new Task[] { a, b });
-            Console.WriteLine();
-
-            Console.WriteLine($"Results: {Message}.");
-            Console.WriteLine($"{watch.ElapsedMilliseconds:#,##0} elapsed milliseconds.");
-        }
-
-        // You can consider conch is a token, and who has it in hand owns the resource.
-        private static object conch = new object();
-
-        static void MethodA()
-        {
-            // add 5 times char A in the message
-            // The statements of the critical section. A critical section is a piece of code that accesses a shared resource (data structure or device) but the condition is that only one thread can enter in this section in a time.
-            lock (conch)
+            for (int i = 0; i < 5; i++)
             {
-                for (int i = 0; i < 5; i++)
-                {
-                    Thread.Sleep(2000);
-                    Message += "A";
-                    Console.Write(".");
-                }
+                Thread.Sleep(2000);
+                Message += "A";
+                Console.Write(".");
             }
         }
-        static void MethodB()
+    }
+
+    new static void MethodB()
+    {
+        // add 5 times char B in the message
+        lock (conch)
         {
-            // add 5 times char B in the message
-            lock (conch)
+            for (int i = 0; i < 5; i++)
             {
-                for (int i = 0; i < 5; i++)
-                {
-                    Thread.Sleep(2000);
-                    Message += "B";
-                    Console.Write(".");
-                }
+                Thread.Sleep(2000);
+                Message += "B";
+                Console.Write(".");
             }
         }
     }
