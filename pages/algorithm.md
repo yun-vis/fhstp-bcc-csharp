@@ -706,7 +706,7 @@ class Program
     {
     }
 
-    public class EdgeProperty<T> : BasicEdgeProperty<T>
+    public class EdgeProperty<TVertex> : BasicEdgeProperty<TVertex>
     {
         public double Weight;
     }
@@ -842,9 +842,8 @@ public void RemoveVertex(string name)
 
             // v3
             // Collect the adjacent edges to be removed
-            // List<Edge<Vertex<TVertexProperty>, TEdgeProperty>> deleteEdgeList = _edges.Where(_edges => (_edges.Property.Source == v) ||
-            //                                                                                        (_edges.Property.Target == v)).ToList();
-            // // Remove the collected edges
+            // List<Edge<Vertex<TVertexProperty>, TEdgeProperty>> deleteEdgeList = _edges.Where(e => (e.Property.Source == v) || (e.Property.Target == v)).ToList();
+            // // Remove thfe collected edges
             // foreach (Edge<Vertex<TVertexProperty>, TEdgeProperty> e in deleteEdgeList)
             // {
             //     // Console.WriteLine(e);
