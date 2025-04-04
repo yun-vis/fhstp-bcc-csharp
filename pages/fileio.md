@@ -712,6 +712,14 @@ class Program
     }
 }
 ```
+How to force a certain file to be put into the built folder:
+```xml
+<ItemGroup>
+  <None Update="weapons.csv">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </None>
+</ItemGroup>
+```
 
 ## Encoding strings as byte arrays
 
