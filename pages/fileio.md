@@ -711,6 +711,14 @@ class Program
         writer.WriteLine($"Final DPS for {string.Join(" ", itemModifiers)} {baseWeaponName}: {dps}");
     }
 }
+Example weapons.csv
+```csv
+Name,Damage,AttackSpeed
+Sword,10,1.5
+Axe,20,2.0
+Dagger,5,0.5
+```
+
 ```
 How to force a certain file to be put into the built folder:
 ```xml
