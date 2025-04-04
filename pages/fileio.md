@@ -627,6 +627,92 @@ $ Ragdoll
 $ SphynxCat
 ```
 
+### The magic item calculator example using files
+```csharp
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+class BaseWeapon
+{
+    public int BaseDamage { get; set; }
+    public double AttackSpeed { get; set; }
+
+    public double CalculateDPS(DamageModifier damageModifier, double durationInSeconds)
+    {
+        int attackCount = (int)(durationInSeconds / AttackSpeed);
+        double totalDamage = 0;
+
+        for (int i = 0; i < attackCount; i++)
+        {
+            totalDamage += damageModifier(BaseDamage);
+        }
+
+        return totalDamage / durationInSeconds;
+    }
+    
+    public static Dictionary<string, BaseWeapon> LoadWeaponsFromCSV(string filePath)
+    {
+        var weapons = new Dictionary<string, BaseWeapon>();
+
+        string[] lines = File.ReadAllLines(filePath);
+
+        foreach (var line in lines[1..]) // Skip header line
+        {
+            var parts = line.Split(',');
+            weapons[parts[0]] = new BaseWeapon
+            {
+                BaseDamage = int.Parse(parts[1]),
+                AttackSpeed = double.Parse(parts[2])
+            };
+        }
+
+        return weapons;
+    }
+}
+
+delegate int DamageModifier(int baseDamage);
+
+class Program
+{
+    
+
+    static void Main()
+    {
+        var weapons = BaseWeapon.LoadWeaponsFromCSV("weapons.csv");
+
+        int strength = 10;
+        Random rng = new();
+
+        Dictionary<string, DamageModifier> modifiers = new()
+        {
+            ["giant"] = dmg => dmg + strength,
+            ["random"] = dmg => dmg * rng.Next(0, 3) * 2,
+            ["brutal"] = dmg => (dmg * dmg) / 5
+        };
+
+        var itemModifiers = new List<string> {"random" };
+        string baseWeaponName = "Sword";
+
+        DamageModifier calculateDamage = dmg => dmg;
+        foreach (var mod in itemModifiers)
+        {
+            if (modifiers.ContainsKey(mod))
+            {
+                DamageModifier modFunc = modifiers[mod];
+                DamageModifier previousFunc = calculateDamage;
+                calculateDamage = dmg => modFunc(previousFunc(dmg));
+            }
+        }
+
+        var dps = weapons[baseWeaponName].CalculateDPS(calculateDamage, 100000);
+
+        using var writer = new StreamWriter("dps.txt", append: true);
+        writer.WriteLine($"Final DPS for {string.Join(" ", itemModifiers)} {baseWeaponName}: {dps}");
+    }
+}
+```
+
 ## Encoding strings as byte arrays
 
 ```csharp
