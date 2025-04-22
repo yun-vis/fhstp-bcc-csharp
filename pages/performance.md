@@ -769,6 +769,260 @@ $ 9,263 elapsed milliseconds.
 ```
 
 ---
+
+# Magic Weapon Example:
+MagicWeapon.cs:
+```csharp
+// MagicWeapons.cs
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+namespace MagicWeaponsSim
+{
+    // A delegate that modifies base damage values
+    public delegate int DamageModifier(int baseDamage);
+
+    // Class representing a base weapon with damage and attack speed
+    public class BaseWeapon
+    {
+        public int BaseDamage { get; set; }
+        public double AttackSpeed { get; set; }
+
+        public double CalculateDPS(DamageModifier damageModifier, double durationInSeconds)
+        {
+            int attackCount = (int)(durationInSeconds / AttackSpeed);
+            double totalDamage = 0;
+
+            for (int i = 0; i < attackCount; i++)
+            {
+                totalDamage += damageModifier(BaseDamage);
+            }
+
+            return totalDamage / durationInSeconds;
+        }
+
+        public static Dictionary<string, BaseWeapon> LoadWeaponsFromCSV(string filePath)
+        {
+            var weapons = new Dictionary<string, BaseWeapon>();
+            string[] lines = File.ReadAllLines(filePath);
+
+            foreach (var line in lines[1..]) // Skip header
+            {
+                var parts = line.Split(',');
+                weapons[parts[0]] = new BaseWeapon
+                {
+                    BaseDamage = int.Parse(parts[1]),
+                    AttackSpeed = double.Parse(parts[2])
+                };
+            }
+
+            return weapons;
+        }
+    }
+
+    // Result structure for DPS entries
+    public class WeaponDPS
+    {
+        public string? Name { get; set; }
+        public double DPS { get; set; }
+    }
+
+    public static class Utils
+    {
+        public static IEnumerable<List<T>> GetCombinations<T>(List<T> list, int k)
+        {
+            if (k == 0) yield return new List<T>();
+            else
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var head = list[i];
+                    var rest = list.Skip(i + 1).ToList();
+                    foreach (var tailCombo in GetCombinations(rest, k - 1))
+                    {
+                        tailCombo.Insert(0, head);
+                        yield return tailCombo;
+                    }
+                }
+            }
+        }
+
+        public static List<List<T>> GetPermutations<T>(List<T> list)
+        {
+            if (list.Count == 1) return new List<List<T>> { new(list) };
+            var result = new List<List<T>>();
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                var item = list[i];
+                var remaining = list.Where((_, index) => index != i).ToList();
+
+                foreach (var perm in GetPermutations(remaining))
+                {
+                    perm.Insert(0, item);
+                    result.Add(perm);
+                }
+            }
+
+            return result;
+        }
+
+        public static void QuickSort(List<WeaponDPS> list, int left, int right)
+        {
+            if (left >= right) return;
+
+            double pivot = list[(left + right) / 2].DPS;
+            int index = Partition(list, left, right, pivot);
+            QuickSort(list, left, index - 1);
+            QuickSort(list, index, right);
+        }
+
+        private static int Partition(List<WeaponDPS> list, int left, int right, double pivot)
+        {
+            while (left <= right)
+            {
+                while (list[left].DPS < pivot) left++;
+                while (list[right].DPS > pivot) right--;
+
+                if (left <= right)
+                {
+                    (list[left], list[right]) = (list[right], list[left]);
+                    left++;
+                    right--;
+                }
+            }
+
+            return left;
+        }
+
+        public static void BubbleSort(List<WeaponDPS> list)
+        {
+            int n = list.Count;
+            bool swapped;
+
+            do
+            {
+                swapped = false;
+                for (int i = 1; i < n; i++)
+                {
+                    if (list[i - 1].DPS > list[i].DPS)
+                    {
+                        (list[i - 1], list[i]) = (list[i], list[i - 1]);
+                        swapped = true;
+                    }
+                }
+            } while (swapped);
+        }
+    }
+}
+
+```
+Program.cs
+```csharp
+// Program.cs
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using MagicWeaponsSim;
+
+class Program
+{
+    static void Main()
+    {
+        var weapons = BaseWeapon.LoadWeaponsFromCSV("weapons.csv");
+        int strength = 10;
+        int dexterity = 20;
+        Random rng = new();
+
+        // Our dictionary of damage modifiers
+        Dictionary<string, DamageModifier> modifiers = new()
+        {
+            ["giant"] = dmg => dmg + strength,
+            ["random"] = dmg => dmg * rng.Next(0, 3) * 2,
+            ["brutal"] = dmg => (dmg * dmg) / 5,
+            ["broken"] = dmg => (int)(dmg * 0.7),
+            //["spicy"] = dmg => dmg + rng.Next(0, 4) * dexterity,
+            //["savage"] = dmg => (int)(dmg * 1.5) - 10,
+        };
+
+        var modifierKeys = modifiers.Keys.ToList();
+        var allModifierCombos = new List<List<string>>();
+
+        // Generate all combinations of modifiers
+        for (int length = 1; length <= modifierKeys.Count; length++)
+        {
+            foreach (var combo in Utils.GetCombinations(modifierKeys, length))
+            {
+                allModifierCombos.AddRange(Utils.GetPermutations(combo));
+            }
+        }
+
+        //Calculate DPS for each weapon and modifier combination
+        var results = new List<WeaponDPS>();
+
+        foreach (var weaponEntry in weapons)
+        {
+            string weaponName = weaponEntry.Key;
+            var weapon = weaponEntry.Value;
+
+            foreach (var combo in allModifierCombos)
+            {
+                DamageModifier chain = dmg => dmg;
+                foreach (var mod in combo)
+                {
+                    DamageModifier current = modifiers[mod];
+                    DamageModifier prev = chain;
+                    chain = dmg => current(prev(dmg));
+                }
+
+                double dps = weapon.CalculateDPS(chain, 10000);
+
+                results.Add(new WeaponDPS
+                {
+                    Name = $"{string.Join("+", combo)} {weaponName}",
+                    DPS = dps
+                });
+            }
+        }
+
+        // Sort results using both algorithms and measure time
+        var quickSorted = new List<WeaponDPS>(results);
+        var bubbleSorted = new List<WeaponDPS>(results);
+
+        Stopwatch sw = Stopwatch.StartNew();
+        Utils.QuickSort(quickSorted, 0, quickSorted.Count - 1);
+        sw.Stop();
+        double quickTime = sw.Elapsed.TotalMilliseconds;
+
+        sw.Restart();
+        Utils.BubbleSort(bubbleSorted);
+        sw.Stop();
+        double bubbleTime = sw.Elapsed.TotalMilliseconds;
+
+        Console.WriteLine($"QuickSort Time: {quickTime:F6} ms");
+        Console.WriteLine($"BubbleSort Time: {bubbleTime:F6} ms");
+
+        // Write results to CSV
+        using var writer = new StreamWriter("weapon_dps_results.csv");
+        writer.WriteLine("Weapon+DPS_Modifiers,DPS");
+        foreach (var entry in quickSorted)
+        {
+            writer.WriteLine($"{entry.Name},{entry.DPS:F2}");
+        }
+
+        writer.WriteLine();
+        writer.WriteLine("Sorting Algorithm,Time(ms)");
+        writer.WriteLine($"QuickSort,{quickTime:F6}");
+        writer.WriteLine($"BubbleSort,{bubbleTime:F6}");
+
+        Console.WriteLine("Results written to weapon_dps_results.csv");
+    }
+}
+```
+
 # Selected Theory
 
 ## Deadlock
