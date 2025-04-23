@@ -409,10 +409,10 @@ class Program
 {
     static void Main(string[] args)
     {
-        Synchronism.Run();
+        // Synchronism.Run();
         // Asynchronism.Run();
         // AsynchronismWithResource.Run();
-        // AsynchronismWithResourceLocked.Run();
+        AsynchronismWithResourceLocked.Run();
     }
 }
 ```
@@ -421,12 +421,14 @@ class Program
 
 In MyBusiness/Method.cs,
 ```csharp
-using System.Diagnostics; // Stopwatch
 
 namespace MyBusiness;
 
 public class Method
 {
+    // Consructor
+    // The constructor is private protected to prevent instantiation of this class.
+    // A private protected member of a base class is accessible from derived types in its containing assembly only if the static type of the variable is the derived class type. 
     private protected Method()
     {
     }
@@ -434,6 +436,7 @@ public class Method
     private protected static void MethodA()
     {
         Console.WriteLine("Starting Method A...");
+        // Parameter of Sleep(): The number of milliseconds for which the thread is suspended.
         Thread.Sleep(3000); // simulate three seconds of work
         Console.WriteLine("Finished Method A.");
     }
@@ -460,7 +463,7 @@ namespace MyBusiness;
 
 public class Synchronism : Method
 {
-    Synchronism()
+    public Synchronism()
     {
     }
 
@@ -500,7 +503,7 @@ namespace MyBusiness;
 
 public class Asynchronism : Method
 {
-    Asynchronism()
+    public Asynchronism()
     {
     }
 
@@ -514,8 +517,17 @@ public class Asynchronism : Method
 
         Console.WriteLine("Running methods asynchronously on multiple threads.");
         Task taskA = new Task(MethodA);
+        // Task taskB = new Task(MethodB);
+        // Task taskC = new Task(MethodC);
         taskA.Start();
-        // Task.Run(action) internally uses the default TaskScheduler, which means it always offloads a task to the thread pool. StartNew(action), on the other hand, uses the scheduler of the current thread which may not use thread pool at all! This can be a matter of concern particularly when we work with the UI thread!
+        // taskB.Start();
+        // taskC.Start();
+        
+        // Task.Run(action) internally uses the default TaskScheduler, which means it 
+        // always offloads a task to the thread pool. 
+        // StartNew(action), on the other hand, uses the scheduler of the current thread 
+        // which may not use thread pool at all! This can be a matter of concern 
+        // particularly when we work with the UI thread!
         Task taskB = Task.Factory.StartNew(MethodB);
         Task taskC = Task.Run(new Action(MethodC));
         // Task taskC = Task.Factory.StartNew(A, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Default);        
@@ -554,7 +566,6 @@ $ Finished Method A.
 
 In MyBusiness/MethodWithResource.cs,
 ```csharp
-using System.Diagnostics; // Stopwatch
 
 namespace MyBusiness;
 
@@ -572,6 +583,7 @@ public class MethodWithResource
         // add 5 times char A in the message
         for (int i = 0; i < 5; i++)
         {
+            // Next() returns a non-negative random integer that is less than the specified maximum.
             Thread.Sleep(r.Next(2000));
             Message += "A";
             Console.Write(".");
@@ -598,7 +610,7 @@ namespace MyBusiness;
 
 public class AsynchronismWithResource : MethodWithResource
 {
-    AsynchronismWithResource()
+    public AsynchronismWithResource()
     {
     }
 
@@ -650,7 +662,7 @@ public class AsynchronismWithResourceLocked : MethodWithResource
     // You can consider conch is a token, and who has it in hand owns the resource.
     private static object conch = new object();
 
-    AsynchronismWithResourceLocked()
+    public AsynchronismWithResourceLocked()
     {
     }
 
