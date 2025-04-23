@@ -685,6 +685,9 @@ public class AsynchronismWithResourceLocked : MethodWithResource
         Console.WriteLine($"{watch.ElapsedMilliseconds:#,##0} elapsed milliseconds.");
     }
 
+    // Static methods are not associated with the instance of a class, but with the class 
+    // itself. Therefore, when a subclass inherits a static method from its parent class, 
+    // it cannot modify the behavior of the static method
     new static void MethodA()
     {
         // add 5 times char A in the message
