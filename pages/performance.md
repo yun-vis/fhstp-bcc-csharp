@@ -6,7 +6,7 @@ classes: wide
 header:
   image: /assets/images/teaser/teaser.png
   caption: "Image credit: [**Yun**](http://yun-vis.net)"  
-last_modified_at: 2023-03-27
+last_modified_at: 2025-04-24
 ---
 
 ## .NET Processes
@@ -523,14 +523,14 @@ public class Asynchronism : Method
         // taskB.Start();
         // taskC.Start();
         
-        // Task.Run(action) internally uses the default TaskScheduler, which means it 
-        // always offloads a task to the thread pool. 
         // StartNew(action), on the other hand, uses the scheduler of the current thread 
         // which may not use thread pool at all! This can be a matter of concern 
         // particularly when we work with the UI thread!
         Task taskB = Task.Factory.StartNew(MethodB);
+        // Task.Run(action) internally uses the default TaskScheduler, which means it 
+        // always offloads a task to the thread pool. 
         Task taskC = Task.Run(new Action(MethodC));
-        // Task taskC = Task.Factory.StartNew(A, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Default);        
+        // Task taskC = Task.Factory.StartNew(Action, CancellationToken.None, TaskCreationOptions.DenyChildAttach, TaskScheduler.Default);        
         Console.WriteLine($"{timer.ElapsedMilliseconds:#,##0}ms elapsed.");
     }
 }
